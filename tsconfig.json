@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "jsx": "react",
+    "allowJs": true,
+    "checkJs": false,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "lib": ["ESNext", "DOM"],
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["react"]
+  },
+  "exclude": [
+    "node_modules",
+    "**/node_modules/*",
+    "android",
+    "ios",
+    "web-build"
+  ]
+}

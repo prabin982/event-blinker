@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Blinker | Admin Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #f87171 0%, #3b82f6 100%);
+        }
+
+        .tab-active {
+            border-bottom: 3px solid #f97316;
+            color: #f97316;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+            transition: all 0.2s ease-out;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <div id="app">
+        <!-- Login -->
+        <div id="loginScreen" class="flex items-center justify-center min-h-screen gradient-bg p-4">
+            <div class="glass p-10 rounded-3xl shadow-2xl w-full max-w-md animate-fade-in">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <span class="text-3xl">🛡️</span>
+                    </div>
+                    <h1 class="text-3xl font-bold text-gray-800">Admin Control</h1>
+                    <p class="text-gray-500 mt-2">Authorized Personnel Only</p>
+                </div>
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2 text-gray-700 ml-1">Secure Entrance Token</label>
+                        <input type="password" id="adminToken" placeholder="••••••••••••"
+                            onkeypress="handleKeyPress(event)"
+                            class="w-full px-5 py-3 rounded-2xl border border-gray-200 focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all shadow-sm">
+                    </div>
+                    <button id="loginBtn" onclick="handleLogin()"
+                        class="w-full bg-orange-500 text-white py-4 rounded-2xl font-bold hover:bg-orange-600 shadow-lg shadow-orange-500/30 transition-all hover:scale-[1.02] active:scale-[0.98]">
+                        Enter Dashboard
+                    </button>
+                    <div id="loginError" class="text-center text-red-500 text-sm font-medium hidden"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="mainApp" class="hidden animate-fade-in">
+            <!-- Header -->
+            <header class="glass sticky top-0 z-50 border-b border-gray-200 shadow-sm">
+                <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center text-white font-bold shadow-md">
+                            E</div>
+                        <h1 class="text-xl font-bold tracking-tight">Event <span class="text-orange-500">Blinker</span>
+                            Portal</h1>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <div class="hidden sm:flex flex-col text-right">
+                            <span class="text-xs text-gray-400 font-bold uppercase tracking-widest">Active
+                                Session</span>
+                            <span class="text-sm font-bold text-gray-700">System Admin</span>
+                        </div>
+                        <button onclick="logout()"
+                            class="px-5 py-2.5 bg-red-50 text-red-600 rounded-xl font-bold hover:bg-red-100 transition-colors border border-red-100">
+                            Log Out
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="max-w-7xl mx-auto px-6 py-10">
+                <!-- Stats / Tabs Container -->
+                <div class="mb-10">
+                    <h2 class="text-2xl font-bold mb-6">Management Overview</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+                        <button onclick="switchTab('all_riders')" id="tabAll_riders"
+                            class="glass p-5 rounded-2xl text-left card-hover transition-all">
+                            <span class="block text-gray-400 text-xs font-bold uppercase mb-1">Total Riders</span>
+                            <span class="text-2xl font-bold" id="allRidersCount">0</span>
+                        </button>
+                        <button onclick="switchTab('riders')" id="tabRiders"
+                            class="glass p-5 rounded-2xl text-left card-hover transition-all">
+                            <span class="block text-gray-400 text-xs font-bold uppercase mb-1">New Riders</span>
+                            <span class="text-2xl font-bold text-orange-500" id="ridersCount">0</span>
+                        </button>
+                        <button onclick="switchTab('licenses')" id="tabLicenses"
+                            class="glass p-5 rounded-2xl text-left card-hover transition-all">
+                            <span class="block text-gray-400 text-xs font-bold uppercase mb-1">License Checks</span>
+                            <span class="text-2xl font-bold text-blue-500" id="licensesCount">0</span>
+                        </button>
+                        <button onclick="switchTab('organizers')" id="tabOrganizers"
+                            class="glass p-5 rounded-2xl text-left card-hover transition-all">
+                            <span class="block text-gray-400 text-xs font-bold uppercase mb-1">Pending Orgs</span>
+                            <span class="text-2xl font-bold text-purple-500" id="organizersCount">0</span>
+                        </button>
+                        <button onclick="switchTab('events')" id="tabEvents"
+                            class="glass p-5 rounded-2xl text-left card-hover transition-all">
+                            <span class="block text-gray-400 text-xs font-bold uppercase mb-1">Pending Events</span>
+                            <span class="text-2xl font-bold text-green-500" id="eventsCount">0</span>
+                        </button>
+                        <button onclick="switchTab('live_events')" id="tabLive_events"
+                            class="glass p-5 rounded-2xl text-left card-hover transition-all">
+                            <span class="block text-gray-400 text-xs font-bold uppercase mb-1">Live Events</span>
+                            <span class="text-2xl font-bold text-red-500" id="liveEventsCount">0</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation & Filters -->
+                <div class="flex items-center justify-between mb-8 overflow-x-auto">
+                    <div class="flex gap-8 border-b w-full min-w-max">
+                        <button onclick="switchTab('all_riders')"
+                            class="tab-btn px-2 py-4 font-bold text-sm transition-all" id="tabNavAll_riders">Rider
+                            Database</button>
+                        <button onclick="switchTab('riders')" class="tab-btn px-2 py-4 font-bold text-sm transition-all"
+                            id="tabNavRiders">Pending Registrations</button>
+                        <button onclick="switchTab('licenses')"
+                            class="tab-btn px-2 py-4 font-bold text-sm transition-all" id="tabNavLicenses">License
+                            Verification</button>
+                        <button onclick="switchTab('organizers')"
+                            class="tab-btn px-2 py-4 font-bold text-sm transition-all" id="tabNavOrganizers">Organizer
+                            Requests</button>
+                        <button onclick="switchTab('events')" class="tab-btn px-2 py-4 font-bold text-sm transition-all"
+                            id="tabNavEvents">Pending Events</button>
+                        <button onclick="switchTab('live_events')"
+                            class="tab-btn px-2 py-4 font-bold text-sm transition-all" id="tabNavLive_events">Live
+                            Events</button>
+                    </div>
+                </div>
+
+                <!-- Content Area -->
+                <div id="contentArea" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[400px]">
+                    <div class="col-span-full flex flex-col items-center justify-center py-20 animate-pulse">
+                        <div class="text-4xl mb-4">⏳</div>
+                        <p class="text-gray-400 font-medium">Synchronizing system data...</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        let adminToken = '';
+        let currentTab = 'all_riders';
+        const API_URL = window.location.origin;
+
+        function handleKeyPress(e) { if (e.key === 'Enter') handleLogin(); }
+
+        function handleLogin() {
+            const token = document.getElementById('adminToken').value.trim();
+            if (!token) return alert('Token required');
+
+            adminToken = token;
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            loadData();
+        }
+
+        function logout() {
+            adminToken = '';
+            location.reload();
+        }
+
+        async function switchTab(tab) {
+            currentTab = tab;
+            loadData();
+        }
+
+        async function loadData() {
+            const container = document.getElementById('contentArea');
+            // Update Tab UI
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active', 'text-orange-500'));
+            const activeTab = document.getElementById('tabNav' + currentTab.charAt(0).toUpperCase() + currentTab.slice(1).replace('_', ''));
+            // Fix for camelCase id matching
+            const tabIdMatch = 'tabNav' + currentTab.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('');
+            const targetNav = document.getElementById(tabIdMatch);
+            if (targetNav) targetNav.classList.add('tab-active');
+
+            try {
+                const headers = { 'x-admin-token': adminToken };
+                const [ridersRes, licensesRes, organizersRes, eventsRes, liveEventsRes, allRidersRes] = await Promise.all([
+                    fetch(`${API_URL}/api/admin/portal/riders/pending`, { headers }),
+                    fetch(`${API_URL}/api/admin/portal/licenses/pending`, { headers }),
+                    fetch(`${API_URL}/api/admin/portal/organizers/pending`, { headers }),
+                    fetch(`${API_URL}/api/admin/portal/events/pending`, { headers }),
+                    fetch(`${API_URL}/api/admin/portal/events/approved`, { headers }),
+                    fetch(`${API_URL}/api/admin/portal/riders/all`, { headers })
+                ]);
+
+                if (ridersRes.status === 401) throw new Error("Unauthorized");
+
+                const ridersData = await ridersRes.json();
+                const licensesData = await licensesRes.json();
+                const organizersData = organizersRes.ok ? await organizersRes.json() : { organizers: [] };
+                const eventsData = eventsRes.ok ? await eventsRes.json() : { events: [] };
+                const liveEventsData = liveEventsRes.ok ? await liveEventsRes.json() : { events: [] };
+                const allRidersData = allRidersRes.ok ? await allRidersRes.json() : { riders: [] };
+
+                // Update counts with animation
+                updateCount('ridersCount', ridersData.riders?.length || 0);
+                updateCount('licensesCount', licensesData.licenses?.length || 0);
+                updateCount('organizersCount', organizersData.organizers?.length || 0);
+                updateCount('eventsCount', eventsData.events?.length || 0);
+                updateCount('liveEventsCount', liveEventsData.events?.length || 0);
+                updateCount('allRidersCount', allRidersData.riders?.length || 0);
+
+                // Render content
+                let items = [];
+                if (currentTab === 'riders') items = ridersData.riders || [];
+                else if (currentTab === 'licenses') items = licensesData.licenses || [];
+                else if (currentTab === 'organizers') items = organizersData.organizers || [];
+                else if (currentTab === 'events') items = eventsData.events || [];
+                else if (currentTab === 'live_events') items = liveEventsData.events || [];
+                else if (currentTab === 'all_riders') items = allRidersData.riders || [];
+
+                renderContent(items);
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `<div class="col-span-full py-20 text-center"><p class="text-red-500 font-bold mb-2">Error connecting to system</p><p class="text-gray-400 text-sm">${err.message}</p></div>`;
+            }
+        }
+
+        function updateCount(id, val) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = val;
+        }
+
+        function renderContent(items) {
+            const container = document.getElementById('contentArea');
+            if (items.length === 0) {
+                container.innerHTML = `<div class="col-span-full py-20 text-center flex flex-col items-center"><span class="text-5xl mb-4">📭</span><p class="text-gray-400 font-medium">All cleared! No pending tasks here.</p></div>`;
+                return;
+            }
+
+            container.innerHTML = items.map(item => {
+                if (currentTab === 'events' || currentTab === 'live_events') return renderEventCard(item);
+                if (currentTab === 'organizers') return renderOrganizerCard(item);
+                if (currentTab === 'riders' || currentTab === 'all_riders') return renderRiderCard(item);
+                if (currentTab === 'licenses') return renderLicenseCard(item);
+                return '';
+            }).join('');
+        }
+
+        function renderEventCard(evt) {
+            const isApproved = evt.is_approved;
+            return `
+            <div class="glass p-6 rounded-3xl card-hover animate-fade-in flex flex-col h-full bg-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-2">
+                     <span class="px-2 py-0.5 rounded-bl-xl text-[10px] font-bold ${isApproved ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'}">
+                        ${isApproved ? 'LIVE' : 'PENDING'}
+                     </span>
+                </div>
+                <div class="flex justify-between gap-4 mb-4">
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg leading-tight line-clamp-2 pr-8">${evt.title}</h3>
+                        <p class="text-xs text-gray-500 mt-1 font-medium">by ${evt.organizer_name || 'Organizer'}</p>
+                    </div>
+                    ${evt.image_url ? `<img src="${evt.image_url}" class="w-16 h-16 object-cover rounded-2xl shadow-sm">` : '<div class="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-2xl text-gray-200">🖼️</div>'}
+                </div>
+                <div class="space-y-2 mb-6 flex-1">
+                    <div class="flex items-center gap-2 text-sm text-gray-600">
+                        <span class="w-5 text-center">📅</span> ${new Date(evt.start_time).toLocaleDateString()}
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-gray-600">
+                        <span class="w-5 text-center">📍</span> ${evt.location_name || 'Generic Location'}
+                    </div>
+                    <div class="flex items-center gap-2 text-sm font-bold text-orange-500">
+                        <span class="w-5 text-center">💰</span> ${evt.price > 0 ? 'NPR ' + evt.price : 'FREE ENTRY'}
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    ${!isApproved ? `
+                        <button onclick="performAction('/api/admin/portal/events/${evt.id}/approve')" class="flex-1 bg-green-500 text-white py-3 rounded-xl font-bold hover:bg-green-600 shadow-md transition-all">Publish</button>
+                    ` : `
+                        <button onclick="performAction('/api/admin/portal/events/${evt.id}/reject')" class="flex-1 bg-yellow-500 text-white py-3 rounded-xl font-bold hover:bg-yellow-600 shadow-md transition-all">Unpublish</button>
+                    `}
+                    <button onclick="if(confirm('PERMANENTLY DELETE this event? This cannot be undone.')) performAction('/api/admin/portal/events/${evt.id}/delete')" class="px-4 bg-red-50 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all font-bold">🗑️</button>
+                </div>
+            </div>`;
+        }
+
+        function renderOrganizerCard(org) {
+            return `
+            <div class="glass p-6 rounded-3xl card-hover animate-fade-in bg-white">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center text-xl">👤</div>
+                    <div>
+                        <h3 class="font-bold">${org.name || org.first_name}</h3>
+                        <p class="text-xs text-gray-500">${org.email}</p>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 mb-4 italic">Requested on ${new Date(org.created_at).toLocaleDateString()}</p>
+                <div class="flex gap-2 border-t pt-4">
+                    <button onclick="performAction('/api/admin/portal/organizers/${org.id}/approve')" class="flex-1 bg-orange-500 text-white py-2.5 rounded-xl font-bold shadow-md">Verify Organizer</button>
+                    <button onclick="performAction('/api/admin/portal/organizers/${org.id}/reject')" class="px-4 py-2.5 bg-red-50 text-red-500 rounded-xl font-bold">Deny</button>
+                </div>
+            </div>`;
+        }
+
+        async function performAction(endpoint, body = {}) {
+            try {
+                const res = await fetch(API_URL + endpoint, {
+                    method: 'POST',
+                    headers: { 'x-admin-token': adminToken, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                if (res.ok) {
+                    loadData();
+                } else {
+                    const err = await res.json();
+                    alert("Action failed: " + (err.error || "Unknown error"));
+                }
+            } catch (e) {
+                alert("Network error: " + e.message);
+            }
+        }
+
+        // --- NEW: Document Modal ---
+        function openDoc(url, title) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 animate-fade-in';
+            modal.innerHTML = `
+                <div class="relative max-w-4xl w-full">
+                    <button onclick="this.parentElement.parentElement.remove()" class="absolute -top-12 right-0 text-white text-xl font-bold bg-white/10 w-10 h-10 rounded-full hover:bg-white/20">✕</button>
+                    <div class="bg-white rounded-3xl overflow-hidden shadow-2xl">
+                        <div class="p-4 border-b flex justify-between items-center">
+                            <h3 class="font-bold text-gray-800">${title}</h3>
+                            <a href="${url}" target="_blank" class="text-xs text-blue-500 font-bold hover:underline">Open Original ↗</a>
+                        </div>
+                        <img src="${url}" class="w-full h-auto max-h-[70vh] object-contain bg-gray-100">
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function renderRiderCard(rider) {
+            const isOnline = rider.is_online;
+            return `
+            <div class="glass p-6 rounded-3xl card-hover animate-fade-in bg-white flex flex-col h-full">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
+                            ${rider.profile_photo_url ? `<img src="${rider.profile_photo_url}" class="w-14 h-14 rounded-full object-cover border-2 border-orange-100 shadow-sm" onclick="openDoc('${rider.profile_photo_url}', 'Rider Profile Photo')">` : '<div class="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center text-xl">👤</div>'}
+                            <div class="absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-white ${isOnline ? 'bg-green-500' : 'bg-gray-400'}"></div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg leading-tight">${rider.first_name || ''} ${rider.last_name || ''}</h3>
+                            <p class="text-xs text-orange-500 font-bold">Pending Verification</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-2xl text-xs space-y-2 mb-4 border border-gray-100">
+                    <div class="flex justify-between">
+                        <span class="text-gray-400 font-bold uppercase tracking-wider">Contact</span>
+                        <span class="font-bold text-gray-800">${rider.email}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400 font-bold uppercase tracking-wider">Emergency</span>
+                        <span class="font-bold text-red-500">${rider.emergency_contact || 'N/A'}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400 font-bold uppercase tracking-wider">Vehicle</span>
+                        <span class="font-bold text-gray-800">${rider.make} ${rider.model} (${rider.year})</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400 font-bold uppercase tracking-wider">Number Plate</span>
+                        <span class="bg-white px-2 py-0.5 border rounded-md font-mono font-bold text-gray-700 shadow-sm">${rider.license_plate}</span>
+                    </div>
+                </div>
+
+                ${rider.bank_name ? `
+                <div class="bg-orange-50/50 p-4 rounded-2xl text-[10px] mb-4 border border-orange-100/50">
+                    <p class="text-orange-400 font-bold uppercase tracking-widest mb-2 opacity-70">Payout Method</p>
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-gray-500 font-bold">${rider.bank_name}</span>
+                        <span class="font-mono text-gray-800 font-bold bg-white/50 px-2 rounded">${rider.account_number}</span>
+                    </div>
+                </div>
+                ` : ''}
+
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase ml-1">Billbook Photo</p>
+                        ${rider.billbook_photo_url ? `
+                            <div class="relative group cursor-pointer" onclick="openDoc('${rider.billbook_photo_url}', 'Billbook (Identity)')">
+                                <img src="${rider.billbook_photo_url}" class="w-full h-24 object-cover rounded-xl border-2 border-dashed border-gray-200 group-hover:border-orange-500 transition-all">
+                                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-xl flex items-center justify-center transition-all">
+                                    <span class="text-white text-[10px] font-bold">Zoom 🔍</span>
+                                </div>
+                            </div>
+                        ` : `<div class="w-full h-24 bg-gray-50 rounded-xl border-2 border-dashed border-gray-100 flex items-center justify-center text-[10px] text-gray-300">No Photo</div>`}
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase ml-1">Driver License</p>
+                        ${rider.license_photo_url ? `
+                            <div class="relative group cursor-pointer" onclick="openDoc('${rider.license_photo_url}', 'License Photo')">
+                                <img src="${rider.license_photo_url}" class="w-full h-24 object-cover rounded-xl border-2 border-dashed border-gray-200 group-hover:border-orange-500 transition-all">
+                                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-xl flex items-center justify-center transition-all">
+                                    <span class="text-white text-[10px] font-bold">Zoom 🔍</span>
+                                </div>
+                            </div>
+                        ` : `<div class="w-full h-24 bg-gray-50 rounded-xl border-2 border-dashed border-gray-100 flex items-center justify-center text-[10px] text-gray-300">No Photo</div>`}
+                    </div>
+                </div>
+
+                <div class="mt-auto pt-4 border-t flex gap-2">
+                    ${currentTab === 'riders' ? `
+                        <button onclick="performAction('/api/admin/portal/riders/${rider.id}/approve')" class="flex-1 bg-orange-500 text-white py-3 rounded-xl font-bold shadow-lg shadow-orange-500/20 hover:bg-orange-600 transition-all">Approve Rider</button>
+                        <button onclick="const reason = prompt('Rejection reason?'); if(reason) performAction('/api/admin/portal/riders/${rider.id}/reject', {rejection_reason: reason})" class="px-5 bg-red-50 text-red-500 rounded-xl font-bold hover:bg-red-500 hover:text-white transition-all text-xs">Reject</button>
+                    ` : `
+                        <button class="flex-1 py-3 bg-gray-50 text-gray-400 font-bold rounded-xl cursor-not-allowed">Active Rider</button>
+                    `}
+                </div>
+            </div>`;
+        }
+
+        function renderLicenseCard(license) {
+            return `
+            <div class="glass p-6 rounded-3xl card-hover animate-fade-in bg-white flex flex-col h-full border-l-4 border-l-blue-500">
+                <div class="mb-4">
+                    <h3 class="font-bold text-lg">${license.first_name} ${license.last_name}</h3>
+                    <p class="text-xs text-gray-500">${license.email}</p>
+                </div>
+                
+                <div class="space-y-4 mb-6 flex-1">
+                    <div class="bg-blue-50/50 p-4 rounded-2xl">
+                        <p class="text-[10px] font-bold text-blue-400 uppercase mb-2">License Information</p>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs text-gray-500">Number</span>
+                            <span class="font-bold text-gray-800">${license.license_number}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-500">Expiry</span>
+                            <span class="font-bold ${new Date(license.expiry_date) < new Date() ? 'text-red-500' : 'text-gray-800'}">${new Date(license.expiry_date).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+
+                    <div class="relative group cursor-pointer" onclick="openDoc('${license.license_photo_url}', 'Driver License Verification')">
+                        <img src="${license.license_photo_url}" class="w-full h-40 object-cover rounded-2xl border-2 border-blue-100 shadow-sm group-hover:border-blue-400 transition-all">
+                        <div class="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 rounded-2xl flex items-center justify-center transition-all">
+                             <span class="bg-white/90 px-4 py-2 rounded-full text-blue-600 font-bold text-xs shadow-lg">Verify Image 🔍</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button onclick="performAction('/api/admin/portal/licenses/${license.id}/approve')" class="flex-1 bg-blue-500 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-600 transition-all">Verify License</button>
+                    <button onclick="const r = prompt('Rejection reason?'); if(r) performAction('/api/admin/portal/licenses/${license.id}/reject', {rejection_reason: r})" class="px-5 bg-red-50 text-red-500 rounded-xl font-bold hover:bg-red-500 hover:text-white transition-all">Reject</button>
+                </div>
+            </div>`;
+        }
+    </script>
+</body>
+
+</html>

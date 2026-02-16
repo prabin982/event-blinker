@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Event Blinker Backend API",
   "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
@@ -14,7 +17,8 @@
     "add-rider-fields": "node scripts/add-rider-fields.js",
     "verify": "node scripts/verify-project.js",
     "fix-chat": "node scripts/fix-chat-nullable.js",
-    "setup-complete": "node update-env.js && node setup-ai-and-rides.js && node scripts/add-verification-columns.js && node scripts/fix-chat-nullable.js && node scripts/migrate-rides.js"
+    "setup-complete": "node update-env.js && node setup-ai-and-rides.js && node scripts/add-verification-columns.js && node scripts/fix-chat-nullable.js && node scripts/migrate-rides.js",
+    "build": "echo \"No build step required\""
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

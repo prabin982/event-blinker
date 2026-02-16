@@ -8,6 +8,7 @@ const db = pgp({
   user: process.env.DB_USER || "postgres",
   password: process.env.DB_PASSWORD,
   max: 30,
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
 })
 
 module.exports = db

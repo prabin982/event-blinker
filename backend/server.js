@@ -112,6 +112,7 @@ app.get("/api/admin/debug/database", (req, res) => {
   res.json({
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
+    jwtStatus: process.env.JWT_SECRET ? "Secret is set" : "Secret is MISSING",
     status: "Database configuration loaded"
   })
 })

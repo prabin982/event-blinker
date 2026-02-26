@@ -13,15 +13,14 @@
       },
       "env": {
         "EXPO_PUBLIC_API_URL": "https://event-blinker.onrender.com/api",
-        "EXPO_PUBLIC_AI_CHAT_URL": "https://event-blinker-ai.onrender.com/chat",
-        "EXPO_PUBLIC_MAPBOX_TOKEN": "pk.eyJ1IjoicHJhYmlubm5ubiIsImEiOiJjbWl2dmh6eTcwczU1M2ZzYjU2Y2RmaGdvIn0.CRMu-jNZzOgNRz7cRNXXdg"
+        "EXPO_PUBLIC_AI_CHAT_URL": "https://event-blinker-ai.onrender.com/chat"
       }
     },
     "production": {
+      "node": "20.x",
       "env": {
         "EXPO_PUBLIC_API_URL": "https://event-blinker.onrender.com/api",
-        "EXPO_PUBLIC_AI_CHAT_URL": "https://event-blinker-ai.onrender.com/chat",
-        "EXPO_PUBLIC_MAPBOX_TOKEN": "pk.eyJ1IjoicHJhYmlubm5ubiIsImEiOiJjbWl2dmh6eTcwczU1M2ZzYjU2Y2RmaGdvIn0.CRMu-jNZzOgNRz7cRNXXdg"
+        "EXPO_PUBLIC_AI_CHAT_URL": "https://event-blinker-ai.onrender.com/chat"
       }
     }
   },

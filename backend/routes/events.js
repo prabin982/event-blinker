@@ -48,19 +48,22 @@ router.get("/", async (req, res) => {
       LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`
 
     const events = await db.query(query, params)
-    
+
     // Convert relative image URLs to absolute URLs
     const baseUrl = `${req.protocol}://${req.get("host")}`
     const eventsWithFullUrls = events.map(event => ({
       ...event,
-      image_url: event.image_url && !event.image_url.startsWith('http') 
+      image_url: event.image_url && !event.image_url.startsWith('http')
         ? `${baseUrl}${event.image_url.startsWith('/') ? '' : '/'}${event.image_url}`
         : event.image_url
     }))
-    
+
+    console.log("Found events:", events.length)
     res.json(eventsWithFullUrls)
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    console.error("DEBUG: Error fetching events:", error)
+    console.error("DEBUG: Query Params:", req.query)
+    res.status(500).json({ error: error.message, stack: process.env.NODE_ENV === 'development' ? error.stack : undefined })
   }
 })
 
@@ -81,16 +84,16 @@ router.get("/:id", async (req, res) => {
       [req.params.id],
     )
     if (!event) return res.status(404).json({ error: "Event not found" })
-    
+
     // Convert relative image URL to absolute URL
     const baseUrl = `${req.protocol}://${req.get("host")}`
     const eventWithFullUrl = {
       ...event,
-      image_url: event.image_url && !event.image_url.startsWith('http') 
+      image_url: event.image_url && !event.image_url.startsWith('http')
         ? `${baseUrl}${event.image_url.startsWith('/') ? '' : '/'}${event.image_url}`
         : event.image_url
     }
-    
+
     res.json(eventWithFullUrl)
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -113,16 +116,16 @@ router.get("/trending", async (req, res) => {
       ORDER BY like_count DESC, checkin_count DESC
       LIMIT 10
     `)
-    
+
     // Convert relative image URLs to absolute URLs
     const baseUrl = `${req.protocol}://${req.get("host")}`
     const eventsWithFullUrls = events.map(event => ({
       ...event,
-      image_url: event.image_url && !event.image_url.startsWith('http') 
+      image_url: event.image_url && !event.image_url.startsWith('http')
         ? `${baseUrl}${event.image_url.startsWith('/') ? '' : '/'}${event.image_url}`
         : event.image_url
     }))
-    
+
     res.json(eventsWithFullUrls)
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -137,10 +140,10 @@ router.post("/", authMiddleware, async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "User not found" })
     }
-    
+
     if (user.user_type === "organizer" && !user.is_verified) {
-      return res.status(403).json({ 
-        error: "Your organizer account is pending admin approval. Please wait for verification before creating events." 
+      return res.status(403).json({
+        error: "Your organizer account is pending admin approval. Please wait for verification before creating events."
       })
     }
 

@@ -161,6 +161,13 @@ const createTables = async () => {
       ALTER COLUMN user_id DROP NOT NULL;
     `).catch(e => console.log("Note: user_id nullability check skipped (already nullable or table missing)"))
 
+    // Update ride_requests status constraint to include cancelled states
+    await db.query(`
+      ALTER TABLE ride_requests DROP CONSTRAINT IF EXISTS ride_requests_status_check;
+      ALTER TABLE ride_requests ADD CONSTRAINT ride_requests_status_check 
+      CHECK (status IN ('pending', 'accepted', 'in_progress', 'completed', 'cancelled', 'passenger_cancelled', 'rider_cancelled'));
+    `).catch(e => console.log("Note: ride_requests status constraint update skipped"))
+
     console.log("✓ All tables, columns, and fixes applied successfully!")
     process.exit(0)
   } catch (error) {

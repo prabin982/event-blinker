@@ -122,9 +122,11 @@ app.get("/api/admin/debug/tables", async (req, res) => {
     const tables = await db.any(
       `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name`
     )
+    const userCount = await db.one("SELECT COUNT(*) FROM users")
     res.json({
       tables: tables.map(t => t.table_name),
-      count: tables.length
+      count: tables.length,
+      usersCount: parseInt(userCount.count)
     })
   } catch (error) {
     res.status(500).json({ error: error.message })

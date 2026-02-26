@@ -17,7 +17,6 @@
       }
     },
     "production": {
-      "node": "20.x",
       "env": {
         "EXPO_PUBLIC_API_URL": "https://event-blinker.onrender.com/api",
         "EXPO_PUBLIC_AI_CHAT_URL": "https://event-blinker-ai.onrender.com/chat"

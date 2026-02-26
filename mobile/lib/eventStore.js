@@ -1,7 +1,7 @@
 import { create } from "zustand"
 import axios from "axios"
 
-const API_URL = "https://event-blinker.onrender.com/api"
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "https://event-blinker.onrender.com/api"
 
 export const useEventStore = create((set) => ({
   events: [],

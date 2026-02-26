@@ -1,7 +1,7 @@
 import { io } from "socket.io-client"
 import { create } from "zustand"
 
-const SOCKET_URL = "https://event-blinker.onrender.com"
+const SOCKET_URL = process.env.EXPO_PUBLIC_API_URL ? process.env.EXPO_PUBLIC_API_URL.replace("/api", "") : "https://event-blinker.onrender.com"
 
 export const useSocketStore = create((set, get) => {
   let socket = null

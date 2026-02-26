@@ -23,7 +23,7 @@ import axios from "axios"
 import { LinearGradient } from "expo-linear-gradient"
 import * as Location from 'expo-location'
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://192.168.254.10:5000/api"
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "https://event-blinker.onrender.com/api"
 const MAPBOX_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_TOKEN || ""
 
 export default function RidesScreen() {

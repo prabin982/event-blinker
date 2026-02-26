@@ -1,7 +1,7 @@
 const pgp = require("pg-promise")()
 require("dotenv").config()
 
-const db = pgp({
+const connection = process.env.DATABASE_URL || {
   host: process.env.DB_HOST || "localhost",
   port: process.env.DB_PORT || 5432,
   database: process.env.DB_NAME || "event_blinker",
@@ -9,6 +9,8 @@ const db = pgp({
   password: process.env.DB_PASSWORD,
   max: 30,
   ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
-})
+}
+
+const db = pgp(connection)
 
 module.exports = db

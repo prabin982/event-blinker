@@ -20,7 +20,7 @@ import { useSocketStore } from "../../lib/socketStore"
 import axios from "axios"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://192.168.254.10:5000/api"
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "https://event-blinker.onrender.com/api"
 
 // Helper function to deduplicate messages
 const deduplicateMessages = (messages) => {
@@ -35,7 +35,7 @@ const deduplicateMessages = (messages) => {
       const timestamp = msg.created_at ? new Date(msg.created_at).getTime() : 0
       key = `content-${msg.user_id}-${timestamp}-${msg.message?.substring(0, 20)}`
     }
-    
+
     if (seen.has(key)) {
       return false
     }
@@ -64,7 +64,7 @@ export default function ChatScreen() {
         const host = parsed.hostname
         return `${parsed.protocol}//${host}:5100/chat`
       } catch (e) {
-        return "http://192.168.254.10:5100/chat"
+        return "https://event-blinker-ai.onrender.com/chat"
       }
     })()
   console.log("Resolved AI_CHAT_URL:", AI_CHAT_URL)
@@ -72,10 +72,10 @@ export default function ChatScreen() {
   const { socket, connected, connect } = useSocketStore()
   const router = useRouter()
   const flatListRef = useRef(null)
-  
+
   const params = useLocalSearchParams()
   const paramEventId = params?.eventId || params?.event_id
-  
+
   // Check for eventId from navigation params
   useEffect(() => {
     if (paramEventId) {
@@ -99,7 +99,7 @@ export default function ChatScreen() {
     if (selectedEvent && socket && connected) {
       // Join event chat room
       socket.emit("join:event", { event_id: selectedEvent, user_id: user?.id })
-      
+
       // Listen for new messages
       const handleNewMessage = (message) => {
         if (message.event_id === selectedEvent || message.event_id?.toString() === selectedEvent?.toString()) {
@@ -111,9 +111,9 @@ export default function ChatScreen() {
                 return m.id === message.id || m.id.toString() === message.id.toString()
               }
               // Match by content and timestamp if no id
-              return m.message === message.message && 
-                     m.user_id === message.user_id &&
-                     Math.abs(new Date(m.created_at) - new Date(message.created_at || message.timestamp)) < 1000
+              return m.message === message.message &&
+                m.user_id === message.user_id &&
+                Math.abs(new Date(m.created_at) - new Date(message.created_at || message.timestamp)) < 1000
             })
             if (exists) return prev
             // Ensure message has all required fields
@@ -132,7 +132,7 @@ export default function ChatScreen() {
           }, 100)
         }
       }
-      
+
       socket.on("message:new", handleNewMessage)
 
       return () => {
@@ -292,7 +292,7 @@ export default function ChatScreen() {
         id: msg.id || `msg-${eventId}-${index}-${msg.created_at || Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
         event_id: msg.event_id || eventId,
       }))
-      
+
       // Remove duplicates - keep first occurrence
       const uniqueMessages = messagesWithIds.filter((msg, index, self) => {
         const firstIndex = self.findIndex((m) => {
@@ -302,12 +302,12 @@ export default function ChatScreen() {
           }
           // Match by content, user, and timestamp (within 1 second)
           const timeDiff = Math.abs(
-            new Date(m.created_at || 0).getTime() - 
+            new Date(m.created_at || 0).getTime() -
             new Date(msg.created_at || 0).getTime()
           )
-          return m.message === msg.message && 
-                 m.user_id === msg.user_id &&
-                 timeDiff < 1000
+          return m.message === msg.message &&
+            m.user_id === msg.user_id &&
+            timeDiff < 1000
         })
         return index === firstIndex
       })
@@ -370,9 +370,9 @@ export default function ChatScreen() {
             return m.id.toString() === newMessage.id.toString()
           }
           // Also check by content and timestamp
-          return m.message === newMessage.message && 
-                 m.user_id === newMessage.user_id &&
-                 Math.abs(new Date(m.created_at) - new Date(newMessage.created_at)) < 2000
+          return m.message === newMessage.message &&
+            m.user_id === newMessage.user_id &&
+            Math.abs(new Date(m.created_at) - new Date(newMessage.created_at)) < 2000
         })
         if (exists) return prev
         const updated = [newMessage, ...prev]
@@ -380,7 +380,7 @@ export default function ChatScreen() {
         return deduplicateMessages(updated)
       })
       setMessageText("")
-      
+
       // Scroll to show new message
       setTimeout(() => {
         flatListRef.current?.scrollToOffset({ offset: 0, animated: true })
@@ -517,10 +517,10 @@ export default function ChatScreen() {
             renderItem={({ item }) => {
               const isSent = item.user_id === user?.id || item.sender_id === user?.id
               const isOrganizer = item.sender_type === "organizer"
-              const senderName = isOrganizer 
-                ? "Organizer" 
+              const senderName = isOrganizer
+                ? "Organizer"
                 : (item.user_name || (isSent ? "You" : "User"))
-              
+
               return (
                 <View style={[styles.messageBubble, isSent && styles.sentMessage, isOrganizer && styles.organizerMessage]}>
                   {!isSent && (
@@ -562,8 +562,8 @@ export default function ChatScreen() {
               value={messageText}
               onChangeText={setMessageText}
             />
-            <TouchableOpacity 
-              style={[styles.sendButton, sending && styles.sendButtonDisabled]} 
+            <TouchableOpacity
+              style={[styles.sendButton, sending && styles.sendButtonDisabled]}
               onPress={handleSendMessage}
               disabled={sending || !messageText.trim()}
             >

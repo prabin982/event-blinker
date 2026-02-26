@@ -20,7 +20,7 @@ import { useAuthStore } from "../lib/authStore"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import axios from "axios"
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://192.168.254.10:5000/api"
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "https://event-blinker.onrender.com/api"
 const MAPBOX_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_TOKEN || ''
 
 // Try to import Mapbox, but handle if native code isn't available

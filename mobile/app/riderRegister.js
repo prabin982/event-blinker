@@ -24,7 +24,7 @@ import axios from "axios"
 import { LinearGradient } from "expo-linear-gradient"
 
 const { width } = Dimensions.get("window")
-const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://192.168.254.10:5000/api"
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "https://event-blinker.onrender.com/api"
 
 export default function RiderRegisterScreen() {
   const router = useRouter()

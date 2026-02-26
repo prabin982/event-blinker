@@ -22,7 +22,7 @@ import { useAuthStore } from "../lib/authStore"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import * as Location from "expo-location"
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://192.168.254.10:5000/api"
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "https://event-blinker.onrender.com/api"
 
 export default function EventDetailScreen() {
   const { id: eventId } = useLocalSearchParams()

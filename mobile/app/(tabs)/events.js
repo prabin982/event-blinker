@@ -20,7 +20,7 @@ import { useSocketStore } from "../../lib/socketStore"
 import axios from "axios"
 import { Ionicons } from "@expo/vector-icons"
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://192.168.254.10:5000/api"
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "https://event-blinker.onrender.com/api"
 
 export default function EventsScreen() {
   const { events, fetchEvents, loading, likeEvent } = useEventStore()
@@ -116,7 +116,7 @@ export default function EventsScreen() {
       router.push("/auth/login")
       return
     }
-    
+
     const token = await AsyncStorage.getItem("token")
     if (likedEvents.includes(eventId)) {
       setLikedEvents(likedEvents.filter((id) => id !== eventId))
@@ -134,8 +134,8 @@ export default function EventsScreen() {
   const renderEventCard = ({ item }) => (
     <TouchableOpacity style={styles.eventCard} onPress={() => router.push(`/eventDetail?id=${item.id}`)}>
       {item.image_url && (
-        <Image 
-          source={{ uri: item.image_url.startsWith('http') ? item.image_url : `${API_URL.replace('/api', '')}${item.image_url}` }} 
+        <Image
+          source={{ uri: item.image_url.startsWith('http') ? item.image_url : `${API_URL.replace('/api', '')}${item.image_url}` }}
           style={styles.eventImage}
           resizeMode="cover"
         />
@@ -217,8 +217,8 @@ export default function EventsScreen() {
                 {activeTab === "all"
                   ? "No events available"
                   : activeTab === "liked"
-                  ? "No liked events"
-                  : "No check-ins yet"}
+                    ? "No liked events"
+                    : "No check-ins yet"}
               </Text>
             </View>
           }

@@ -25,7 +25,7 @@ export const useAuthStore = create((set) => ({
       return { success: true }
     } catch (error) {
       console.log("[v0] Login error:", error.response?.data || error.message)
-      const message = error.response?.data?.message || "Login failed"
+      const message = error.response?.data?.error || error.response?.data?.message || "Login failed"
       set({ error: message, loading: false })
       return { success: false, error: message }
     }
@@ -48,7 +48,7 @@ export const useAuthStore = create((set) => ({
       return { success: true }
     } catch (error) {
       console.log("[v0] Registration error:", error.response?.data || error.message)
-      const message = error.response?.data?.message || "Registration failed"
+      const message = error.response?.data?.error || error.response?.data?.message || "Registration failed"
       set({ error: message, loading: false })
       return { success: false, error: message }
     }

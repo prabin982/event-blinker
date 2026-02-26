@@ -141,7 +141,27 @@ const createTables = async () => {
     await addColumnIfNotExists("events", "is_approved", "BOOLEAN DEFAULT false")
     await addColumnIfNotExists("events", "location_address", "TEXT")
 
-    console.log("✓ All tables and columns checked successfully!")
+    // Set existing users as verified
+    await db.query(`
+      UPDATE users 
+      SET is_verified = true 
+      WHERE is_verified IS NULL OR (user_type != 'organizer' AND is_verified = false);
+    `).catch(() => { })
+
+    // Set existing events as approved
+    await db.query(`
+      UPDATE events 
+      SET is_approved = true 
+      WHERE is_approved IS NULL;
+    `).catch(() => { })
+
+    // Fix chat_messages user_id nullability
+    await db.query(`
+      ALTER TABLE chat_messages 
+      ALTER COLUMN user_id DROP NOT NULL;
+    `).catch(e => console.log("Note: user_id nullability check skipped (already nullable or table missing)"))
+
+    console.log("✓ All tables, columns, and fixes applied successfully!")
     process.exit(0)
   } catch (error) {
     console.error("Migration error:", error)

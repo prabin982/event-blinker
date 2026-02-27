@@ -48,7 +48,8 @@ app.get("/api/health", adminAuth, (req, res) => {
 // Proxy API routes (protected)
 app.use("/api", adminAuth, async (req, res) => {
   try {
-    const targetUrl = `http://localhost:5000/api${req.url}`
+    const API_BASE = process.env.API_URL || "https://event-blinker.onrender.com"
+    const targetUrl = `${API_BASE}/api${req.url}`
 
     console.log(`🔀 Proxying: ${req.method} ${req.originalUrl} → ${targetUrl}`)
 
@@ -77,7 +78,7 @@ app.use("/api", adminAuth, async (req, res) => {
 // Proxy /uploads for images
 app.use("/uploads/*", async (req, res) => {
   try {
-    const API_URL = process.env.API_URL || "http://localhost:5000"
+    const API_URL = process.env.API_URL || "https://event-blinker.onrender.com"
     const targetUrl = `${API_URL}${req.originalUrl}`
     const axios = (await import("axios")).default
 
@@ -103,7 +104,7 @@ app.listen(PORT, () => {
   const adminToken = process.env.ADMIN_SECRET_TOKEN || "prabin@1234"
   console.log(`\n🔐 Admin Portal running on http://localhost:${PORT}`)
   console.log(`📝 Admin Token: ${adminToken}`)
-  console.log(`📝 Backend API: ${process.env.API_URL || "http://localhost:5000/api"}`)
+  console.log(`📝 Backend API: ${process.env.API_URL || "https://event-blinker.onrender.com/api"}`)
   console.log(`⚠️  Keep this token secret!\n`)
 })
 

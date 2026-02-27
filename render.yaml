@@ -19,3 +19,5 @@ services:
         generateValue: true
       - key: JWT_EXPIRY
         value: 7d
+      - key: MAPBOX_TOKEN
+        value: pk.eyJ1IjoicHJhYmlubm5ubiIsImEiOiJjbW00OHZ4NTAwOHRlMnFxcnU0bHpnM2pkIn0.qaMlA24-5I_qANfRSN2jvA

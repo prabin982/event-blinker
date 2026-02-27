@@ -135,7 +135,11 @@ export default function EventsScreen() {
     <TouchableOpacity style={styles.eventCard} onPress={() => router.push(`/eventDetail?id=${item.id}`)}>
       {item.image_url && (
         <Image
-          source={{ uri: item.image_url.startsWith('http') ? item.image_url : `${API_URL.replace('/api', '')}${item.image_url}` }}
+          source={{
+            uri: item.image_url.startsWith('http')
+              ? item.image_url
+              : `${API_URL.replace('/api', '')}${item.image_url.startsWith('/') ? '' : '/'}${item.image_url}`
+          }}
           style={styles.eventImage}
           resizeMode="cover"
         />

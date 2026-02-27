@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import Navigation from "../components/Navigation"
 
-const API_URL = import.meta.env.VITE_API_URL || "http://192.168.254.10:5000"
+const API_URL = import.meta.env.VITE_API_URL || "https://event-blinker.onrender.com"
 
 export default function DashboardPage({ user, onLogout }) {
   const [events, setEvents] = useState([])
@@ -127,9 +127,8 @@ export default function DashboardPage({ user, onLogout }) {
                     </td>
                     <td className="px-6 py-4 text-sm">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          event.status === "ongoing" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
-                        }`}
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${event.status === "ongoing" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+                          }`}
                       >
                         {event.status}
                       </span>

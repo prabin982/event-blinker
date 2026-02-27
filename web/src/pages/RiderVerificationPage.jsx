@@ -3,7 +3,7 @@ import { useSelector } from "react-redux"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 
-const API_URL = import.meta.env.VITE_API_URL || "http://192.168.254.10:5000/api"
+const API_URL = import.meta.env.VITE_API_URL || "https://event-blinker.onrender.com"
 
 export default function RiderVerificationPage() {
   const navigate = useNavigate()
@@ -25,10 +25,10 @@ export default function RiderVerificationPage() {
     try {
       setLoading(true)
       const [ridersRes, licensesRes] = await Promise.all([
-        axios.get(`${API_URL}/admin/riders/pending`, {
+        axios.get(`${API_URL}/api/admin/riders/pending`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axios.get(`${API_URL}/admin/licenses/pending`, {
+        axios.get(`${API_URL}/api/admin/licenses/pending`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ])
@@ -46,7 +46,7 @@ export default function RiderVerificationPage() {
 
     try {
       await axios.post(
-        `${API_URL}/admin/riders/${riderId}/approve`,
+        `${API_URL}/api/admin/riders/${riderId}/approve`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -63,7 +63,7 @@ export default function RiderVerificationPage() {
 
     try {
       await axios.post(
-        `${API_URL}/admin/riders/${riderId}/reject`,
+        `${API_URL}/api/admin/riders/${riderId}/reject`,
         { rejection_reason: reason },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -79,7 +79,7 @@ export default function RiderVerificationPage() {
 
     try {
       await axios.post(
-        `${API_URL}/admin/licenses/${licenseId}/approve`,
+        `${API_URL}/api/admin/licenses/${licenseId}/approve`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -96,7 +96,7 @@ export default function RiderVerificationPage() {
 
     try {
       await axios.post(
-        `${API_URL}/admin/licenses/${licenseId}/reject`,
+        `${API_URL}/api/admin/licenses/${licenseId}/reject`,
         { rejection_reason: reason },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -122,17 +122,15 @@ export default function RiderVerificationPage() {
       <div className="flex gap-4 mb-6 border-b">
         <button
           onClick={() => setActiveTab("riders")}
-          className={`px-4 py-2 font-semibold ${
-            activeTab === "riders" ? "border-b-2 border-orange-500 text-orange-500" : "text-gray-600"
-          }`}
+          className={`px-4 py-2 font-semibold ${activeTab === "riders" ? "border-b-2 border-orange-500 text-orange-500" : "text-gray-600"
+            }`}
         >
           Pending Riders ({pendingRiders.length})
         </button>
         <button
           onClick={() => setActiveTab("licenses")}
-          className={`px-4 py-2 font-semibold ${
-            activeTab === "licenses" ? "border-b-2 border-orange-500 text-orange-500" : "text-gray-600"
-          }`}
+          className={`px-4 py-2 font-semibold ${activeTab === "licenses" ? "border-b-2 border-orange-500 text-orange-500" : "text-gray-600"
+            }`}
         >
           Pending Licenses ({pendingLicenses.length})
         </button>
@@ -164,7 +162,7 @@ export default function RiderVerificationPage() {
                   <div className="mb-4">
                     <p className="text-sm font-semibold mb-2">License Photo:</p>
                     <img
-                      src={`${API_URL.replace("/api", "")}${rider.license_photo_url}`}
+                      src={`${API_URL}${rider.license_photo_url}`}
                       alt="License"
                       className="max-w-md border rounded"
                     />
@@ -211,7 +209,7 @@ export default function RiderVerificationPage() {
                   <div className="mb-4">
                     <p className="text-sm font-semibold mb-2">License Photo:</p>
                     <img
-                      src={`${API_URL.replace("/api", "")}${license.license_photo_url}`}
+                      src={`${API_URL}${license.license_photo_url}`}
                       alt="License"
                       className="max-w-md border rounded"
                     />

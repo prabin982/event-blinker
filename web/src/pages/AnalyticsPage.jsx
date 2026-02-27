@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useParams, Link } from "react-router-dom"
 import Navigation from "../components/Navigation"
 
-const API_URL = import.meta.env.VITE_API_URL || "http://192.168.254.10:5000"
+const API_URL = import.meta.env.VITE_API_URL || "https://event-blinker.onrender.com"
 
 export default function AnalyticsPage({ user, onLogout }) {
   const { id } = useParams()

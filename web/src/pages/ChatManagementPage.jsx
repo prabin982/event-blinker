@@ -4,7 +4,7 @@ import Navigation from "../components/Navigation"
 import axios from "axios"
 import { io } from "socket.io-client"
 
-const API_URL = import.meta.env.VITE_API_URL || "http://192.168.254.10:5000"
+const API_URL = import.meta.env.VITE_API_URL || "https://event-blinker.onrender.com"
 const SOCKET_URL = API_URL
 
 export default function ChatManagementPage({ user, onLogout }) {
@@ -114,7 +114,7 @@ export default function ChatManagementPage({ user, onLogout }) {
         return [...prev, newMessage]
       })
       setMessageText("")
-      
+
       // Scroll to bottom
       setTimeout(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -172,11 +172,10 @@ export default function ChatManagementPage({ user, onLogout }) {
                     className={`flex ${isOrganizer ? "justify-end" : "justify-start"}`}
                   >
                     <div
-                      className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                        isOrganizer
+                      className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${isOrganizer
                           ? "bg-gradient-to-r from-red-600 to-blue-600 text-white"
                           : "bg-gray-100 text-gray-900"
-                      }`}
+                        }`}
                     >
                       {!isOrganizer && (
                         <p className="text-xs font-semibold mb-1 opacity-80">

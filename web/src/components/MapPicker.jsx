@@ -4,7 +4,7 @@ import "mapbox-gl/dist/mapbox-gl.css"
 
 // Get Mapbox token from environment or use a public demo token
 // For production, get your own free token from https://account.mapbox.com/
-const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw"
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || "pk.eyJ1IjoicHJhYmlubm5ubiIsImEiOiJjbWl2dmh6eTcwczU1M2ZzYjU2Y2RmaGdvIn0.CRMu-jNZzOgNRz7cRNXXdg"
 
 // Check if token is valid (basic validation)
 const isValidToken = MAPBOX_TOKEN && MAPBOX_TOKEN.length > 20
@@ -62,7 +62,7 @@ export default function MapPicker({ latitude, longitude, onLocationSelect, heigh
           <div className="bg-white p-4 rounded-lg border border-gray-300 mb-4">
             <p className="text-xs text-gray-500 mb-2">Current Coordinates:</p>
             <p className="text-sm font-mono text-gray-800">
-              {selectedLocation 
+              {selectedLocation
                 ? `${selectedLocation.latitude.toFixed(6)}, ${selectedLocation.longitude.toFixed(6)}`
                 : `${viewState.latitude.toFixed(6)}, ${viewState.longitude.toFixed(6)}`}
             </p>
@@ -71,9 +71,9 @@ export default function MapPicker({ latitude, longitude, onLocationSelect, heigh
             <p>✅ Location selection is working</p>
             <p>⚠️ Map tiles need Mapbox token</p>
             <p className="mt-3">
-              <a 
-                href="https://account.mapbox.com/access-tokens/" 
-                target="_blank" 
+              <a
+                href="https://account.mapbox.com/access-tokens/"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:underline"
               >
@@ -81,7 +81,7 @@ export default function MapPicker({ latitude, longitude, onLocationSelect, heigh
               </a>
             </p>
             <p className="text-xs mt-2">
-              Or create <code className="bg-gray-200 px-1 rounded">web/.env</code> with:<br/>
+              Or create <code className="bg-gray-200 px-1 rounded">web/.env</code> with:<br />
               <code className="bg-gray-200 px-1 rounded">VITE_MAPBOX_TOKEN=your_token_here</code>
             </p>
           </div>

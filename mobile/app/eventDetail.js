@@ -56,14 +56,23 @@ export default function EventDetailScreen() {
               eventData.latitude = geoJson.coordinates[1]
             }
           } catch (e) {
-            console.error("Error parsing location:", e)
+            console.warn("Location parse warning:", e.message)
           }
         }
+
+        // Ensure image URL is solid
+        if (eventData.image_url && !eventData.image_url.startsWith('http')) {
+          const base = API_URL.replace('/api', '')
+          eventData.image_url = `${base}${eventData.image_url.startsWith('/') ? '' : '/'}${eventData.image_url}`
+        }
+
         setEvent(eventData)
+      } else {
+        console.error("No event data returned for ID:", eventId)
       }
     } catch (error) {
       console.error("Error loading event:", error)
-      Alert.alert("Error", "Failed to load event details")
+      Alert.alert("Connection Error", "Could not reach the server. Please check your internet.")
     } finally {
       setLoading(false)
     }
@@ -198,7 +207,7 @@ export default function EventDetailScreen() {
 
         {event.image_url && (
           <Image
-            source={{ uri: event.image_url.startsWith('http') ? event.image_url : `${API_URL.replace('/api', '')}${event.image_url}` }}
+            source={{ uri: event.image_url }}
             style={styles.eventImage}
             resizeMode="cover"
           />

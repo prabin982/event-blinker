@@ -7,6 +7,17 @@ import { useAuthStore } from "../lib/authStore"
 
 SplashScreen.preventAutoHideAsync()
 
+// Initialize Mapbox as early as possible
+try {
+  const MapboxGL = require("@rnmapbox/maps").default
+  const MAPBOX_TOKEN = "pk.eyJ1IjoicHJhYmlubm5ubiIsImEiOiJjbWl2dmh6eTcwczU1M2ZzYjU2Y2RmaGdvIn0.CRMu-jNZzOgNRz7cRNXXdg"
+  if (MAPBOX_TOKEN) {
+    MapboxGL.setAccessToken(MAPBOX_TOKEN)
+  }
+} catch (e) {
+  console.warn("Mapbox initialization failed in root layout:", e.message)
+}
+
 export default function RootLayout() {
   const { user, loadUser } = useAuthStore()
   const segments = useSegments()
@@ -37,7 +48,7 @@ export default function RootLayout() {
     if (user === null && !inAuthGroup) {
       // Defer navigation to ensure the Root Layout has mounted
       setTimeout(() => router.replace("/auth/login"), 0)
-    } 
+    }
     // If logged in and in auth group, redirect to map
     else if (user !== null && inAuthGroup) {
       setTimeout(() => router.replace("/(tabs)/map"), 0)

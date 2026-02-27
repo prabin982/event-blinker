@@ -4,7 +4,7 @@ import "mapbox-gl/dist/mapbox-gl.css"
 
 // Get Mapbox token from environment or use a public demo token
 // For production, get your own free token from https://account.mapbox.com/
-const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || "pk.eyJ1IjoicHJhYmlubm5ubiIsImEiOiJjbWl2dmh6eTcwczU1M2ZzYjU2Y2RmaGdvIn0.CRMu-jNZzOgNRz7cRNXXdg"
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || "pk.eyJ1IjoicHJhYmlubm5ubiIsImEiOiJjbW00OHZ4NTAwOHRlMnFxcnU0bHpnM2pkIn0.qaMlA24-5I_qANfRSN2jvA"
 
 // Check if token is valid (basic validation)
 const isValidToken = MAPBOX_TOKEN && MAPBOX_TOKEN.length > 20

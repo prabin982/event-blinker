@@ -10,7 +10,7 @@ SplashScreen.preventAutoHideAsync()
 // Initialize Mapbox as early as possible
 try {
   const MapboxGL = require("@rnmapbox/maps").default
-  const MAPBOX_TOKEN = "pk.eyJ1IjoicHJhYmlubm5ubiIsImEiOiJjbWl2dmh6eTcwczU1M2ZzYjU2Y2RmaGdvIn0.CRMu-jNZzOgNRz7cRNXXdg"
+  const MAPBOX_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_TOKEN || "pk.eyJ1IjoicHJhYmlubm5ubiIsImEiOiJjbW00OHZ4NTAwOHRlMnFxcnU0bHpnM2pkIn0.qaMlA24-5I_qANfRSN2jvA"
   if (MAPBOX_TOKEN) {
     MapboxGL.setAccessToken(MAPBOX_TOKEN)
   }

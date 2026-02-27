@@ -10,6 +10,8 @@ import CreateEventPage from "./pages/CreateEventPage"
 import AnalyticsPage from "./pages/AnalyticsPage"
 import ChatManagementPage from "./pages/ChatManagementPage"
 
+import RiderVerificationPage from "./pages/RiderVerificationPage"
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [user, setUser] = useState(null)
@@ -59,6 +61,10 @@ function App() {
           <Route
             path="/events/:eventId/chat"
             element={isAuthenticated ? <ChatManagementPage user={user} onLogout={handleLogout} /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/admin/riders"
+            element={isAuthenticated ? <RiderVerificationPage user={user} onLogout={handleLogout} /> : <Navigate to="/login" />}
           />
           <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
         </Routes>

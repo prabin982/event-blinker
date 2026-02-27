@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons"
 let MapboxGL = null
 try {
   MapboxGL = require("@rnmapbox/maps").default
-  const MAPBOX_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_TOKEN
+  const MAPBOX_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_TOKEN || "pk.eyJ1IjoicHJhYmlubm5ubiIsImEiOiJjbWl2dmh6eTcwczU1M2ZzYjU2Y2RmaGdvIn0.CRMu-jNZzOgNRz7cRNXXdg"
   if (MAPBOX_TOKEN) {
     MapboxGL.setAccessToken(MAPBOX_TOKEN)
   }

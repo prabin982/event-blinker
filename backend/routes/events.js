@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
       FROM events e
       LEFT JOIN user_likes ul ON e.id = ul.event_id
       LEFT JOIN check_ins ci ON e.id = ci.event_id
-      WHERE e.is_active = true AND e.is_approved = true
+      WHERE e.is_active = true
     `
     const params = []
 

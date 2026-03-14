@@ -141,6 +141,21 @@ const createTables = async () => {
     await addColumnIfNotExists("events", "is_approved", "BOOLEAN DEFAULT false")
     await addColumnIfNotExists("events", "location_address", "TEXT")
 
+    // Ride Sharing exact missing columns
+    await addColumnIfNotExists("ride_requests", "vehicle_type", "VARCHAR(50) DEFAULT 'sedan'")
+    await addColumnIfNotExists("riders", "profile_photo_url", "TEXT")
+    await addColumnIfNotExists("riders", "emergency_contact", "VARCHAR(50)")
+    await addColumnIfNotExists("riders", "nid_number", "VARCHAR(50)")
+    await addColumnIfNotExists("riders", "bank_name", "VARCHAR(100)")
+    await addColumnIfNotExists("riders", "account_number", "VARCHAR(50)")
+    await addColumnIfNotExists("riders", "account_holder_name", "VARCHAR(100)")
+    await addColumnIfNotExists("riders", "terms_accepted", "BOOLEAN DEFAULT false")
+    await addColumnIfNotExists("vehicles", "registration_document_url", "TEXT")
+    await addColumnIfNotExists("vehicles", "billbook_photo_url", "TEXT")
+    await addColumnIfNotExists("driver_licenses", "date_of_birth", "DATE")
+    await addColumnIfNotExists("driver_licenses", "license_holder_name", "VARCHAR(100)")
+
+
     // Set existing users as verified
     await db.query(`
       UPDATE users 

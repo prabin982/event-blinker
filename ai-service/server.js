@@ -107,7 +107,8 @@ app.post("/chat", async (req, res) => {
 
     let reply = null
 
-    if (OLLAMA_BASE_URL) {
+    if (OLLAMA_BASE_URL && !OPENAI_API_KEY) {
+      // Local Ollama without API Key
       const ollamaResp = await fetch(`${OLLAMA_BASE_URL.replace(/\/$/, "")}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -132,8 +133,14 @@ app.post("/chat", async (req, res) => {
         ollamaJson?.response?.trim() ||
         "Thanks for asking! Tell me more."
     } else {
-      const response = await client.chat.completions.create({
-        model: OPENAI_MODEL,
+      // Use OpenAI client (supports OpenAI, Groq, Together, etc.)
+      const aiClient = new OpenAI({
+        apiKey: OPENAI_API_KEY || "dummy",
+        baseURL: OLLAMA_BASE_URL || undefined // Groq example: https://api.groq.com/openai/v1
+      })
+
+      const response = await aiClient.chat.completions.create({
+        model: OLLAMA_BASE_URL ? OLLAMA_MODEL : OPENAI_MODEL,
         messages: [
           { role: "system", content: systemPrompt.filter(Boolean).join(" ") },
           { role: "user", content: message },

@@ -70,34 +70,51 @@ router.post("/chat", async (req, res) => {
             )
         }
 
-        // Call OpenRouter using modern Fetch API
-        const response = await fetch(`${BASE_URL}/chat/completions`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${API_KEY}`,
-                "HTTP-Referer": "https://event-blinker.onrender.com",
-                "X-OpenRouter-Title": "Event Blinker AI"
-            },
-            body: JSON.stringify({
-                model: MODEL,
-                messages: [
-                    { role: "system", content: systemPrompt.join(" ") },
-                    { role: "user", content: message }
-                ],
-                temperature: 0.7,
-                max_tokens: 500
-            })
-        })
+        const models = [MODEL, "google/gemini-2.0-flash-lite-preview-02-05:free"];
+        let reply = null;
+        let lastError = null;
 
-        const data = await response.json()
+        for (const targetModel of models) {
+            try {
+                const response = await fetch(`${BASE_URL}/chat/completions`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${API_KEY}`,
+                        "HTTP-Referer": "https://event-blinker.onrender.com",
+                        "X-OpenRouter-Title": "Event Blinker AI"
+                    },
+                    body: JSON.stringify({
+                        model: targetModel,
+                        messages: [
+                            { role: "system", content: systemPrompt.join(" ") },
+                            { role: "user", content: message }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 500
+                    })
+                });
 
-        if (!response.ok) {
-            console.error("[AI] OpenRouter Error:", data)
-            throw new Error(data.error?.message || `API Error ${response.status}`)
+                const data = await response.json();
+
+                if (!response.ok) {
+                    console.error(`[AI] Error with ${targetModel}:`, data);
+                    lastError = data.error?.message || `API Error ${response.status}`;
+                    continue; // Try next model
+                }
+
+                reply = data.choices?.[0]?.message?.content?.trim();
+                if (reply) break;
+            } catch (err) {
+                console.error(`[AI] Exception with ${targetModel}:`, err.message);
+                lastError = err.message;
+            }
         }
 
-        const reply = data.choices?.[0]?.message?.content?.trim() || "I'm here to help! What can I do for you?"
+        if (!reply) {
+            throw new Error(lastError || "All AI models failed to respond");
+        }
+
         res.json({ reply })
 
     } catch (err) {

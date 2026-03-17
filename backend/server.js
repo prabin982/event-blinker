@@ -18,6 +18,7 @@ const organizerRoutes = require("./routes/organizer")
 const uploadRoutes = require("./routes/upload")
 const rideRoutes = require("./routes/rides")
 const adminRoutes = require("./routes/admin")
+const aiRoutes = require("./routes/ai")
 
 const app = express()
 const server = http.createServer(app)
@@ -94,6 +95,8 @@ app.use("/api/upload", uploadRoutes)
 app.use("/api/rides", rideRoutes)
 app.use("/api/users", require("./routes/users"))
 app.use("/api/admin", adminRoutes)
+app.use("/api/ai", aiRoutes)
+
 
 // ============ DIAGNOSTICS & ROOT ============
 

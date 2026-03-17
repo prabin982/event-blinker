@@ -70,7 +70,13 @@ router.post("/chat", async (req, res) => {
             )
         }
 
-        const models = [MODEL, "google/gemini-2.0-flash-lite-preview-02-05:free"];
+        const models = [
+            MODEL,
+            "google/gemini-2.0-flash-exp:free",
+            "google/gemini-flash-1.5-8b",
+            "meta-llama/llama-3.1-8b-instruct:free",
+            "openrouter/free"
+        ];
         let reply = null;
         let lastError = null;
 

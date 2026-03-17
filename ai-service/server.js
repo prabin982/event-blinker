@@ -87,22 +87,26 @@ app.post("/chat", async (req, res) => {
     const eventContext = await getEventContext(event_id)
 
     const systemPrompt = [
-      "You are an event assistant. Be concise, friendly, and specific.",
-      "If location/time/parking are known, include them briefly.",
-      "If asked for directions/route, keep it short and actionable.",
-      "If unsure, say you’re not certain and suggest contacting organizers.",
+      "You are 'Blinker AI', the official AI assistant for the Event Blinker platform in Nepal.",
+      "Event Blinker is a complete ecosystem that combines event discovery, ticketing, and peer-to-peer ride-sharing all in one app.",
+      "Key features to know: Users can discover events, book rides directly to those events (via Car, SUV, or Motorcycle), check-in at events, and administrators can verify riders via the Admin Portal.",
+      "Your tone: Professional, friendly, helpful, and concise. You love helping people plan their nights out or figure out how to get to their events safely.",
+      "If someone asks about booking a ride, tell them to go to the 'Ride Sharing' tab in the app.",
+      "If someone asks about creating an event, tell them to use the Organizer Web Portal.",
+      "Always be concise, friendly, and specific. If asked for directions/route, keep it short and actionable. If unsure, say you’re not certain and suggest contacting the organizers."
     ]
 
     if (eventContext) {
       const { title, description, location_name, start_time, price, capacity } = eventContext
       systemPrompt.push(
-        `Event: ${title || "Unknown"}.`,
+        `\n--- CURRENT EVENT CONTEXT ---`,
+        `Event Title: ${title || "Unknown"}.`,
         location_name ? `Location: ${location_name}.` : "",
         start_time ? `Starts at: ${start_time}.` : "",
         price ? `Price: ${price}.` : "Price: free or not provided.",
-        capacity ? `Capacity: ${capacity}.` : ""
+        capacity ? `Capacity: ${capacity} people.` : ""
       )
-      if (description) systemPrompt.push(`Details: ${description.slice(0, 300)}`)
+      if (description) systemPrompt.push(`Details: ${description.slice(0, 500)}`)
     }
 
     let reply = null
@@ -133,10 +137,14 @@ app.post("/chat", async (req, res) => {
         ollamaJson?.response?.trim() ||
         "Thanks for asking! Tell me more."
     } else {
-      // Use OpenAI client (supports OpenAI, Groq, Together, etc.)
+      // Use OpenAI client (supports OpenAI, Groq, OpenRouter, Together, etc.)
       const aiClient = new OpenAI({
         apiKey: OPENAI_API_KEY || "dummy",
-        baseURL: OLLAMA_BASE_URL || undefined // Groq example: https://api.groq.com/openai/v1
+        baseURL: OLLAMA_BASE_URL || undefined,
+        defaultHeaders: {
+          "HTTP-Referer": "https://event-blinker.onrender.com",
+          "X-OpenRouter-Title": "Event Blinker AI"
+        }
       })
 
       const response = await aiClient.chat.completions.create({

@@ -11,13 +11,13 @@
 
 ### Key Features
 
-- **Real-time Map Discovery**: Interactive map with live event markers
-- **Geospatial Search**: Find events within a specific radius
-- **Live Event Chat**: Real-time messaging with event organizers and attendees
+- **Interactive Map Discovery**: Discover events via Mapbox with live markers
+- **Peer-to-Peer Ride Sharing**: Book rides (Car, SUV, Motorcycle) directly to events
+- **Blinker AI Assistant**: Llama 3.3-powered virtual concierge for event info
+- **Live Event Chat**: Real-time messaging with organizers and attendees
 - **Event Likes & Check-ins**: Social engagement and attendance tracking
 - **Organizer Dashboard**: Comprehensive admin panel with analytics
-- **WebSocket Support**: Real-time updates for events and messages
-- **Mobile-First**: Responsive design optimized for smartphones
+- **Rider Verification**: Secure backend for driver document verification
 
 ---
 
@@ -55,9 +55,8 @@
 
 ### Prerequisites
 - Node.js 18+
-- PostgreSQL 13+
+- PostgreSQL 13+ (with PostGIS)
 - Git
-- Python 3.8+ (optional, for virtual env)
 
 ### Installation (5 minutes)
 

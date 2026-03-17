@@ -48,25 +48,31 @@ router.post("/chat", async (req, res) => {
         const eventContext = await getEventContext(event_id)
 
         const systemPrompt = [
-            "You are 'Blinker AI', the official AI assistant for the Event Blinker platform in Nepal.",
-            "Event Blinker is a total ecosystem combining discovery, ticketing, and ride-sharing.",
-            "--- CORE KNOWLEDGE ---",
-            "1. RIDE SHARING: Users book rides (Car, SUV, Motorcycle) in the 'Ride Sharing' tab.",
-            "2. EVENT CREATION: Organizers use the Web Portal. All events need Admin Approval.",
-            "3. TICKETING: Users get digital QR codes in-app for entry.",
-            "4. VERIFICATION: Riders must submit NID, billbook, and license for admin approval.",
-            "--- PERSONA ---",
-            "- Tone: Professional, friendly, helpful, and concisely Nepali. Use emojis! 🇳🇵",
-            "- If asked for instructions, give step-by-step app navigation.",
-            "- Guide users to the correct buttons; you cannot perform actions for them.",
+            "You are 'Blinker AI', the premium virtual concierge for Event Blinker, Nepal's leading event discovery and ride-sharing platform. 🇳🇵",
+            "Your goal is to make every user's event experience effortless, safe, and exciting.",
+            "--- PLATFORM MASTER KNOWLEDGE ---",
+            "1. RIDE-SHARING: We offer peer-to-peer rides via Car, SUV, and motorcycles. All drivers are manually verified (NID, License, Billbook). To book/offer a ride, tell users: 'Tap the Ride Sharing tab at the bottom menu.'",
+            "2. TICKETING: Digital tickets with QR codes are issued in-app after purchase. For entry, users simply show their QR code. If they can't find it: 'Check the My Tickets section in your Profile.'",
+            "3. EVENT CREATION: Organizers use our Web Dashboard (https://event-blinker.onrender.com). All events go through a strict Admin vetting process to ensure quality and safety.",
+            "4. REAL-TIME MAPS: Our Map discovery shows events happening right now near the user's GPS position.",
+            "--- BEHAVIORAL PROTOCOLS ---",
+            "- TONE: Warm, high-energy, professional, and slightly 'Local Nepali' (e.g., using 'Namaste', 'Hajur', 'Dhanyabad').",
+            "- PROACTIVE SUGGESTIONS: If a user asks about an event, ALWAYS remind them they can book a ride directly to that venue via our 'Ride Sharing' tab to avoid traffic and parking issues.",
+            "- TROUBLESHOOTING: If a user has a technical issue (e.g., 'Ticket not showing'), immediately suggest checking their internet connection and then reaching out to 'Support' in the settings.",
+            "- CONCISE LOGIC: Use bullet points for steps. Never write long paragraphs. Keep it under 4 sentences unless explaining a complex process.",
+            "- RESTRICTIONS: Politely refuse non-platform tasks (coding, math, general advice) by saying: 'As your Event Blinker guide, I specialize in events and rides! Let's get back to your plans.'",
+            "Always end your replies with a relevant emoji (🎸, 🏍️, 🎟️, 🏔️)."
         ]
 
         if (eventContext) {
             const { title, description, location_name, start_time, price } = eventContext
             systemPrompt.push(
-                "\n--- EVENT CONTEXT ---",
-                `Event: ${title}. Location: ${location_name}. Time: ${start_time}. Price: NPR ${price}.`,
-                `Details: ${description?.slice(0, 500)}`
+                "\n--- LIVE EVENT DETAILS ---",
+                `Title: ${title}`,
+                `Venue: ${location_name || 'Not specified'}`,
+                `When: ${start_time}`,
+                `Cost: NPR ${price || 'Free'}`,
+                `About: ${description ? description.slice(0, 400) : 'No description available'}`
             )
         }
 
@@ -77,11 +83,17 @@ router.post("/chat", async (req, res) => {
             "meta-llama/llama-3.1-8b-instruct:free",
             "openrouter/free"
         ];
+
         let reply = null;
         let lastError = null;
 
         for (const targetModel of models) {
             try {
+                console.log(`[AI] Attempting request with model: ${targetModel}`);
+                // Add a per-model timeout to ensure responsiveness
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 12000); // 12 second limit per model
+
                 const response = await fetch(`${BASE_URL}/chat/completions`, {
                     method: "POST",
                     headers: {
@@ -90,30 +102,35 @@ router.post("/chat", async (req, res) => {
                         "HTTP-Referer": "https://event-blinker.onrender.com",
                         "X-OpenRouter-Title": "Event Blinker AI"
                     },
+                    signal: controller.signal,
                     body: JSON.stringify({
                         model: targetModel,
                         messages: [
-                            { role: "system", content: systemPrompt.join(" ") },
+                            { role: "system", content: systemPrompt.join("\n") },
                             { role: "user", content: message }
                         ],
-                        temperature: 0.7,
-                        max_tokens: 500
+                        temperature: 0.5, // Lower temp for more accurate, grounded answers
+                        max_tokens: 450
                     })
                 });
 
+                clearTimeout(timeoutId);
                 const data = await response.json();
 
                 if (!response.ok) {
                     console.error(`[AI] Error with ${targetModel}:`, data);
                     lastError = data.error?.message || `API Error ${response.status}`;
-                    continue; // Try next model
+                    continue;
                 }
 
                 reply = data.choices?.[0]?.message?.content?.trim();
-                if (reply) break;
+                if (reply) {
+                    console.log(`[AI] Success with model: ${targetModel}`);
+                    break;
+                }
             } catch (err) {
-                console.error(`[AI] Exception with ${targetModel}:`, err.message);
-                lastError = err.message;
+                console.error(`[AI] Exception with ${targetModel}:`, err.name === 'AbortError' ? 'Timeout' : err.message);
+                lastError = err.name === 'AbortError' ? 'Connection timed out' : err.message;
             }
         }
 

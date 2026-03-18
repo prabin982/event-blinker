@@ -2,6 +2,7 @@
 
 import { Stack, useRouter, useSegments } from "expo-router"
 import { useEffect } from "react"
+import { StatusBar } from "expo-status-bar"
 import * as SplashScreen from "expo-splash-screen"
 import { useAuthStore } from "../lib/authStore"
 
@@ -60,15 +61,19 @@ export default function RootLayout() {
   }, [user, segments])
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        animationEnabled: true,
-      }}
-    >
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="auth" />
-      <Stack.Screen name="eventDetail" />
-    </Stack>
+    <>
+      <StatusBar style="light" />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          animationEnabled: true,
+          contentStyle: { backgroundColor: "#0B0F1A" },
+        }}
+      >
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="auth" />
+        <Stack.Screen name="eventDetail" />
+      </Stack>
+    </>
   )
 }

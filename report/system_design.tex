@@ -1,0 +1,153 @@
+\chapter{System Design}
+
+\section{System Architecture}
+The architecture of \textbf{Event Blinker} follows a three-tier client-server model with real-time communication:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Presentation Layer:} React Native (Expo) mobile app + React/Vite web portal + HTML admin portal.
+    \item \textbf{Application Layer:} Node.js/Express.js API server with Socket.io real-time engine.
+    \item \textbf{Data Layer:} PostgreSQL with PostGIS extension for geospatial data, with file storage for uploads.
+\end{itemize}
+
+% ---- FIGURE: System Architecture ----
+% >>> CREATE THIS: A clean 3-tier diagram showing:
+%     [Mobile App (Expo)] [Web Portal (React/Vite)] [Admin Portal (HTML)]
+%               ↓ HTTP/REST + WebSocket (Socket.io) ↓
+%     [Node.js/Express API Server]
+%         ├── JWT Auth Middleware
+%         ├── 11 Route Modules
+%         └── Socket.io Handler
+%               ↓
+%     [PostgreSQL + PostGIS]     [OpenRouter AI API]    [File Storage]
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.85\textwidth}{\centering\vspace{4cm}
+    \textbf{[FIGURE: Three-Tier System Architecture Diagram]}\\[0.3cm]
+    \small \textbf{Tier 1 (Clients):} Mobile App (Expo) | Web Portal (React/Vite) | Admin Portal (HTML)\\
+    $\downarrow$ REST API + WebSocket $\downarrow$\\
+    \textbf{Tier 2 (Server):} Node.js/Express (JWT Auth + 11 Routes + Socket.io)\\
+    $\downarrow$\\
+    \textbf{Tier 3 (Data):} PostgreSQL/PostGIS | OpenRouter AI | File Storage\\[0.3cm]
+    \textit{Create this as a professional block diagram with arrows.}
+    \vspace{2cm}}}
+    \caption{System Architecture of Event Blinker}
+    \label{fig:system_architecture}
+\end{figure}
+
+\section{Database Design}
+
+\subsection{Entity-Relationship Overview}
+The database consists of 12+ tables organized into three domains:
+
+\begin{table}[H]
+\centering
+\caption{Database Schema Overview}
+\label{tab:db_schema}
+\begin{tabular}{@{}llp{6.5cm}@{}}
+\toprule
+\textbf{Domain} & \textbf{Table} & \textbf{Key Fields} \\
+\midrule
+\multirow{2}{*}{Users} & \texttt{users} & id (UUID), email, password, user\_type, is\_verified \\
+                        & \texttt{organizer\_profiles} & company\_name, verification\_status \\
+\midrule
+\multirow{4}{*}{Events} & \texttt{events} & location\_geom (PostGIS), category, is\_approved \\
+                         & \texttt{event\_likes} & user\_id, event\_id (UNIQUE constraint) \\
+                         & \texttt{check\_ins} & user\_id, event\_id, check\_in\_time \\
+                         & \texttt{chat\_messages} & sender\_type (user/organizer/bot) \\
+\midrule
+\multirow{5}{*}{Rides} & \texttt{riders} & current\_location (PostGIS), registration\_status \\
+                        & \texttt{vehicles} & vehicle\_type, license\_plate, billbook\_photo \\
+                        & \texttt{driver\_licenses} & verification\_status, license\_photo\_url \\
+                        & \texttt{ride\_requests} & pickup/dropoff (PostGIS), status, distance\_km \\
+                        & \texttt{ride\_offers} & offered\_price, estimated\_arrival \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ---- FIGURE: ER Diagram ----
+% >>> CREATE THIS: An ER diagram showing relationships between:
+%     users (1) → (M) events, users (1) → (M) event_likes, users (1) → (1) riders
+%     riders (1) → (1) vehicles, riders (1) → (1) driver_licenses
+%     riders (1) → (M) ride_requests, events (1) → (M) chat_messages
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.85\textwidth}{\centering\vspace{4cm}
+    \textbf{[FIGURE: Entity-Relationship (ER) Diagram]}\\[0.3cm]
+    \small Show tables: users, events, event\_likes, check\_ins, chat\_messages, riders, vehicles, driver\_licenses, ride\_requests, ride\_offers, ride\_reviews\\
+    Show foreign key relationships with cardinality (1:M, 1:1)\\[0.3cm]
+    \textit{Create this using draw.io or dbdiagram.io}
+    \vspace{2cm}}}
+    \caption{Entity-Relationship Diagram of Event Blinker Database}
+    \label{fig:er_diagram}
+\end{figure}
+
+\section{System Diagrams}
+
+\subsection{Use Case Diagram}
+The use case diagram identifies four primary actors and their interactions with the system:
+\begin{itemize}[noitemsep]
+    \item \textbf{User/Attendee:} Discover events on map, view details, like, check-in, chat, book rides, interact with Blinker AI.
+    \item \textbf{Event Organizer:} Create events, manage attendees, view analytics, moderate chat.
+    \item \textbf{Driver/Rider:} Register with vehicle/license, go online, accept ride requests, offer custom prices.
+    \item \textbf{Admin:} Approve/reject organizers, events, riders, and licenses.
+\end{itemize}
+
+% ---- FIGURE: Use Case Diagram ----
+% >>> CREATE THIS: UML Use Case diagram with 4 actors and their use cases as listed above
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.85\textwidth}{\centering\vspace{4cm}
+    \textbf{[FIGURE: Use Case Diagram]}\\[0.3cm]
+    \small \textbf{Actors:} User, Organizer, Driver, Admin\\
+    \textbf{User Cases:} Discover Events, View Detail, Like, Check-in, Chat, Book Ride, Ask Blinker AI\\
+    \textbf{Organizer Cases:} Create Event, View Analytics, Moderate Chat\\
+    \textbf{Driver Cases:} Register, Go Online, Accept Rides, Offer Price\\
+    \textbf{Admin Cases:} Approve Organizer, Approve Event, Verify Rider, Verify License\\[0.3cm]
+    \textit{Create this as a standard UML Use Case diagram.}
+    \vspace{2cm}}}
+    \caption{Use Case Diagram of Event Blinker}
+    \label{fig:usecase}
+\end{figure}
+
+\subsection{Sequence Diagram}
+The sequence diagram illustrates the event discovery and AI chat flow:
+
+% ---- FIGURE: Sequence Diagram ----
+% >>> CREATE THIS: UML Sequence diagram:
+%     User → Mobile App → Express API → PostGIS (find nearby events)
+%     User → Mobile App → Express API → OpenRouter (AI chat) → Response
+%     Express API → Socket.io → Mobile App (real-time updates)
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.85\textwidth}{\centering\vspace{4cm}
+    \textbf{[FIGURE: Sequence Diagram -- Event Discovery \& AI Chat]}\\[0.3cm]
+    \small \textbf{Lifelines:} User, Mobile App, Express API, PostgreSQL/PostGIS, OpenRouter AI, Socket.io\\
+    \textbf{Flow 1:} User opens map $\rightarrow$ App sends GPS coords $\rightarrow$ API runs ST\_DWithin $\rightarrow$ Returns events $\rightarrow$ Markers rendered\\
+    \textbf{Flow 2:} User asks AI $\rightarrow$ API fetches event context $\rightarrow$ Sends to LLAMA 3.3 $\rightarrow$ Returns reply\\[0.3cm]
+    \textit{Create this as a standard UML Sequence diagram.}
+    \vspace{2cm}}}
+    \caption{Sequence Diagram: Event Discovery and AI Interaction}
+    \label{fig:sequence}
+\end{figure}
+
+\subsection{Activity Diagram}
+The activity diagram shows the complete ride-sharing booking flow:
+
+% ---- FIGURE: Activity Diagram ----
+% >>> CREATE THIS: UML Activity diagram:
+%     Start → Passenger sets pickup/dropoff → System calculates distance (Haversine)
+%     → System calculates price → Passenger confirms → Socket.io notifies riders
+%     → [Decision] Rider accepts OR Rider offers custom price
+%     → Passenger confirms → Ride starts → Ride completes → Rating/Review → End
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.85\textwidth}{\centering\vspace{4cm}
+    \textbf{[FIGURE: Activity Diagram -- Ride Booking Flow]}\\[0.3cm]
+    \small \textbf{Steps:} Start $\rightarrow$ Set Pickup/Dropoff $\rightarrow$ Calculate Distance (Haversine) $\rightarrow$ Calculate Price (NPR) $\rightarrow$ Create Request $\rightarrow$ Notify Riders (Socket.io)\\
+    $\rightarrow$ [Decision Diamond] Rider Accepts / Rider Offers Custom Price\\
+    $\rightarrow$ Ride In-Progress $\rightarrow$ Ride Complete $\rightarrow$ Review \& Rating $\rightarrow$ End\\[0.3cm]
+    \textit{Create this as a standard UML Activity diagram.}
+    \vspace{2cm}}}
+    \caption{Activity Diagram: Ride Booking Process}
+    \label{fig:activity}
+\end{figure}

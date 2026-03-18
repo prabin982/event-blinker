@@ -1,0 +1,138 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage{multirow}
+\usepackage{amssymb}
+
+% Code listing style
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  backgroundcolor=\color{gray!10},
+  keywordstyle=\color{blue},
+  commentstyle=\color{green!50!black},
+  stringstyle=\color{red!60!black},
+}
+
+% Page setup
+\geometry{margin=1in}
+\setstretch{1.5}
+
+% Section formatting
+\titleformat{\chapter}[hang]{\bfseries\Large}{\thechapter.}{1em}{}
+\titleformat{\section}[hang]{\bfseries\large}{\thesection}{1em}{}
+
+\begin{document}
+
+%-------------------------------
+% TITLE PAGE
+%-------------------------------
+\begin{titlepage}
+    \centering
+    % University Logo
+    \includegraphics[scale=0.3]{logotu.jpg}\par\vspace{1cm}
+
+    % University and Department
+    {\Large\bfseries TRIBHUVAN UNIVERSITY\\[0.2cm]
+    INSTITUTE OF ENGINEERING\\[0.2cm]
+    PULCHOWK CAMPUS\par}
+    \vspace{1cm}
+
+    % Project Title
+    {\LARGE\bfseries A Final Project Report\\[0.3cm]
+    \textbf{On}\\[0.3cm]
+    \textbf{Event Blinker -- Real-Time Event Discovery Platform\\with Peer-to-Peer Ride Sharing and AI Concierge}\par}
+    \vspace{1.5cm}
+
+    % Submitted By Section
+    {\large\textbf{Submitted By:}\par}
+    {\large
+    Prabin Dhungana (PUL078BEI0XX)\\  % <-- UPDATE your roll number
+    \par}
+    \vspace{1cm}
+
+    % Submitted To Section
+    {\large\textbf{Submitted To:}\par}
+    {\large Department of Electronics \& Computer Engineering\par}
+
+    \vfill
+
+    % Date at bottom
+    {\large March, 2026\par}
+\end{titlepage}
+
+%-------------------------------
+% ACKNOWLEDGMENTS
+%-------------------------------
+\chapter*{Acknowledgments}
+\addcontentsline{toc}{chapter}{\numberline{}Acknowledgements}
+
+We would like to express our sincere gratitude to the Department of Electronics and Computer Engineering, Pulchowk Campus, for providing us with the opportunity to pursue this major project. The department's continuous encouragement and infrastructure support have been instrumental in guiding our work.
+
+We are deeply thankful to the Head of the Department, along with the Deputy Heads, for fostering an academic environment that promotes research, innovation, and practical engineering.
+
+We also extend our gratitude to our project supervisor for their guidance and constructive feedback throughout the development of \textbf{Event Blinker}. Their suggestions on system architecture, database design, and real-time communication were invaluable.
+
+Furthermore, we acknowledge the open-source community whose libraries and tools---including Node.js, React Native, PostgreSQL/PostGIS, Expo, and Socket.io---formed the foundation of this platform.
+
+This submission would not have been possible without the collaborative efforts and guidance of everyone mentioned above.
+
+\vspace{1cm}
+\noindent Thank you.\\
+Sincerely,\\
+Prabin Dhungana
+
+%-------------------------------
+% ABSTRACT
+%-------------------------------
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{\numberline{}Abstract}
+
+The rapid growth of urban social life has created a significant gap between event organizers and potential attendees. Existing platforms often lack real-time updates, geospatial precision, and integrated transport solutions. This project presents \textbf{Event Blinker}, a comprehensive real-time event discovery platform that integrates three key innovations: (1) geospatial event discovery via interactive Mapbox maps, (2) an AI-powered virtual concierge (\textbf{Blinker AI}) leveraging LLAMA 3.3 via OpenRouter for localized event assistance, and (3) a peer-to-peer ride-sharing module enabling event-goers to book rides directly to venues.
+
+The system is built on a robust technology stack comprising a Node.js/Express.js backend, PostgreSQL with PostGIS for geospatial queries, React Native (Expo) for the mobile application, Mapbox GL for map rendering, Socket.io for real-time communication, and React.js (Vite) for the organizer web portal. An additional admin portal handles event and rider verification. The ride-sharing module includes a Haversine-based distance calculator and NPR-based dynamic pricing.
+
+Experimental results demonstrate sub-200ms API response times, sub-50ms WebSocket latency, and accurate geospatial filtering. The platform is deployed on Render and supports both Android and web clients.
+
+%-------------------------------
+% TABLE OF CONTENTS
+%-------------------------------
+\tableofcontents
+\addcontentsline{toc}{chapter}{\numberline{}Contents}
+
+\listoffigures
+\addcontentsline{toc}{chapter}{\numberline{}List of Figures}
+
+\listoftables
+\addcontentsline{toc}{chapter}{\numberline{}List of Tables}
+
+%-------------------------------
+% INCLUDE SECTIONS
+%-------------------------------
+\input{introduction}
+\input{objective}
+\input{methodology}
+\input{system_design}
+\input{work_completed}
+\input{problems_faced}
+\input{future_plan}
+\input{discussion}
+\input{conclusion}
+
+\vfill
+
+\end{document}

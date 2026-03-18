@@ -151,12 +151,12 @@ export default function EventsScreen() {
         </Text>
 
         <View style={styles.eventMeta}>
-          <Ionicons name="calendar" size={14} color="#666" />
+          <Ionicons name="calendar" size={14} color="#8892B0" />
           <Text style={styles.eventMetaText}>{new Date(item.start_time).toLocaleDateString()}</Text>
         </View>
 
         <View style={styles.eventMeta}>
-          <Ionicons name="location" size={14} color="#666" />
+          <Ionicons name="location" size={14} color="#8892B0" />
           <Text style={styles.eventMetaText} numberOfLines={1}>
             {item.location_name}
           </Text>
@@ -169,8 +169,8 @@ export default function EventsScreen() {
           <TouchableOpacity style={styles.likeButton} onPress={() => handleLikePress(item.id)}>
             <Ionicons
               name={likedEvents.includes(item.id) ? "heart" : "heart-outline"}
-              size={20}
-              color={likedEvents.includes(item.id) ? "#FF6B35" : "#666"}
+              size={22}
+              color={likedEvents.includes(item.id) ? "#FF6B35" : "#6B7599"}
             />
           </TouchableOpacity>
         </View>
@@ -216,7 +216,7 @@ export default function EventsScreen() {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#FF6B35" />}
           ListEmptyComponent={
             <View style={styles.centerContainer}>
-              <Ionicons name="calendar-outline" size={48} color="#ddd" />
+              <Ionicons name="calendar-outline" size={48} color="#2A3050" />
               <Text style={styles.emptyText}>
                 {activeTab === "all"
                   ? "No events available"
@@ -235,79 +235,88 @@ export default function EventsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#0B0F1A",
   },
   listContent: {
-    padding: 12,
+    padding: 16,
   },
   eventCard: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
+    backgroundColor: "#151A2D",
+    borderRadius: 18,
     overflow: "hidden",
-    marginBottom: 12,
-    elevation: 3,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.06)",
+    elevation: 6,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
   },
   eventImage: {
     width: "100%",
     height: 200,
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "#1C2240",
   },
   eventContent: {
-    padding: 12,
+    padding: 16,
   },
   eventTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 8,
+    fontSize: 17,
+    fontWeight: "700",
+    color: "#F0F2F8",
+    marginBottom: 10,
+    letterSpacing: -0.2,
   },
   eventMeta: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 4,
+    marginBottom: 6,
   },
   eventMetaText: {
-    fontSize: 12,
-    color: "#666",
-    marginLeft: 6,
+    fontSize: 13,
+    color: "#8892B0",
+    marginLeft: 8,
     flex: 1,
   },
   eventFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 12,
+    marginTop: 14,
+    paddingTop: 14,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255,255,255,0.05)",
   },
   eventPrice: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: 19,
+    fontWeight: "800",
     color: "#FF6B35",
   },
   likeButton: {
     padding: 8,
+    borderRadius: 20,
+    backgroundColor: "rgba(255,255,255,0.04)",
   },
   centerContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
+    paddingTop: 80,
   },
   emptyText: {
     fontSize: 16,
-    color: "#999",
+    color: "#4D5675",
     marginTop: 12,
   },
   tabContainer: {
     flexDirection: "row",
-    backgroundColor: "#fff",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    backgroundColor: "#0D1120",
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: "rgba(255,255,255,0.04)",
   },
   tab: {
     flex: 1,
@@ -315,17 +324,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderBottomWidth: 2,
     borderBottomColor: "transparent",
+    borderRadius: 8,
   },
   activeTab: {
     borderBottomColor: "#FF6B35",
+    backgroundColor: "rgba(255,107,53,0.06)",
   },
   tabText: {
     fontSize: 14,
-    color: "#666",
-    fontWeight: "500",
+    color: "#4D5675",
+    fontWeight: "600",
   },
   activeTabText: {
     color: "#FF6B35",
-    fontWeight: "bold",
+    fontWeight: "700",
   },
 })

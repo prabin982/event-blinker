@@ -1,0 +1,44 @@
+\chapter{Introduction}
+
+\section{Background}
+In today's fast-paced urban environment, staying informed about local events---concerts, workshops, sports tournaments, and community gatherings---has become a significant challenge. While social media platforms exist, they suffer from information overload, lack of geospatial precision, and fragmented event details. Citizens frequently experience ``FOMO'' (Fear Of Missing Out) because they simply cannot discover what is happening nearby in real-time. Furthermore, even when events are discovered, the ``last-mile'' transportation problem---traffic congestion, lack of parking, and unreliable public transport---often discourages attendance.
+
+\textbf{Event Blinker} addresses these interconnected problems by providing a unified, real-time platform for event discovery, intelligent assistance, and community-driven transportation. It goes beyond simple event listing by incorporating:
+\begin{itemize}[noitemsep]
+    \item A \textbf{geospatial discovery engine} powered by PostgreSQL/PostGIS and Mapbox GL.
+    \item An \textbf{AI-powered virtual concierge} (Blinker AI) using LLAMA 3.3 for localized, event-specific assistance.
+    \item A \textbf{peer-to-peer ride-sharing system} with Haversine-based distance calculation and NPR dynamic pricing.
+    \item \textbf{Real-time social engagement} via Socket.io-powered live chat, event likes, and attendance check-ins.
+\end{itemize}
+
+\section{Problem Statement}
+The current event discovery landscape faces several critical challenges:
+\begin{itemize}
+    \item \textbf{Information Staleness:} Event details on posters, static websites, or social media feeds are often outdated by the time a user sees them, with no mechanism for real-time status updates.
+    \item \textbf{Geospatial Inefficiency:} Users find it difficult to discover events happening ``right now'' within their immediate vicinity. Existing platforms rely on text-based search rather than location-aware discovery.
+    \item \textbf{Transportation Barriers:} Traffic congestion and lack of convenient transport options frequently discourage people from attending events, especially in cities like Kathmandu.
+    \item \textbf{Static Assistance:} Traditional FAQ pages and help desks cannot handle nuanced, context-specific queries about event details, pricing, or platform navigation at scale.
+    \item \textbf{Platform Fragmentation:} Organizers must manage events across multiple disconnected platforms (social media, ticketing sites, messaging apps), leading to inconsistent data and poor analytics.
+    \item \textbf{Trust Deficit:} Without proper verification mechanisms for organizers and drivers, users hesitate to engage with unknown event listings or ride offers.
+\end{itemize}
+
+\section{Objective}
+The primary objective of \textbf{Event Blinker} is to build a modern, mobile-first event ecosystem. Specific goals include:
+\begin{itemize}
+    \item To develop a real-time mobile application for geospatial event discovery using Mapbox GL with live markers and radius-based filtering via PostGIS.
+    \item To integrate an AI virtual assistant (\textbf{Blinker AI}) using Large Language Models (LLAMA 3.3 via OpenRouter) that provides context-aware, localized event support.
+    \item To implement a secure, verified peer-to-peer ride-sharing module supporting Car, SUV, and Motorcycle categories with Haversine distance calculation and NPR-based dynamic pricing.
+    \item To provide a centralized web portal for event organizers to create events, manage attendees, and view engagement analytics.
+    \item To build a comprehensive admin verification system for organizers, events, riders, and driver licenses.
+\end{itemize}
+
+\section{Scope}
+The scope of \textbf{Event Blinker} encompasses the following:
+\begin{itemize}
+    \item \textbf{Mobile Application (React Native/Expo):} Interactive map discovery, event details, ride booking, live chat, profile management, and AI assistant integration.
+    \item \textbf{Backend API (Node.js/Express):} 11 route modules covering authentication, events, likes, check-ins, chat, rides, AI, uploads, users, organizer features, and admin operations.
+    \item \textbf{Database (PostgreSQL/PostGIS):} 12+ tables including \texttt{users}, \texttt{events}, \texttt{event\_likes}, \texttt{check\_ins}, \texttt{chat\_messages}, \texttt{event\_reviews}, \texttt{vehicles}, \texttt{driver\_licenses}, \texttt{riders}, \texttt{ride\_requests}, \texttt{ride\_offers}, and \texttt{ride\_reviews}.
+    \item \textbf{Real-Time Communication:} Socket.io rooms for event chat, ride notifications, and live event status updates.
+    \item \textbf{Organizer Web Portal (React/Vite):} Event creation with map picker, dashboard, analytics, and chat management.
+    \item \textbf{Admin Portal:} Standalone HTML portal for approving/rejecting organizers, events, riders, and driver licenses.
+\end{itemize}

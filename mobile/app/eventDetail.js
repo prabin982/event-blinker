@@ -183,7 +183,7 @@ export default function EventDetailScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.errorContainer}>
-          <Ionicons name="warning-outline" size={48} color="#ddd" />
+          <Ionicons name="warning-outline" size={48} color="#2A3050" />
           <Text style={styles.errorText}>Event not found</Text>
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
             <Text style={styles.backButtonText}>Go Back</Text>
@@ -198,10 +198,10 @@ export default function EventDetailScreen() {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButtonIcon}>
-            <Ionicons name="chevron-back" size={24} color="#333" />
+            <Ionicons name="chevron-back" size={24} color="#F0F2F8" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.likeButton} onPress={handleLike}>
-            <Ionicons name={isLiked ? "heart" : "heart-outline"} size={24} color={isLiked ? "#FF6B35" : "#333"} />
+            <Ionicons name={isLiked ? "heart" : "heart-outline"} size={24} color={isLiked ? "#FF6B35" : "#F0F2F8"} />
           </TouchableOpacity>
         </View>
 
@@ -308,7 +308,7 @@ export default function EventDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#0B0F1A",
   },
   scrollView: {
     flex: 1,
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#0B0F1A",
   },
   errorContainer: {
     flex: 1,
@@ -327,24 +327,26 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 16,
-    color: "#666",
+    color: "#6B7599",
     marginTop: 12,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
   },
   backButtonIcon: {
     paddingVertical: 8,
     paddingHorizontal: 8,
+    borderRadius: 12,
+    backgroundColor: "rgba(255,255,255,0.06)",
   },
   backButton: {
     backgroundColor: "#FF6B35",
     paddingVertical: 12,
     paddingHorizontal: 24,
-    borderRadius: 8,
+    borderRadius: 14,
     marginTop: 16,
   },
   backButtonText: {
@@ -354,110 +356,178 @@ const styles = StyleSheet.create({
   likeButton: {
     paddingVertical: 8,
     paddingHorizontal: 12,
+    borderRadius: 12,
+    backgroundColor: "rgba(255,255,255,0.06)",
   },
   eventImage: {
     width: "100%",
     height: 300,
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "#1C2240",
   },
   content: {
-    padding: 16,
+    padding: 20,
   },
   eventTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 16,
+    fontSize: 26,
+    fontWeight: "800",
+    color: "#F0F2F8",
+    marginBottom: 18,
+    letterSpacing: -0.5,
+    lineHeight: 32,
   },
   priceContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#FFE8DC",
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 16,
+    backgroundColor: "rgba(255,107,53,0.1)",
+    padding: 18,
+    borderRadius: 16,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "rgba(255,107,53,0.15)",
   },
   priceLabel: {
     fontSize: 14,
-    color: "#666",
+    color: "#8892B0",
+    fontWeight: "500",
   },
   priceValue: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: "800",
     color: "#FF6B35",
   },
   infoRow: {
     flexDirection: "row",
-    marginBottom: 16,
+    marginBottom: 18,
+    alignItems: "flex-start",
+    backgroundColor: "#151A2D",
+    padding: 14,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.04)",
   },
   infoContent: {
-    marginLeft: 12,
+    marginLeft: 14,
     flex: 1,
   },
   infoLabel: {
     fontSize: 12,
-    color: "#999",
+    color: "#6B7599",
+    textTransform: "uppercase",
+    fontWeight: "600",
+    letterSpacing: 0.3,
   },
   infoValue: {
-    fontSize: 14,
-    color: "#333",
+    fontSize: 15,
+    color: "#E0E4EF",
     fontWeight: "600",
     marginTop: 4,
   },
   descriptionSection: {
-    marginVertical: 16,
+    marginVertical: 20,
+    backgroundColor: "#151A2D",
+    padding: 18,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.04)",
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 8,
+    fontWeight: "800",
+    color: "#F0F2F8",
+    marginBottom: 10,
   },
   description: {
     fontSize: 14,
-    color: "#666",
+    color: "#8892B0",
     lineHeight: 22,
   },
   routeButton: {
     flexDirection: "row",
-    backgroundColor: "#F7A600",
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderRadius: 14,
+    backgroundColor: "#D29922",
+    paddingVertical: 16,
+    paddingHorizontal: 18,
+    borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: 12,
-    shadowColor: "#F7A600",
+    marginVertical: 8,
+    shadowColor: "#D29922",
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.35,
-    shadowRadius: 12,
-    elevation: 6,
+    shadowRadius: 14,
+    elevation: 8,
   },
   routeButtonText: {
     color: "#fff",
     fontSize: 17,
-    fontWeight: "bold",
+    fontWeight: "800",
   },
   routeButtonSubText: {
-    color: "rgba(255,255,255,0.85)",
+    color: "rgba(255,255,255,0.75)",
     fontSize: 12,
   },
   checkInButton: {
     flexDirection: "row",
     backgroundColor: "#FF6B35",
-    paddingVertical: 14,
+    paddingVertical: 16,
     paddingHorizontal: 20,
-    borderRadius: 8,
+    borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: 16,
+    marginVertical: 8,
+    shadowColor: "#FF6B35",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
   },
   checkInButtonText: {
     color: "#fff",
     fontSize: 16,
-    fontWeight: "bold",
-    marginLeft: 8,
+    fontWeight: "800",
+    marginLeft: 10,
+  },
+  chatButton: {
+    flexDirection: "row",
+    backgroundColor: "#34D399",
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 8,
+    shadowColor: "#34D399",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  chatButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "800",
+    marginLeft: 10,
+  },
+  bookRideButton: {
+    flexDirection: "row",
+    backgroundColor: "#FF6B35",
+    paddingVertical: 18,
+    paddingHorizontal: 20,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 8,
+    shadowColor: "#FF6B35",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 14,
+    elevation: 8,
+  },
+  bookRideButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "800",
+    marginLeft: 12,
   },
   messageSection: {
     marginVertical: 16,
@@ -466,10 +536,11 @@ const styles = StyleSheet.create({
   messageInput: {
     flexDirection: "row",
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
+    borderColor: "rgba(255,255,255,0.07)",
+    borderRadius: 14,
     paddingHorizontal: 12,
     alignItems: "flex-end",
+    backgroundColor: "#151A2D",
   },
   input: {
     flex: 1,
@@ -477,47 +548,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     fontSize: 14,
     maxHeight: 100,
-    color: "#333",
+    color: "#F0F2F8",
   },
   sendButton: {
     paddingVertical: 12,
     paddingHorizontal: 12,
   },
-  chatButton: {
-    flexDirection: "row",
-    backgroundColor: "#4CAF50",
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 16,
-  },
-  chatButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-    marginLeft: 8,
-  },
-  bookRideButton: {
-    flexDirection: "row",
-    backgroundColor: "#FF6B35",
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderRadius: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 10,
-    shadowColor: "#FF6B35",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  bookRideButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-    marginLeft: 10,
-  }
 })

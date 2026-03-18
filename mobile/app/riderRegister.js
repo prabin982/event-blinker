@@ -224,11 +224,11 @@ export default function RiderRegisterScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient colors={["#FFF", "#FDF2F0"]} style={styles.background} />
+      <LinearGradient colors={["#0B0F1A", "#111633"]} style={styles.background} />
 
       <View style={styles.header}>
         <TouchableOpacity onPress={() => step > 1 ? setStep(step - 1) : router.back()} style={styles.backBtn}>
-          <Ionicons name="arrow-back" size={24} color="#333" />
+          <Ionicons name="arrow-back" size={24} color="#F0F2F8" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Become a Rider</Text>
         <View style={{ width: 40 }} />
@@ -258,6 +258,7 @@ export default function RiderRegisterScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="Emergency Contact Phone"
+                placeholderTextColor="#4D5675"
                 keyboardType="phone-pad"
                 value={personalData.emergency_contact}
                 onChangeText={(v) => setPersonalData({ ...personalData, emergency_contact: v })}
@@ -269,6 +270,7 @@ export default function RiderRegisterScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="National ID / Document Number"
+                placeholderTextColor="#4D5675"
                 value={personalData.nid_number}
                 onChangeText={(v) => setPersonalData({ ...personalData, nid_number: v })}
               />
@@ -280,6 +282,7 @@ export default function RiderRegisterScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="Bank Name"
+                placeholderTextColor="#4D5675"
                 value={personalData.bank_name}
                 onChangeText={(v) => setPersonalData({ ...personalData, bank_name: v })}
               />
@@ -289,6 +292,7 @@ export default function RiderRegisterScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="Account Number"
+                placeholderTextColor="#4D5675"
                 value={personalData.account_number}
                 onChangeText={(v) => setPersonalData({ ...personalData, account_number: v })}
               />
@@ -306,6 +310,7 @@ export default function RiderRegisterScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="Make (e.g. Honda)"
+                placeholderTextColor="#4D5675"
                 value={vehicleData.make}
                 onChangeText={(v) => setVehicleData({ ...vehicleData, make: v })}
               />
@@ -316,6 +321,7 @@ export default function RiderRegisterScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="Model (e.g. CB Shine)"
+                placeholderTextColor="#4D5675"
                 value={vehicleData.model}
                 onChangeText={(v) => setVehicleData({ ...vehicleData, model: v })}
               />
@@ -326,6 +332,7 @@ export default function RiderRegisterScreen() {
                 <TextInput
                   style={styles.input}
                   placeholder="Year"
+                  placeholderTextColor="#4D5675"
                   keyboardType="numeric"
                   value={vehicleData.year}
                   onChangeText={(v) => setVehicleData({ ...vehicleData, year: v })}
@@ -335,6 +342,7 @@ export default function RiderRegisterScreen() {
                 <TextInput
                   style={styles.input}
                   placeholder="Color"
+                  placeholderTextColor="#4D5675"
                   value={vehicleData.color}
                   onChangeText={(v) => setVehicleData({ ...vehicleData, color: v })}
                 />
@@ -346,6 +354,7 @@ export default function RiderRegisterScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="License Plate (e.g. BA 97 PA 1234)"
+                placeholderTextColor="#4D5675"
                 autoCapitalize="characters"
                 value={vehicleData.license_plate}
                 onChangeText={(v) => setVehicleData({ ...vehicleData, license_plate: v })}
@@ -396,6 +405,7 @@ export default function RiderRegisterScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="License Number"
+                placeholderTextColor="#4D5675"
                 value={licenseData.license_number}
                 onChangeText={(v) => setLicenseData({ ...licenseData, license_number: v })}
               />
@@ -406,6 +416,7 @@ export default function RiderRegisterScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="Expiry (YYYY-MM-DD)"
+                placeholderTextColor="#4D5675"
                 value={licenseData.expiry_date}
                 onChangeText={(v) => setLicenseData({ ...licenseData, expiry_date: v })}
               />
@@ -416,6 +427,7 @@ export default function RiderRegisterScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="Full Name on License"
+                placeholderTextColor="#4D5675"
                 value={licenseData.license_holder_name}
                 onChangeText={(v) => setLicenseData({ ...licenseData, license_holder_name: v })}
               />
@@ -461,7 +473,7 @@ export default function RiderRegisterScreen() {
             </View>
 
             <View style={styles.infoBox}>
-              <Ionicons name="information-circle" size={20} color="#666" />
+              <Ionicons name="information-circle" size={20} color="#8892B0" />
               <Text style={styles.infoText}>Approvals usually take 24-48 hours.</Text>
             </View>
 
@@ -495,7 +507,7 @@ export default function RiderRegisterScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#FFF" },
+  container: { flex: 1, backgroundColor: "#0B0F1A" },
   background: { ...StyleSheet.absoluteFillObject },
   header: {
     flexDirection: "row",
@@ -504,8 +516,8 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingTop: 8,
   },
-  backBtn: { padding: 8, borderRadius: 12, backgroundColor: "rgba(0,0,0,0.05)" },
-  headerTitle: { fontSize: 20, fontWeight: "800", color: "#333", letterSpacing: -0.5 },
+  backBtn: { padding: 8, borderRadius: 12, backgroundColor: "rgba(255,255,255,0.06)" },
+  headerTitle: { fontSize: 20, fontWeight: "800", color: "#F0F2F8", letterSpacing: -0.5 },
 
   progressContainer: {
     flexDirection: "row",
@@ -519,47 +531,47 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "#EEE",
+    backgroundColor: "#1C2240",
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
-    borderColor: "#DDD"
+    borderColor: "rgba(255,255,255,0.06)"
   },
   progressCircleActive: { backgroundColor: "#FF6B35", borderColor: "#FF8C60" },
-  progressText: { fontSize: 14, fontWeight: "700", color: "#999" },
+  progressText: { fontSize: 14, fontWeight: "700", color: "#4D5675" },
   progressTextActive: { color: "#FFF" },
-  progressLine: { width: 50, height: 4, backgroundColor: "#EEE", marginHorizontal: 2 },
+  progressLine: { width: 50, height: 4, backgroundColor: "rgba(255,255,255,0.06)", marginHorizontal: 2 },
   progressLineActive: { backgroundColor: "#FF6B35" },
 
   scrollContent: { padding: 20, paddingBottom: 40 },
   formCard: {
-    backgroundColor: "rgba(255,255,255,0.7)",
+    backgroundColor: "rgba(21,26,45,0.9)",
     borderRadius: 30,
     padding: 24,
     borderWidth: 1,
-    borderColor: "rgba(255,107,53,0.1)",
+    borderColor: "rgba(255,255,255,0.06)",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.25,
     shadowRadius: 15,
     elevation: 5,
   },
-  stepTitle: { fontSize: 22, fontWeight: "800", color: "#333" },
-  stepSubtitle: { fontSize: 14, color: "#888", marginBottom: 25, marginTop: 4 },
+  stepTitle: { fontSize: 22, fontWeight: "800", color: "#F0F2F8" },
+  stepSubtitle: { fontSize: 14, color: "#6B7599", marginBottom: 25, marginTop: 4 },
 
-  label: { fontSize: 13, fontWeight: "700", color: "#666", marginTop: 20, marginBottom: 10 },
+  label: { fontSize: 13, fontWeight: "700", color: "#6B7599", marginTop: 20, marginBottom: 10, textTransform: "uppercase", letterSpacing: 0.3 },
   inputGroup: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFF",
+    backgroundColor: "#1C2240",
     borderRadius: 15,
     paddingHorizontal: 15,
     marginBottom: 15,
     borderWidth: 1,
-    borderColor: "#EEE"
+    borderColor: "rgba(255,255,255,0.06)"
   },
   inputIcon: { marginRight: 10 },
-  input: { flex: 1, paddingVertical: 14, fontSize: 15, color: "#333" },
+  input: { flex: 1, paddingVertical: 14, fontSize: 15, color: "#F0F2F8" },
   row: { flexDirection: "row" },
 
   typeContainer: { flexDirection: "row", gap: 8 },
@@ -570,10 +582,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,
-    backgroundColor: "#FDF2F0",
+    backgroundColor: "rgba(255,107,53,0.06)",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#FFE1D2"
+    borderColor: "rgba(255,107,53,0.15)"
   },
   typeBtnActive: { backgroundColor: "#FF6B35", borderColor: "#FF6B35" },
   typeBtnText: { fontSize: 11, fontWeight: "800", color: "#FF6B35" },
@@ -582,10 +594,10 @@ const styles = StyleSheet.create({
   uploadBox: {
     width: "100%",
     height: 140,
-    backgroundColor: "#FFF7F5",
+    backgroundColor: "rgba(255,107,53,0.04)",
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: "#FF6B35",
+    borderColor: "rgba(255,107,53,0.2)",
     borderStyle: "dashed",
     justifyContent: "center",
     alignItems: "center",
@@ -594,14 +606,14 @@ const styles = StyleSheet.create({
   uploadText: { marginTop: 10, color: "#FF6B35", fontWeight: "700", fontSize: 14 },
   previewImg: { width: "100%", height: "100%", resizeMode: "cover" },
 
-  successIcon: { alignSelf: "center", marginBottom: 20, padding: 20, backgroundColor: "#FFF7F5", borderRadius: 50 },
+  successIcon: { alignSelf: "center", marginBottom: 20, padding: 20, backgroundColor: "rgba(255,107,53,0.08)", borderRadius: 50 },
   reviewList: { marginTop: 20, gap: 12 },
-  reviewItem: { backgroundColor: "#FFF", padding: 15, borderRadius: 15, borderWidth: 1, borderColor: "#EEE" },
-  reviewLabel: { fontSize: 12, color: "#999", fontWeight: "700", textTransform: "uppercase" },
-  reviewValue: { fontSize: 15, color: "#333", fontWeight: "600", marginTop: 2 },
+  reviewItem: { backgroundColor: "#1C2240", padding: 15, borderRadius: 15, borderWidth: 1, borderColor: "rgba(255,255,255,0.06)" },
+  reviewLabel: { fontSize: 12, color: "#6B7599", fontWeight: "700", textTransform: "uppercase", letterSpacing: 0.3 },
+  reviewValue: { fontSize: 15, color: "#F0F2F8", fontWeight: "600", marginTop: 2 },
 
   infoBox: { flexDirection: "row", alignItems: "center", gap: 8, marginTop: 25, alignSelf: "center" },
-  infoText: { fontSize: 12, color: "#666", fontWeight: "500" },
+  infoText: { fontSize: 12, color: "#8892B0", fontWeight: "500" },
 
   primaryBtn: {
     backgroundColor: "#FF6B35",
@@ -613,18 +625,18 @@ const styles = StyleSheet.create({
     marginTop: 30,
     gap: 10,
     shadowColor: "#FF6B35",
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
+    shadowOpacity: 0.35,
+    shadowRadius: 14,
     elevation: 8
   },
   primaryBtnText: { color: "#FFF", fontSize: 17, fontWeight: "800" },
   profilePicker: { alignSelf: 'center', marginBottom: 25 },
-  profilePlaceholder: { width: 120, height: 120, borderRadius: 60, backgroundColor: 'rgba(255,107,53,0.05)', borderStyle: 'dashed', borderWidth: 2, borderColor: '#FF6B35', justifyContent: 'center', alignItems: 'center' },
+  profilePlaceholder: { width: 120, height: 120, borderRadius: 60, backgroundColor: 'rgba(255,107,53,0.06)', borderStyle: 'dashed', borderWidth: 2, borderColor: 'rgba(255,107,53,0.3)', justifyContent: 'center', alignItems: 'center' },
   profileImgMain: { width: 120, height: 120, borderRadius: 60, borderWidth: 3, borderColor: '#FF6B35' },
   uploadTextSmall: { fontSize: 10, fontWeight: '800', color: '#FF6B35', marginTop: 5 },
-  disabledBtn: { opacity: 0.6 },
+  disabledBtn: { opacity: 0.5 },
   termsRow: { flexDirection: 'row', alignItems: 'center', marginTop: 20, gap: 10, alignSelf: 'center' },
-  checkbox: { width: 18, height: 18, borderRadius: 4, borderSize: 1, borderColor: '#FF6B35', borderWidth: 1, justifyContent: 'center', alignItems: 'center' },
-  checkboxActive: { backgroundColor: '#FF6B35' },
-  termsText: { fontSize: 11, color: '#666', fontWeight: '500' }
+  checkbox: { width: 18, height: 18, borderRadius: 4, borderColor: 'rgba(255,107,53,0.4)', borderWidth: 1, justifyContent: 'center', alignItems: 'center' },
+  checkboxActive: { backgroundColor: '#FF6B35', borderColor: '#FF6B35' },
+  termsText: { fontSize: 11, color: '#8892B0', fontWeight: '500' }
 })

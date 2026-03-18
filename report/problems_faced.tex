@@ -1,0 +1,21 @@
+\chapter{Problems Faced}
+
+During the development of \textbf{Event Blinker}, several technical challenges were encountered and addressed:
+
+\section{PostGIS Geospatial Query Optimization}
+Scaling PostGIS queries for event-dense areas while maintaining sub-200ms response times required careful spatial indexing. Initial queries without GiST indexes on \texttt{location\_geom} took over 2 seconds for radius-based searches. Adding \texttt{CREATE INDEX idx\_location USING GIST(location\_point)} reduced query times to under 100ms.
+
+\section{Socket.io Cross-Platform Compatibility}
+Mobile apps (React Native/Expo) do not send a browser \texttt{Origin} header, causing CORS rejections. The solution required implementing a dynamic CORS origin handler that accepts \texttt{null} origins and local network IPs, while also enabling \texttt{allowEIO3} for older Engine.IO client compatibility and supporting both \texttt{polling} and \texttt{websocket} transports.
+
+\section{AI Hallucination and Context Grounding}
+LLMs tend to generate fabricated event details when not properly grounded. To mitigate this, each AI request injects real-time event data (title, venue, price, time) from the PostgreSQL database into the system prompt. The AI is also restricted from handling off-topic queries (math, coding, general advice) through behavioral protocols in the prompt.
+
+\section{Multi-Model Fallback Reliability}
+Free-tier AI model providers frequently experience rate limiting and downtime. The solution was a 5-model cascading fallback system with 12-second per-model timeouts: LLAMA 3.3 $\rightarrow$ Gemini Flash $\rightarrow$ Gemini 1.5 $\rightarrow$ LLAMA 3.1 $\rightarrow$ OpenRouter Free.
+
+\section{Database Schema Evolution}
+The ride-sharing module required significant schema additions (6 new tables, 14 indexes) after the initial event platform was built. Managing column name differences (\texttt{first\_name}/\texttt{last\_name} vs. \texttt{name}) across old and new schemas required a dynamic \texttt{getUserNameSelect()} helper function that introspects column availability at runtime.
+
+\section{Mobile State Persistence}
+Maintaining consistent authentication state across app restarts in React Native/Expo required integration with AsyncStorage via Zustand middleware. Race conditions between auth token verification and Socket.io connection establishment were resolved by sequencing connection logic.

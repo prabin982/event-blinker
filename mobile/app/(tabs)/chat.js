@@ -435,7 +435,7 @@ export default function ChatScreen() {
           <TextInput
             style={styles.input}
             placeholder="Ask AI about this event..."
-            placeholderTextColor="#999"
+            placeholderTextColor="#4D5675"
             value={aiPrompt}
             onChangeText={setAiPrompt}
             multiline
@@ -466,7 +466,7 @@ export default function ChatScreen() {
           </View>
         ) : events.length === 0 ? (
           <View style={styles.centerContainer}>
-            <Ionicons name="chatbubbles-outline" size={48} color="#ddd" />
+            <Ionicons name="chatbubbles-outline" size={48} color="#2A3050" />
             <Text style={styles.emptyText}>No events to chat about</Text>
           </View>
         ) : (
@@ -558,7 +558,7 @@ export default function ChatScreen() {
             <TextInput
               style={styles.input}
               placeholder="Type your message..."
-              placeholderTextColor="#999"
+              placeholderTextColor="#4D5675"
               value={messageText}
               onChangeText={setMessageText}
             />
@@ -583,23 +583,23 @@ export default function ChatScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#0B0F1A",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: "#f5f5f5",
+    paddingVertical: 14,
+    backgroundColor: "#0D1120",
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    paddingTop: 12,
+    borderBottomColor: "rgba(255,255,255,0.04)",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
+    fontWeight: "800",
+    color: "#F0F2F8",
+    letterSpacing: -0.3,
   },
   centerContainer: {
     flex: 1,
@@ -612,10 +612,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 12,
     marginBottom: 4,
-    backgroundColor: "#fff7f2",
-    borderRadius: 12,
+    backgroundColor: "rgba(255,107,53,0.06)",
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#FFE1D2",
+    borderColor: "rgba(255,107,53,0.15)",
   },
   toggleButton: {
     flex: 1,
@@ -624,139 +624,152 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 10,
     paddingHorizontal: 8,
+    borderRadius: 13,
   },
   toggleButtonActive: {
     backgroundColor: "#FF6B35",
-    borderRadius: 12,
   },
   toggleLabel: {
     color: "#FF6B35",
     fontWeight: "600",
+    marginLeft: 6,
+    fontSize: 13,
   },
   toggleLabelActive: {
     color: "#fff",
   },
   emptyText: {
     fontSize: 14,
-    color: "#999",
+    color: "#4D5675",
     marginTop: 12,
   },
   eventItem: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 18,
+    paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: "rgba(255,255,255,0.04)",
   },
   eventItemContent: {
     flex: 1,
   },
   eventItemTitle: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#333",
+    fontSize: 15,
+    fontWeight: "700",
+    color: "#F0F2F8",
   },
   eventItemSubtitle: {
-    fontSize: 12,
-    color: "#999",
+    fontSize: 13,
+    color: "#6B7599",
     marginTop: 4,
   },
   messagesList: {
-    padding: 12,
+    padding: 14,
   },
   messageBubble: {
-    backgroundColor: "#f0f0f0",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 12,
+    backgroundColor: "#1C2240",
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 16,
     marginBottom: 8,
-    marginHorizontal: 12,
+    marginHorizontal: 4,
     maxWidth: "80%",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.04)",
   },
   sentMessage: {
     backgroundColor: "#FF6B35",
     alignSelf: "flex-end",
+    borderWidth: 0,
   },
   organizerMessage: {
-    backgroundColor: "#E3F2FD",
+    backgroundColor: "rgba(96,165,250,0.1)",
     borderLeftWidth: 3,
-    borderLeftColor: "#2196F3",
+    borderLeftColor: "#60A5FA",
   },
   aiMessage: {
-    backgroundColor: "#F1EAFF",
+    backgroundColor: "rgba(167,139,250,0.1)",
     borderLeftWidth: 3,
-    borderLeftColor: "#7E57C2",
+    borderLeftColor: "#A78BFA",
   },
   aiMessageError: {
-    backgroundColor: "#FFF3F0",
-    borderLeftColor: "#E64A19",
+    backgroundColor: "rgba(248,113,113,0.1)",
+    borderLeftColor: "#F87171",
   },
   senderName: {
     fontSize: 11,
-    color: "#666",
+    color: "#8892B0",
     marginBottom: 4,
-    fontWeight: "600",
+    fontWeight: "700",
   },
   messageText: {
     fontSize: 14,
-    color: "#333",
+    color: "#E0E4EF",
+    lineHeight: 20,
   },
   sentMessageText: {
     color: "#fff",
   },
   messageTime: {
     fontSize: 10,
-    color: "#999",
+    color: "#4D5675",
     marginTop: 4,
     alignSelf: "flex-end",
   },
   sentMessageTime: {
-    color: "rgba(255,255,255,0.8)",
+    color: "rgba(255,255,255,0.7)",
   },
   aiTip: {
     marginHorizontal: 16,
     marginTop: 12,
-    padding: 12,
-    backgroundColor: "#EEF7FF",
-    borderRadius: 12,
+    padding: 14,
+    backgroundColor: "rgba(96,165,250,0.08)",
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#D6E9FF",
+    borderColor: "rgba(96,165,250,0.15)",
   },
   aiTipText: {
-    color: "#3A4A5A",
+    color: "#8892B0",
     fontSize: 13,
-    lineHeight: 18,
+    lineHeight: 19,
   },
   sendButtonDisabled: {
-    opacity: 0.5,
+    opacity: 0.4,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
     borderTopWidth: 1,
-    borderTopColor: "#eee",
+    borderTopColor: "rgba(255,255,255,0.04)",
+    backgroundColor: "#0D1120",
   },
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    borderColor: "rgba(255,255,255,0.07)",
+    borderRadius: 22,
+    paddingHorizontal: 18,
+    paddingVertical: 11,
     fontSize: 14,
-    color: "#333",
+    color: "#F0F2F8",
+    backgroundColor: "#151A2D",
   },
   sendButton: {
     backgroundColor: "#FF6B35",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 8,
+    marginLeft: 10,
+    shadowColor: "#FF6B35",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
 })

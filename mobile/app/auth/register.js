@@ -74,33 +74,33 @@ export default function RegisterScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="John"
-                placeholderTextColor="#999"
+                placeholderTextColor="#4D5675"
                 value={firstName}
                 onChangeText={setFirstName}
                 editable={!loading}
               />
             </View>
 
-            <Text style={[styles.label, { marginTop: 16 }]}>Last Name</Text>
+            <Text style={[styles.label, { marginTop: 18 }]}>Last Name</Text>
             <View style={styles.inputContainer}>
               <Ionicons name="person-outline" size={20} color="#FF6B35" />
               <TextInput
                 style={styles.input}
                 placeholder="Doe"
-                placeholderTextColor="#999"
+                placeholderTextColor="#4D5675"
                 value={lastName}
                 onChangeText={setLastName}
                 editable={!loading}
               />
             </View>
 
-            <Text style={[styles.label, { marginTop: 16 }]}>Email</Text>
+            <Text style={[styles.label, { marginTop: 18 }]}>Email</Text>
             <View style={styles.inputContainer}>
               <Ionicons name="mail-outline" size={20} color="#FF6B35" />
               <TextInput
                 style={styles.input}
                 placeholder="your@email.com"
-                placeholderTextColor="#999"
+                placeholderTextColor="#4D5675"
                 value={email}
                 onChangeText={setEmail}
                 editable={!loading}
@@ -108,26 +108,27 @@ export default function RegisterScreen() {
               />
             </View>
 
-            <Text style={[styles.label, { marginTop: 16 }]}>Account Type</Text>
+            <Text style={[styles.label, { marginTop: 18 }]}>Account Type</Text>
             <View style={styles.pickerContainer}>
               <Picker
                 selectedValue={userType}
                 onValueChange={(value) => setUserType(value)}
                 style={styles.picker}
                 enabled={!loading}
+                dropdownIconColor="#FF6B35"
               >
-                <Picker.Item label="User" value="user" />
-                <Picker.Item label="Organizer" value="organizer" />
+                <Picker.Item label="User" value="user" color="#F0F2F8" />
+                <Picker.Item label="Organizer" value="organizer" color="#F0F2F8" />
               </Picker>
             </View>
 
-            <Text style={[styles.label, { marginTop: 16 }]}>Password</Text>
+            <Text style={[styles.label, { marginTop: 18 }]}>Password</Text>
             <View style={styles.inputContainer}>
               <Ionicons name="lock-closed-outline" size={20} color="#FF6B35" />
               <TextInput
                 style={styles.input}
                 placeholder="Create a password"
-                placeholderTextColor="#999"
+                placeholderTextColor="#4D5675"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
@@ -138,13 +139,13 @@ export default function RegisterScreen() {
               </TouchableOpacity>
             </View>
 
-            <Text style={[styles.label, { marginTop: 16 }]}>Confirm Password</Text>
+            <Text style={[styles.label, { marginTop: 18 }]}>Confirm Password</Text>
             <View style={styles.inputContainer}>
               <Ionicons name="lock-closed-outline" size={20} color="#FF6B35" />
               <TextInput
                 style={styles.input}
                 placeholder="Confirm your password"
-                placeholderTextColor="#999"
+                placeholderTextColor="#4D5675"
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 secureTextEntry={!showPassword}
@@ -176,87 +177,99 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#0B0F1A",
   },
   scrollContent: {
     flexGrow: 1,
-    padding: 20,
+    padding: 24,
   },
   backButton: {
     paddingVertical: 8,
+    width: 40,
   },
   headerSection: {
-    marginTop: 20,
-    marginBottom: 40,
+    marginTop: 16,
+    marginBottom: 36,
   },
   title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#333",
+    fontSize: 32,
+    fontWeight: "800",
+    color: "#F0F2F8",
     marginBottom: 8,
+    letterSpacing: -0.5,
   },
   subtitle: {
-    fontSize: 14,
-    color: "#999",
+    fontSize: 15,
+    color: "#6B7599",
   },
   formSection: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   label: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#333",
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#8892B0",
     marginBottom: 8,
+    letterSpacing: 0.3,
+    textTransform: "uppercase",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    backgroundColor: "#f9f9f9",
+    borderColor: "rgba(255,255,255,0.07)",
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    backgroundColor: "#151A2D",
   },
   input: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 14,
     paddingHorizontal: 10,
-    fontSize: 14,
-    color: "#333",
+    fontSize: 15,
+    color: "#F0F2F8",
   },
   pickerContainer: {
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    backgroundColor: "#f9f9f9",
+    borderColor: "rgba(255,255,255,0.07)",
+    borderRadius: 14,
+    backgroundColor: "#151A2D",
     overflow: "hidden",
   },
   picker: {
     height: 50,
+    color: "#F0F2F8",
   },
   registerButton: {
     backgroundColor: "#FF6B35",
-    paddingVertical: 14,
-    borderRadius: 8,
+    paddingVertical: 16,
+    borderRadius: 14,
     alignItems: "center",
-    marginTop: 32,
+    marginTop: 36,
+    shadowColor: "#FF6B35",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    elevation: 10,
   },
   registerButtonText: {
     color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 17,
+    fontWeight: "800",
+    letterSpacing: 0.5,
   },
   loginSection: {
     flexDirection: "row",
     justifyContent: "center",
+    marginBottom: 24,
   },
   loginText: {
-    color: "#666",
+    color: "#6B7599",
     fontSize: 14,
   },
   loginLink: {
     color: "#FF6B35",
     fontSize: 14,
-    fontWeight: "bold",
+    fontWeight: "700",
   },
 })

@@ -1,0 +1,216 @@
+\chapter{Methodology}
+
+The development of \textbf{Event Blinker} follows an agile, iterative development methodology, progressing through requirements analysis, architecture design, module-wise implementation, integration testing, and deployment.
+
+\section{Technology Stack}
+The platform is built using a carefully selected modern full-stack:
+
+\begin{table}[H]
+\centering
+\caption{Technology Stack of Event Blinker}
+\label{tab:tech_stack}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Layer} & \textbf{Technology} & \textbf{Purpose} \\
+\midrule
+Backend & Node.js + Express.js & RESTful API server \\
+Database & PostgreSQL + PostGIS & Geospatial data storage \\
+Real-Time & Socket.io & Live chat \& notifications \\
+Mobile App & React Native + Expo & Cross-platform mobile UI \\
+Maps & Mapbox GL & Interactive map rendering \\
+State Mgmt & Zustand (mobile) & Lightweight state stores \\
+Web Portal & React.js + Vite & Organizer dashboard \\
+Web Styling & Tailwind CSS & Responsive web UI \\
+Admin Portal & Vanilla HTML/CSS/JS & Standalone admin interface \\
+AI & OpenRouter (LLAMA 3.3) & Virtual concierge \\
+Auth & JWT + bcryptjs & Secure authentication \\
+File Upload & Multer & Image upload handling \\
+Deployment & Render + Docker & Cloud hosting \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Backend Architecture}
+The backend (\texttt{server.js}) serves as the central API hub, registering 11 route modules:
+
+\begin{table}[H]
+\centering
+\caption{Backend API Route Modules}
+\label{tab:api_routes}
+\begin{tabular}{@{}llp{7cm}@{}}
+\toprule
+\textbf{Route Path} & \textbf{Module} & \textbf{Functionality} \\
+\midrule
+\texttt{/api/auth} & auth.js & User registration and JWT login \\
+\texttt{/api/events} & events.js & Event CRUD with PostGIS spatial queries \\
+\texttt{/api/likes} & likes.js & Event like/unlike toggle \\
+\texttt{/api/checkin} & checkins.js & Event attendance check-in \\
+\texttt{/api/chat} & chat.js & Real-time chat with AI bot integration \\
+\texttt{/api/rides} & rides.js (925 lines) & Complete ride-sharing lifecycle \\
+\texttt{/api/ai} & ai.js & Blinker AI concierge endpoint \\
+\texttt{/api/upload} & upload.js & Image upload via Multer \\
+\texttt{/api/users} & users.js & User profile management \\
+\texttt{/api/organizer} & organizer.js & Organizer-specific event features \\
+\texttt{/api/admin} & admin.js (679 lines) & Admin verification workflows \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ---- FIGURE: Data Flow Diagram ----
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{system_archi.jpg}
+    \caption{Data Flow: Client Request $\rightarrow$ Express Router $\rightarrow$ PostgreSQL/PostGIS $\rightarrow$ Response}
+    \label{fig:data_flow}
+\end{figure}
+
+\section{Geospatial Engine}
+Event discovery is powered by PostGIS spatial functions:
+\begin{itemize}[noitemsep]
+    \item \texttt{ST\_SetSRID(ST\_Point(lng, lat), 4326)} -- Create spatial points from coordinates.
+    \item \texttt{ST\_DWithin(geom, point, radius)} -- Find events within a given radius (meters).
+    \item \texttt{ST\_Distance(geom1, geom2)} -- Calculate distance between two geometries for sorting.
+    \item \texttt{ST\_AsGeoJSON(geom)} -- Convert geometry to GeoJSON for Mapbox rendering.
+\end{itemize}
+GiST spatial indexes are created on \texttt{events.location\_geom}, \texttt{riders.current\_location}, \texttt{ride\_requests.pickup\_location}, and \texttt{ride\_requests.dropoff\_location} to ensure sub-second query performance.
+
+\section{AI Integration (Blinker AI)}
+The AI module (\texttt{routes/ai.js}) implements a multi-model fallback strategy:
+\begin{enumerate}[noitemsep]
+    \item User sends a message via \texttt{POST /api/ai/chat}.
+    \item Backend fetches live event context from PostgreSQL (title, venue, price, time).
+    \item A detailed system prompt is constructed with platform knowledge (ride-sharing instructions, ticketing help, Nepali greetings).
+    \item The request cycles through 5 LLM models in order: LLAMA 3.3 $\rightarrow$ Gemini Flash $\rightarrow$ Gemini 1.5 $\rightarrow$ LLAMA 3.1 $\rightarrow$ OpenRouter Free.
+    \item Each model has a 12-second timeout. If one fails, the next is tried automatically.
+\end{enumerate}
+
+% ---- FIGURE: AI Flowchart ----
+% >>> CREATE THIS: A flowchart showing the AI multi-model fallback:
+%     User Message → Fetch Event Context → Try Model 1 → Success? → Return
+%                                                      → Fail → Try Model 2 → ...
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}
+    \textbf{[FIGURE: AI Multi-Model Fallback Flowchart]}\\
+    \small Create a flowchart showing: User Message $\rightarrow$ Fetch Event Context from DB $\rightarrow$ Build System Prompt $\rightarrow$ Try LLAMA 3.3 $\rightarrow$ Timeout/Fail? $\rightarrow$ Try Gemini Flash $\rightarrow$ $\ldots$ $\rightarrow$ Return Response
+    \vspace{3cm}}}
+    \caption{Blinker AI Multi-Model Fallback Strategy}
+    \label{fig:ai_flowchart}
+\end{figure}
+
+\section{Ride-Sharing Module}
+The ride-sharing system (\texttt{routes/rides.js}, 925 lines) implements a complete lifecycle:
+
+\subsection{Driver Registration (3-Step Process)}
+\begin{enumerate}
+    \item \textbf{Personal Info} (\texttt{POST /rider/register/personal}): Profile photo, emergency contact, NID, bank details.
+    \item \textbf{Vehicle Info} (\texttt{POST /rider/register/vehicle}): Make, model, year, license plate, vehicle type, billbook photo.
+    \item \textbf{License Info} (\texttt{POST /rider/register/license}): License number, photo, expiry date, issuing authority.
+\end{enumerate}
+After all three steps, admin approval is required before the driver can accept rides.
+
+\subsection{Distance Calculation and Pricing}
+Distance is computed using the \textbf{Haversine formula} (\texttt{utils/distanceCalculator.js}):
+
+\begin{table}[H]
+\centering
+\caption{Ride Pricing Model (NPR)}
+\label{tab:pricing}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Vehicle Type} & \textbf{Rate/km (NPR)} & \textbf{Base Fare (NPR)} & \textbf{Discount} \\
+\midrule
+Motorcycle & 15 & 50 & -- \\
+Hatchback & 22 & 50 & -- \\
+Sedan & 25 & 50 & 5\% ($>$10 km) \\
+SUV & 35 & 50 & 10\% ($>$20 km) \\
+Van & 40 & 50 & 10\% ($>$20 km) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ---- FIGURE: Ride Lifecycle Flowchart ----
+% >>> CREATE THIS: Flowchart showing:
+%     Passenger Request → Notify Nearby Riders (Socket.io) → Rider Accepts/Offers Price
+%     → Passenger Confirms → Ride In-Progress → Ride Complete → Review
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}
+    \textbf{[FIGURE: Ride Request Lifecycle Flowchart]}\\
+    \small Create a flowchart: Passenger Creates Request $\rightarrow$ Socket.io Notifies Riders $\rightarrow$ Rider Accepts or Offers Custom Price $\rightarrow$ Passenger Accepts Offer $\rightarrow$ Ride Starts $\rightarrow$ Ride Completes $\rightarrow$ Review/Rating
+    \vspace{3cm}}}
+    \caption{Peer-to-Peer Ride Request Lifecycle}
+    \label{fig:ride_lifecycle}
+\end{figure}
+
+\section{Real-Time Communication}
+Socket.io (\texttt{utils/socket-handler.js}) manages the following real-time events:
+
+\begin{table}[H]
+\centering
+\caption{Socket.io Events}
+\label{tab:socket_events}
+\begin{tabular}{@{}lp{8cm}@{}}
+\toprule
+\textbf{Event} & \textbf{Description} \\
+\midrule
+\texttt{join:event} / \texttt{leave:event} & User joins/leaves an event chat room \\
+\texttt{message:send} / \texttt{message:new} & Send and broadcast chat messages \\
+\texttt{event:update-status} & Real-time event status changes \\
+\texttt{subscribe:events} & Subscribe to all event updates (map markers) \\
+\texttt{ride:new} & Notify nearby riders of a new ride request \\
+\texttt{ride:accepted} & Notify passenger that a rider accepted \\
+\texttt{ride:started} / \texttt{ride:cancelled} & Ride lifecycle updates \\
+\texttt{rider:online} / \texttt{rider:offline} & Driver availability status \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Mobile Application}
+The React Native (Expo) mobile app (\texttt{mobile/}) consists of:
+
+\begin{table}[H]
+\centering
+\caption{Mobile App Screen Structure}
+\label{tab:mobile_screens}
+\begin{tabular}{@{}llp{6cm}@{}}
+\toprule
+\textbf{Screen} & \textbf{File} & \textbf{Functionality} \\
+\midrule
+Map Discovery & \texttt{(tabs)/map.js} & Mapbox GL with live event markers \\
+Events List & \texttt{(tabs)/events.js} & Scrollable event feed \\
+Ride Sharing & \texttt{(tabs)/rides.js} (47KB) & Full ride booking/offering UI \\
+Live Chat & \texttt{(tabs)/chat.js} (24KB) & Real-time event chat with AI \\
+Profile & \texttt{(tabs)/profile.js} & User profile \& settings \\
+Event Detail & \texttt{eventDetail.js} & Event info, like, check-in, chat \\
+Ride Detail & \texttt{rideDetail.js} (23KB) & Ride tracking \& driver info \\
+Ride Map Picker & \texttt{rideMapPicker.js} & Select pickup/dropoff on map \\
+Driver Register & \texttt{riderRegister.js} (25KB) & 3-step driver registration form \\
+Login/Register & \texttt{auth/login.js}, \texttt{register.js} & Authentication screens \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+State management uses \textbf{Zustand} stores: \texttt{authStore.js}, \texttt{eventStore.js}, and \texttt{socketStore.js}.
+
+\section{Web Organizer Portal}
+The React/Vite web portal (\texttt{web/src/}) provides organizer tools:
+\begin{itemize}[noitemsep]
+    \item \texttt{LoginPage.jsx} -- Organizer authentication.
+    \item \texttt{DashboardPage.jsx} -- Event overview and metrics.
+    \item \texttt{EventsPage.jsx} -- Manage created events.
+    \item \texttt{CreateEventPage.jsx} + \texttt{EventForm.jsx} -- Event creation with \texttt{MapPicker.jsx} for location selection.
+    \item \texttt{AnalyticsPage.jsx} -- Engagement analytics (likes, check-ins, attendance).
+    \item \texttt{ChatManagementPage.jsx} -- View and moderate event chat messages.
+    \item \texttt{RiderVerificationPage.jsx} -- Verify rider documents and licenses.
+\end{itemize}
+
+\section{Admin Portal}
+A standalone HTML admin portal (\texttt{admin-portal/public/index.html}) authenticated via secret token (\texttt{X-Admin-Token}) provides:
+\begin{itemize}[noitemsep]
+    \item Approve/reject pending organizer registrations.
+    \item Approve/reject pending event submissions.
+    \item Verify/reject rider registrations (with document review).
+    \item Verify/reject driver license submissions.
+    \item View all approved events and rider statistics.
+\end{itemize}

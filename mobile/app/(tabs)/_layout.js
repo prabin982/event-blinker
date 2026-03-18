@@ -24,13 +24,24 @@ export default function TabsLayout() {
           return <Ionicons name={iconName} size={size} color={color} />
         },
         tabBarActiveTintColor: "#FF6B35",
-        tabBarInactiveTintColor: "#666",
+        tabBarInactiveTintColor: "#4D5675",
+        tabBarLabelStyle: {
+          fontSize: 10,
+          fontWeight: "600",
+          letterSpacing: 0.3,
+        },
         tabBarStyle: {
-          height: 60,
-          paddingBottom: 10,
-          backgroundColor: "#fff",
-          borderTopColor: "#f0f0f0",
+          height: 70,
+          paddingBottom: 14,
+          paddingTop: 8,
+          backgroundColor: "#0D1120",
+          borderTopColor: "rgba(255,255,255,0.04)",
           borderTopWidth: 1,
+          elevation: 20,
+          shadowColor: "#000",
+          shadowOpacity: 0.4,
+          shadowRadius: 15,
+          shadowOffset: { width: 0, height: -5 },
         },
       })}
     >

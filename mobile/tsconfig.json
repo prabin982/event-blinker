@@ -1,13 +1,21 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "strict": true,
     "skipLibCheck": true,
-    "typeRoots": ["./node_modules/@types", "../node_modules/@types"],
-    "types": ["react"],
     "allowJs": true,
     "checkJs": false,
     "noEmit": true
   },
-  "include": ["./**/*"],
-  "exclude": ["node_modules", "**/node_modules/*", "android", "ios"]
+  "include": [
+    "**/*",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/node_modules/*",
+    "android",
+    "ios"
+  ]
 }

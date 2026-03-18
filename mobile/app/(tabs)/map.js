@@ -112,7 +112,7 @@ export default function MapScreen() {
   if (!MapboxGL) {
     return (
       <View style={styles.center}>
-        <Text>Map service unavailable. Please use a development build.</Text>
+        <Text style={{ color: '#8892B0' }}>Map service unavailable. Please use a development build.</Text>
       </View>
     )
   }
@@ -171,14 +171,44 @@ export default function MapScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F5F5F5" },
+  container: { flex: 1, backgroundColor: "#0B0F1A" },
   map: { flex: 1 },
-  center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 20 },
+  center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 20, backgroundColor: "#0B0F1A" },
   markerContainer: { width: 40, height: 40, justifyContent: "center", alignItems: "center" },
   pulse: { position: "absolute", width: 24, height: 24, borderRadius: 12, backgroundColor: "#FF6B35" },
-  dot: { width: 14, height: 14, borderRadius: 7, backgroundColor: "#FF6B35", borderWidth: 2, borderColor: "#FFF", elevation: 4 },
-  userDot: { width: 24, height: 24, borderRadius: 12, backgroundColor: "rgba(33, 150, 243, 0.2)", justifyContent: "center", alignItems: "center" },
-  userDotInner: { width: 12, height: 12, borderRadius: 6, backgroundColor: "#2196F3", borderWidth: 2, borderColor: "#FFF" },
-  refreshButton: { position: "absolute", bottom: 30, right: 20, backgroundColor: "#FF6B35", width: 50, height: 50, borderRadius: 25, justifyContent: "center", alignItems: "center", elevation: 8, shadowColor: "#000", shadowOpacity: 0.3, shadowRadius: 5 },
-  loader: { position: "absolute", top: 40, alignSelf: "center", backgroundColor: "#FFF", padding: 10, borderRadius: 20, elevation: 5 }
+  dot: { width: 14, height: 14, borderRadius: 7, backgroundColor: "#FF6B35", borderWidth: 2.5, borderColor: "#FFF", elevation: 6, shadowColor: "#FF6B35", shadowOpacity: 0.5, shadowRadius: 6 },
+  userDot: { width: 26, height: 26, borderRadius: 13, backgroundColor: "rgba(96, 165, 250, 0.25)", justifyContent: "center", alignItems: "center", borderWidth: 1, borderColor: "rgba(96, 165, 250, 0.4)" },
+  userDotInner: { width: 12, height: 12, borderRadius: 6, backgroundColor: "#60A5FA", borderWidth: 2, borderColor: "#FFF" },
+  refreshButton: {
+    position: "absolute",
+    bottom: 30,
+    right: 20,
+    backgroundColor: "#FF6B35",
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 10,
+    shadowColor: "#FF6B35",
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    borderWidth: 2,
+    borderColor: "rgba(255,255,255,0.15)",
+  },
+  loader: {
+    position: "absolute",
+    top: 50,
+    alignSelf: "center",
+    backgroundColor: "#151A2D",
+    padding: 12,
+    borderRadius: 22,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.06)",
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
 })

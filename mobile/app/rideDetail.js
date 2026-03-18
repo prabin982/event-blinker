@@ -188,7 +188,7 @@ export default function RideDetailScreen() {
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.headerButton}>
-                    <Ionicons name="chevron-back" size={24} color="#333" />
+                    <Ionicons name="chevron-back" size={24} color="#F0F2F8" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Ride Details</Text>
                 <View style={styles.headerButton} />
@@ -198,7 +198,7 @@ export default function RideDetailScreen() {
                 {!MAPBOX_AVAILABLE ? (
                     <View style={styles.mapFallback}>
                         <Image
-                            source={{ uri: `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s-a+4CAF50(${ride.pickup_lng},${ride.pickup_lat}),pin-s-b+FF6B35(${ride.dropoff_lng},${ride.dropoff_lat})/auto/600x300@2x?access_token=${MAPBOX_TOKEN}&padding=50,50,50,50` }}
+                            source={{ uri: `https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/pin-s-a+34D399(${ride.pickup_lng},${ride.pickup_lat}),pin-s-b+FF6B35(${ride.dropoff_lng},${ride.dropoff_lat})/auto/600x300@2x?access_token=${MAPBOX_TOKEN}&padding=50,50,50,50` }}
                             style={StyleSheet.absoluteFillObject}
                             resizeMode="cover"
                         />
@@ -225,7 +225,7 @@ export default function RideDetailScreen() {
 
                         {/* Pickup Marker */}
                         <MapboxGL.PointAnnotation id="pickup" coordinate={[ride.pickup_lng, ride.pickup_lat]}>
-                            <View style={[styles.marker, { backgroundColor: '#4CAF50' }]}>
+                            <View style={[styles.marker, { backgroundColor: '#34D399' }]}>
                                 <Ionicons name="location" size={16} color="white" />
                             </View>
                         </MapboxGL.PointAnnotation>
@@ -259,7 +259,7 @@ export default function RideDetailScreen() {
 
                 <View style={styles.infoCard}>
                     <View style={styles.row}>
-                        <Ionicons name="location" size={20} color="#4CAF50" style={styles.icon} />
+                        <Ionicons name="location" size={20} color="#34D399" style={styles.icon} />
                         <View>
                             <Text style={styles.label}>Pickup</Text>
                             <Text style={styles.value}>{ride.pickup_address}</Text>
@@ -277,7 +277,7 @@ export default function RideDetailScreen() {
 
                 <View style={styles.infoCard}>
                     <View style={styles.row}>
-                        <Ionicons name="cash" size={20} color="#333" style={styles.icon} />
+                        <Ionicons name="cash" size={20} color="#FF6B35" style={styles.icon} />
                         <View>
                             <Text style={styles.label}>Price</Text>
                             <Text style={styles.value}>NPR {ride.requested_price || ride.estimated_price}</Text>
@@ -285,7 +285,7 @@ export default function RideDetailScreen() {
                     </View>
                     <View style={styles.divider} />
                     <View style={styles.row}>
-                        <Ionicons name="speedometer" size={20} color="#333" style={styles.icon} />
+                        <Ionicons name="speedometer" size={20} color="#60A5FA" style={styles.icon} />
                         <View>
                             <Text style={styles.label}>Distance</Text>
                             <Text style={styles.value}>{ride.distance_km} km</Text>
@@ -304,7 +304,7 @@ export default function RideDetailScreen() {
                         </View>
 
                         <View style={styles.row}>
-                            <Ionicons name="person" size={20} color="#333" style={styles.icon} />
+                            <Ionicons name="person" size={20} color="#8892B0" style={styles.icon} />
                             <View style={{ flex: 1 }}>
                                 <Text style={styles.label}>Name</Text>
                                 <Text style={styles.value}>{ride.rider_name || "Unknown"}</Text>
@@ -313,7 +313,7 @@ export default function RideDetailScreen() {
 
                         {ride.model && (
                             <View style={styles.row}>
-                                <Ionicons name="car" size={20} color="#333" style={styles.icon} />
+                                <Ionicons name="car" size={20} color="#8892B0" style={styles.icon} />
                                 <View style={{ flex: 1 }}>
                                     <Text style={styles.label}>Vehicle</Text>
                                     <Text style={styles.value}>{ride.color} {ride.make} {ride.model}</Text>
@@ -322,12 +322,12 @@ export default function RideDetailScreen() {
                             </View>
                         )}
                         <TouchableOpacity style={styles.callRow} onPress={() => handleCall(ride.rider_phone_number || ride.rider_phone)}>
-                            <Ionicons name="call" size={20} color="#4CAF50" style={styles.icon} />
+                            <Ionicons name="call" size={20} color="#34D399" style={styles.icon} />
                             <View style={{ flex: 1 }}>
                                 <Text style={styles.label}>Phone (Tap to Call)</Text>
-                                <Text style={[styles.value, { color: '#4CAF50' }]}>{ride.rider_phone_number || ride.rider_phone || "Contact via App"}</Text>
+                                <Text style={[styles.value, { color: '#34D399' }]}>{ride.rider_phone_number || ride.rider_phone || "Contact via App"}</Text>
                             </View>
-                            <Ionicons name="chevron-forward" size={16} color="#CCC" />
+                            <Ionicons name="chevron-forward" size={16} color="#4D5675" />
                         </TouchableOpacity>
                     </View>
                 )}
@@ -342,19 +342,19 @@ export default function RideDetailScreen() {
                             />
                         </View>
                         <View style={styles.row}>
-                            <Ionicons name="person" size={20} color="#333" style={styles.icon} />
+                            <Ionicons name="person" size={20} color="#8892B0" style={styles.icon} />
                             <View style={{ flex: 1 }}>
                                 <Text style={styles.label}>Name</Text>
                                 <Text style={styles.value}>{ride.user_name || "Passenger"}</Text>
                             </View>
                         </View>
                         <TouchableOpacity style={styles.callRow} onPress={() => handleCall(ride.passenger_phone || ride.user_phone)}>
-                            <Ionicons name="call" size={20} color="#4CAF50" style={styles.icon} />
+                            <Ionicons name="call" size={20} color="#34D399" style={styles.icon} />
                             <View style={{ flex: 1 }}>
                                 <Text style={styles.label}>Phone (Tap to Call)</Text>
-                                <Text style={[styles.value, { color: '#4CAF50' }]}>{ride.passenger_phone || ride.user_phone}</Text>
+                                <Text style={[styles.value, { color: '#34D399' }]}>{ride.passenger_phone || ride.user_phone}</Text>
                             </View>
-                            <Ionicons name="chevron-forward" size={16} color="#CCC" />
+                            <Ionicons name="chevron-forward" size={16} color="#4D5675" />
                         </TouchableOpacity>
                     </View>
                 )}
@@ -408,96 +408,148 @@ export default function RideDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#f5f5f5" },
-    loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
-    header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 16, backgroundColor: "white" },
-    headerTitle: { fontSize: 18, fontWeight: "bold" },
-    headerButton: { width: 40 },
+    container: { flex: 1, backgroundColor: "#0B0F1A" },
+    loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#0B0F1A" },
+    header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 16, backgroundColor: "#0D1120", borderBottomWidth: 1, borderBottomColor: "rgba(255,255,255,0.04)" },
+    headerTitle: { fontSize: 18, fontWeight: "800", color: "#F0F2F8" },
+    headerButton: { width: 40, height: 40, borderRadius: 12, justifyContent: "center", alignItems: "center" },
     errorContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
-    errorText: { fontSize: 16, marginBottom: 16 },
-    backButton: { padding: 10, backgroundColor: "#FF6B35", borderRadius: 5 },
-    backButtonText: { color: "white" },
+    errorText: { fontSize: 16, marginBottom: 16, color: "#6B7599" },
+    backButton: { padding: 12, backgroundColor: "#FF6B35", borderRadius: 14, paddingHorizontal: 24 },
+    backButtonText: { color: "white", fontWeight: "700" },
     mapContainer: { height: 250, width: '100%' },
     map: { flex: 1 },
     content: { flex: 1, padding: 16 },
-    statusCard: { backgroundColor: "white", padding: 16, borderRadius: 10, marginBottom: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-    statusLabel: { fontSize: 16, color: '#666' },
-    statusValue: { fontSize: 16, fontWeight: 'bold' },
-    statusSuccess: { color: '#4CAF50' },
-    statusError: { color: '#F44336' },
-    statusPending: { color: '#FF9800' },
-    infoCard: { backgroundColor: "white", padding: 16, borderRadius: 10, marginBottom: 16 },
-    cardTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 12 },
+    statusCard: {
+        backgroundColor: "#151A2D",
+        padding: 18,
+        borderRadius: 16,
+        marginBottom: 14,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.06)",
+    },
+    statusLabel: { fontSize: 16, color: '#8892B0', fontWeight: '500' },
+    statusValue: { fontSize: 16, fontWeight: '800' },
+    statusSuccess: { color: '#34D399' },
+    statusError: { color: '#F87171' },
+    statusPending: { color: '#FBBF24' },
+    infoCard: {
+        backgroundColor: "#151A2D",
+        padding: 18,
+        borderRadius: 16,
+        marginBottom: 14,
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.06)",
+    },
+    cardTitle: { fontSize: 16, fontWeight: '800', marginBottom: 12, color: '#F0F2F8' },
     row: { flexDirection: 'row', alignItems: 'center', paddingVertical: 8 },
     icon: { marginRight: 16, width: 24 },
-    label: { fontSize: 12, color: '#999' },
-    value: { fontSize: 16, color: '#333', fontWeight: '500' },
-    subValue: { fontSize: 14, color: '#666' },
-    divider: { height: 1, backgroundColor: '#eee', marginVertical: 4 },
+    label: { fontSize: 12, color: '#6B7599', textTransform: 'uppercase', fontWeight: '600', letterSpacing: 0.3 },
+    value: { fontSize: 16, color: '#E0E4EF', fontWeight: '500' },
+    subValue: { fontSize: 14, color: '#8892B0' },
+    divider: { height: 1, backgroundColor: 'rgba(255,255,255,0.04)', marginVertical: 4 },
     marker: { width: 30, height: 30, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: 'white' },
-    cancelButton: { backgroundColor: '#FFEBEE', padding: 16, borderRadius: 10, alignItems: 'center', marginBottom: 32 },
-    cancelButtonText: { color: '#D32F2F', fontWeight: 'bold', fontSize: 16 },
-    primaryButton: { backgroundColor: '#FF6B35', padding: 18, borderRadius: 15, alignItems: 'center', marginBottom: 10, shadowColor: '#FF6B35', shadowOpacity: 0.3, shadowRadius: 10, elevation: 5 },
+    cancelButton: {
+        backgroundColor: 'rgba(248,113,113,0.1)',
+        padding: 16,
+        borderRadius: 16,
+        alignItems: 'center',
+        marginBottom: 32,
+        borderWidth: 1,
+        borderColor: 'rgba(248,113,113,0.2)',
+    },
+    cancelButtonText: { color: '#F87171', fontWeight: '800', fontSize: 16 },
+    primaryButton: {
+        backgroundColor: '#FF6B35',
+        padding: 18,
+        borderRadius: 16,
+        alignItems: 'center',
+        marginBottom: 10,
+        shadowColor: '#FF6B35',
+        shadowOpacity: 0.35,
+        shadowRadius: 12,
+        elevation: 8,
+    },
     primaryButtonText: { color: 'white', fontWeight: '900', fontSize: 16, letterSpacing: 1 },
-    completeButton: { backgroundColor: '#4CAF50', padding: 18, borderRadius: 15, alignItems: 'center', marginBottom: 32, shadowColor: '#4CAF50', shadowOpacity: 0.3, shadowRadius: 10, elevation: 5 },
+    completeButton: {
+        backgroundColor: '#34D399',
+        padding: 18,
+        borderRadius: 16,
+        alignItems: 'center',
+        marginBottom: 32,
+        shadowColor: '#34D399',
+        shadowOpacity: 0.35,
+        shadowRadius: 12,
+        elevation: 8,
+    },
     completeButtonText: { color: 'white', fontWeight: '900', fontSize: 16, letterSpacing: 1 },
     mapFallback: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F0F0F0',
+        backgroundColor: '#151A2D',
         overflow: 'hidden'
     },
     mapBadge: {
         position: 'absolute',
         top: 10,
         right: 10,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        paddingVertical: 4,
-        paddingHorizontal: 10,
-        borderRadius: 12
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        paddingVertical: 5,
+        paddingHorizontal: 12,
+        borderRadius: 12,
     },
     mapBadgeText: {
         color: 'white',
         fontSize: 10,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     callRow: {
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 12,
-        backgroundColor: '#F1F8E9',
-        borderRadius: 12,
-        paddingHorizontal: 12,
-        marginTop: 8
+        backgroundColor: 'rgba(52,211,153,0.08)',
+        borderRadius: 14,
+        paddingHorizontal: 14,
+        marginTop: 8,
+        borderWidth: 1,
+        borderColor: 'rgba(52,211,153,0.15)',
     },
     cardHeaderRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 15
+        marginBottom: 15,
     },
     avatarLarge: {
         width: 50,
         height: 50,
         borderRadius: 25,
-        backgroundColor: '#EEE',
+        backgroundColor: '#1C2240',
         borderWidth: 2,
-        borderColor: '#FF6B35'
+        borderColor: '#FF6B35',
     },
     navigateBtn: {
         flexDirection: 'row',
-        backgroundColor: '#1A73E8',
+        backgroundColor: '#3B82F6',
         padding: 16,
-        borderRadius: 15,
+        borderRadius: 16,
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom: 10,
-        gap: 10
+        gap: 10,
+        shadowColor: '#3B82F6',
+        shadowOpacity: 0.3,
+        shadowRadius: 10,
+        elevation: 6,
     },
     navigateBtnText: {
         color: 'white',
-        fontWeight: 'bold',
-        fontSize: 14
-    }
+        fontWeight: '800',
+        fontSize: 14,
+        letterSpacing: 0.5,
+    },
 })

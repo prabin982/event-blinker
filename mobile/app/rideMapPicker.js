@@ -67,7 +67,7 @@ export default function RideMapPicker() {
       <SafeAreaView style={styles.safe}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={24} color="#333" />
+            <Ionicons name="chevron-back" size={24} color="#F0F2F8" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>{type === 'pickup' ? 'Set Pickup' : 'Set Destination'}</Text>
           <View style={{ width: 40 }} />
@@ -81,7 +81,7 @@ export default function RideMapPicker() {
               onChangeText={(t) => { setQuery(t); search(t) }}
               placeholder={type === 'pickup' ? 'Search pickup...' : 'Search where to go...'}
               style={styles.input}
-              placeholderTextColor="#999"
+              placeholderTextColor="#4D5675"
             />
             {loading && <ActivityIndicator size="small" color="#FF6B35" />}
           </View>
@@ -139,22 +139,22 @@ export default function RideMapPicker() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF' },
-  safe: { zIndex: 10, backgroundColor: 'rgba(255,255,255,0.9)' },
+  container: { flex: 1, backgroundColor: '#0B0F1A' },
+  safe: { zIndex: 10, backgroundColor: 'rgba(11,15,26,0.92)' },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 15, height: 50 },
-  backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#F5F5F5', justifyContent: 'center', alignItems: 'center' },
-  headerTitle: { fontSize: 18, fontWeight: '800', color: '#333' },
+  backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.06)', justifyContent: 'center', alignItems: 'center' },
+  headerTitle: { fontSize: 18, fontWeight: '800', color: '#F0F2F8' },
   searchContainer: { padding: 15 },
-  searchBar: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#F8F9FA', borderRadius: 15, paddingHorizontal: 15, height: 50, borderWidth: 1, borderColor: '#EEE' },
-  input: { flex: 1, marginLeft: 10, fontSize: 15, color: '#333' },
-  resultsDropdown: { backgroundColor: '#FFF', borderRadius: 15, marginTop: 5, elevation: 5, padding: 5 },
-  resultItem: { flexDirection: 'row', alignItems: 'center', padding: 12, borderBottomWidth: 1, borderBottomColor: '#F0F0F0' },
-  resultText: { marginLeft: 10, fontSize: 13, color: '#666', flex: 1 },
+  searchBar: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#151A2D', borderRadius: 15, paddingHorizontal: 15, height: 50, borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)' },
+  input: { flex: 1, marginLeft: 10, fontSize: 15, color: '#F0F2F8' },
+  resultsDropdown: { backgroundColor: '#151A2D', borderRadius: 15, marginTop: 5, elevation: 8, padding: 5, borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)' },
+  resultItem: { flexDirection: 'row', alignItems: 'center', padding: 12, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.04)' },
+  resultText: { marginLeft: 10, fontSize: 13, color: '#8892B0', flex: 1 },
   mapWrap: { ...StyleSheet.absoluteFillObject, zIndex: 1 },
   map: { flex: 1 },
   pin: { marginTop: -30 },
-  footer: { position: 'absolute', bottom: 30, left: 20, right: 20, backgroundColor: '#FFF', borderRadius: 20, padding: 20, elevation: 10, zIndex: 20 },
-  addressText: { fontSize: 14, color: '#333', fontWeight: 'bold', marginBottom: 15, textAlign: 'center' },
-  confirmBtn: { backgroundColor: '#FF6B35', height: 50, borderRadius: 15, justifyContent: 'center', alignItems: 'center' },
+  footer: { position: 'absolute', bottom: 30, left: 20, right: 20, backgroundColor: '#151A2D', borderRadius: 20, padding: 20, elevation: 12, zIndex: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)', shadowColor: '#000', shadowOpacity: 0.4, shadowRadius: 15 },
+  addressText: { fontSize: 14, color: '#F0F2F8', fontWeight: 'bold', marginBottom: 15, textAlign: 'center' },
+  confirmBtn: { backgroundColor: '#FF6B35', height: 50, borderRadius: 15, justifyContent: 'center', alignItems: 'center', shadowColor: '#FF6B35', shadowOpacity: 0.3, shadowRadius: 10, elevation: 6 },
   confirmText: { color: '#FFF', fontSize: 16, fontWeight: '800', textTransform: 'uppercase' }
 })

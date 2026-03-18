@@ -165,7 +165,7 @@ export default function ProfileScreen() {
           <Text style={styles.statValue}>{stats.totalEvents}</Text>
           <Text style={styles.statLabel}>Total</Text>
         </View>
-        <View style={styles.statItem}>
+        <View style={[styles.statItem, styles.statBorder]}>
           <Text style={styles.statValue}>{stats.eventsLiked}</Text>
           <Text style={styles.statLabel}>Liked</Text>
         </View>
@@ -182,14 +182,14 @@ export default function ProfileScreen() {
           setPhoneModalVisible(true)
         }}>
           <View style={styles.infoLeft}>
-            <Ionicons name="call-outline" size={20} color="#666" />
+            <Ionicons name="call-outline" size={20} color="#8892B0" />
             <Text style={styles.infoLabel}>Phone Number</Text>
           </View>
           <View style={styles.infoRight}>
             <Text style={[styles.infoValue, !user?.phone && styles.missingInfo]}>
               {user?.phone || "Add Number"}
             </Text>
-            <Ionicons name="chevron-forward" size={16} color="#CCC" />
+            <Ionicons name="chevron-forward" size={16} color="#4D5675" />
           </View>
         </TouchableOpacity>
       </View>
@@ -208,7 +208,7 @@ export default function ProfileScreen() {
             <TextInput
               style={styles.phoneInput}
               placeholder="98XXXXXXXX"
-              placeholderTextColor="#999"
+              placeholderTextColor="#4D5675"
               keyboardType="phone-pad"
               value={newPhone}
               onChangeText={setNewPhone}
@@ -241,27 +241,27 @@ export default function ProfileScreen() {
 
       <View style={styles.menuSection}>
         <TouchableOpacity style={styles.menuItem} onPress={handleSettings} activeOpacity={0.7}>
-          <Ionicons name="settings-outline" size={20} color="#333" />
+          <Ionicons name="settings-outline" size={20} color="#8892B0" />
           <Text style={styles.menuText}>Settings</Text>
-          <Ionicons name="chevron-forward" size={20} color="#ccc" />
+          <Ionicons name="chevron-forward" size={20} color="#2A3050" />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem} onPress={handleHelp} activeOpacity={0.7}>
-          <Ionicons name="help-circle-outline" size={20} color="#333" />
+          <Ionicons name="help-circle-outline" size={20} color="#8892B0" />
           <Text style={styles.menuText}>Help & Support</Text>
-          <Ionicons name="chevron-forward" size={20} color="#ccc" />
+          <Ionicons name="chevron-forward" size={20} color="#2A3050" />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem} onPress={handleAbout} activeOpacity={0.7}>
-          <Ionicons name="information-circle-outline" size={20} color="#333" />
+          <Ionicons name="information-circle-outline" size={20} color="#8892B0" />
           <Text style={styles.menuText}>About</Text>
-          <Ionicons name="chevron-forward" size={20} color="#ccc" />
+          <Ionicons name="chevron-forward" size={20} color="#2A3050" />
         </TouchableOpacity>
 
         <TouchableOpacity style={[styles.menuItem, styles.logoutItem]} onPress={handleLogout}>
           <Ionicons name="log-out-outline" size={20} color="#FF6B35" />
           <Text style={[styles.menuText, styles.logoutText]}>Logout</Text>
-          <Ionicons name="chevron-forward" size={20} color="#ccc" />
+          <Ionicons name="chevron-forward" size={20} color="#2A3050" />
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -271,23 +271,25 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#0B0F1A",
   },
   header: {
-    backgroundColor: "#fff",
-    paddingVertical: 24,
+    backgroundColor: "#0D1120",
+    paddingVertical: 32,
     alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: "rgba(255,255,255,0.04)",
   },
   profileImageContainer: {
-    marginBottom: 12,
+    marginBottom: 16,
   },
   profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#ddd",
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    backgroundColor: "#1C2240",
+    borderWidth: 3,
+    borderColor: "rgba(255,107,53,0.3)",
   },
   placeholderImage: {
     justifyContent: "center",
@@ -295,94 +297,99 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF6B35",
   },
   userName: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#333",
+    fontSize: 22,
+    fontWeight: "800",
+    color: "#F0F2F8",
+    letterSpacing: -0.3,
   },
   userEmail: {
     fontSize: 14,
-    color: "#666",
+    color: "#6B7599",
     marginTop: 4,
   },
   userTypeTag: {
-    marginTop: 8,
-    backgroundColor: "#FFE8DC",
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 16,
+    marginTop: 10,
+    backgroundColor: "rgba(255,107,53,0.12)",
+    paddingHorizontal: 14,
+    paddingVertical: 5,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "rgba(255,107,53,0.2)",
   },
   userTypeText: {
     color: "#FF6B35",
     fontSize: 12,
-    fontWeight: "600",
-  },
-  bioSection: {
-    backgroundColor: "#fff",
-    padding: 16,
-    marginTop: 12,
-  },
-  bioTitle: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 8,
-  },
-  bioText: {
-    fontSize: 14,
-    color: "#666",
-    lineHeight: 20,
+    fontWeight: "700",
+    letterSpacing: 0.3,
   },
   statsContainer: {
     flexDirection: "row",
-    backgroundColor: "#fff",
-    marginTop: 12,
-    paddingVertical: 16,
+    backgroundColor: "#151A2D",
+    marginTop: 16,
+    marginHorizontal: 16,
+    paddingVertical: 20,
     justifyContent: "space-around",
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.06)",
   },
   statItem: {
     alignItems: "center",
+    flex: 1,
+  },
+  statBorder: {
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderColor: "rgba(255,255,255,0.06)",
   },
   statValue: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 22,
+    fontWeight: "800",
     color: "#FF6B35",
   },
   statLabel: {
     fontSize: 12,
-    color: "#666",
+    color: "#6B7599",
     marginTop: 4,
+    fontWeight: "500",
   },
   menuSection: {
-    backgroundColor: "#fff",
-    marginTop: 12,
-    marginBottom: 20,
+    backgroundColor: "#151A2D",
+    marginTop: 16,
+    marginBottom: 24,
+    marginHorizontal: 16,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.06)",
+    overflow: "hidden",
   },
   menuItem: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
+    paddingHorizontal: 18,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: "rgba(255,255,255,0.04)",
   },
   menuText: {
     flex: 1,
-    fontSize: 14,
-    color: "#333",
-    marginLeft: 12,
+    fontSize: 15,
+    color: "#E0E4EF",
+    marginLeft: 14,
     fontWeight: "500",
   },
   logoutItem: {
-    marginTop: 8,
+    borderBottomWidth: 0,
   },
   logoutText: {
     color: "#FF6B35",
+    fontWeight: "600",
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#0B0F1A",
   },
   errorContainer: {
     flex: 1,
@@ -392,38 +399,114 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 16,
-    color: "#666",
+    color: "#6B7599",
     marginBottom: 20,
   },
   loginButton: {
     backgroundColor: "#FF6B35",
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 28,
+    borderRadius: 14,
+    shadowColor: "#FF6B35",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
   },
   loginButtonText: {
     color: "#fff",
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "800",
   },
-  section: { backgroundColor: '#FFF', marginTop: 12, padding: 16 },
-  sectionTitle: { fontSize: 13, fontWeight: '800', color: '#999', textTransform: 'uppercase', marginBottom: 15, letterSpacing: 0.5 },
-  infoRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 12 },
+  section: {
+    backgroundColor: '#151A2D',
+    marginTop: 16,
+    marginHorizontal: 16,
+    padding: 18,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.06)',
+  },
+  sectionTitle: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#6B7599',
+    textTransform: 'uppercase',
+    marginBottom: 15,
+    letterSpacing: 0.5,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
   infoLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  infoLabel: { fontSize: 15, color: '#333', fontWeight: '500' },
+  infoLabel: { fontSize: 15, color: '#E0E4EF', fontWeight: '500' },
   infoRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  infoValue: { fontSize: 15, color: '#666' },
+  infoValue: { fontSize: 15, color: '#8892B0' },
   missingInfo: { color: '#FF6B35', fontWeight: '700' },
-
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center', padding: 20 },
-  modalContent: { backgroundColor: '#FFF', width: '100%', borderRadius: 25, padding: 25, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 15, elevation: 10 },
-  modalTitle: { fontSize: 20, fontWeight: '800', color: '#333', textAlign: 'center' },
-  modalSub: { fontSize: 14, color: '#666', textAlign: 'center', marginTop: 8, marginBottom: 20 },
-  phoneInput: { backgroundColor: '#F8F9FA', borderRadius: 15, height: 60, paddingHorizontal: 20, fontSize: 18, fontWeight: '700', color: '#333', borderWidth: 1, borderColor: '#EEE', marginBottom: 25 },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modalContent: {
+    backgroundColor: '#151A2D',
+    width: '100%',
+    borderRadius: 25,
+    padding: 28,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+    shadowColor: '#000',
+    shadowOpacity: 0.4,
+    shadowRadius: 20,
+    elevation: 12,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#F0F2F8',
+    textAlign: 'center',
+  },
+  modalSub: {
+    fontSize: 14,
+    color: '#6B7599',
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 24,
+  },
+  phoneInput: {
+    backgroundColor: '#1C2240',
+    borderRadius: 15,
+    height: 60,
+    paddingHorizontal: 20,
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#F0F2F8',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+    marginBottom: 25,
+  },
   modalActions: { flexDirection: 'row', gap: 15 },
-  modalBtn: { flex: 1, height: 50, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
-  cancelBtn: { backgroundColor: '#F0F0F0' },
-  cancelBtnText: { color: '#666', fontWeight: '700' },
-  saveBtn: { backgroundColor: '#FF6B35' },
-  saveBtnText: { color: '#FFF', fontWeight: '700' }
+  modalBtn: {
+    flex: 1,
+    height: 50,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cancelBtn: { backgroundColor: 'rgba(255,255,255,0.06)' },
+  cancelBtnText: { color: '#8892B0', fontWeight: '700' },
+  saveBtn: {
+    backgroundColor: '#FF6B35',
+    shadowColor: '#FF6B35',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  saveBtnText: { color: '#FFF', fontWeight: '700' },
 })

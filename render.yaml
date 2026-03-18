@@ -1,3 +1,10 @@
+databases:
+  - name: event-blinker-db
+    databaseName: event_blinker
+    user: event_blinker_user
+    region: ohio
+    plan: free
+
 services:
   - type: web
     name: event-blinker-backend

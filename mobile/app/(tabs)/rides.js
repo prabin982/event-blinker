@@ -12,6 +12,7 @@ import {
   TextInput,
   Dimensions,
   Image,
+  Linking,
 } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { AppState } from 'react-native'
@@ -337,6 +338,12 @@ function RiderPortalView({ router, user, riderProfile, onUpdateProfile }) {
                 <View style={styles.activeCardPath}>
                   <Text style={styles.activePathText} numberOfLines={1}>To: {ride.dropoff_address}</Text>
                 </View>
+                {ride.user_phone && (
+                  <TouchableOpacity style={styles.cardPhoneButton} onPress={() => Linking.openURL(`tel:${ride.user_phone}`)}>
+                    <Ionicons name="call" size={14} color="#FFF" />
+                    <Text style={styles.cardPhoneText}>Call Passenger: {ride.user_phone}</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </TouchableOpacity>
           ))}
@@ -710,6 +717,12 @@ function BookRideView({ router, user, myRides, onRefresh, loading }) {
                   <Text style={[styles.historyPrice, { marginTop: 5 }]}>NPR {ride.requested_price || ride.estimated_price}</Text>
                 </View>
               </View>
+              {['accepted', 'in_progress', 'started'].includes(ride.status) && ride.rider_phone && (
+                <View style={styles.cardPhoneRow}>
+                  <Ionicons name="call" size={14} color="#34D399" />
+                  <Text style={styles.cardPhoneTextDark}>Rider: {ride.rider_phone}</Text>
+                </View>
+              )}
             </TouchableOpacity>
           ))
         )}
@@ -1048,5 +1061,9 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     backgroundColor: '#1C2240'
-  }
+  },
+  cardPhoneButton: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.2)', paddingVertical: 6, paddingHorizontal: 12, borderRadius: 8, alignSelf: 'flex-start', marginTop: 8 },
+  cardPhoneText: { color: '#FFF', fontSize: 12, fontWeight: '700', marginLeft: 6 },
+  cardPhoneRow: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(52,211,153,0.1)', paddingVertical: 8, paddingHorizontal: 10, borderRadius: 8, marginTop: 10, alignSelf: 'flex-start' },
+  cardPhoneTextDark: { color: '#34D399', fontSize: 12, fontWeight: '700', marginLeft: 6 },
 })

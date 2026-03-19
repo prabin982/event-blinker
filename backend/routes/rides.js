@@ -647,6 +647,7 @@ router.get("/request/:id", authMiddleware, async (req, res) => {
          ST_X(rr.dropoff_location::geometry) as dropoff_lng,
          ST_Y(rr.dropoff_location::geometry) as dropoff_lat,
          r.id as rider_profile_id,
+         r.user_id as rider_user_id,
          v.make, v.model, v.color, v.license_plate, v.vehicle_type,
          ${await getUserNameSelect('r_u', 'rider')},
          ${await getUserNameSelect('p_u', 'user')},

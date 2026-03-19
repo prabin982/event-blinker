@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper]{report}
+\documentclass[14pt,a4paper]{extreport}
 
 \usepackage{geometry}
 \usepackage{graphicx}
@@ -16,6 +16,9 @@
 \usepackage{times}
 \usepackage{multirow}
 \usepackage{amssymb}
+\usepackage{etoolbox}
+\usepackage[hang]{footmisc}
+\usepackage{chngcntr}
 
 % Code listing style
 \lstset{
@@ -29,12 +32,42 @@
 }
 
 % Page setup
-\geometry{margin=1in}
+\geometry{
+  a4paper,
+  left=2.5cm,
+  right=2.5cm,
+  top=2cm,
+  bottom=2cm
+}
+
+% Line spacing
 \setstretch{1.5}
+
+% Footnote configuration
+\counterwithout{footnote}{chapter} % Continuous footnote numbering
+\setlength{\footnotemargin}{1cm}   % Indent footnote by 1cm
+\renewcommand{\footnoterule}{%     % Broken line (5cm / 20 chars approx)
+  \kern -3pt
+  \hrule width 5cm height 0.4pt
+  \kern 2.6pt
+}
+\renewcommand{\footnotesize}{\fontsize{11pt}{13pt}\selectfont} % Slightly larger than 10pt since base is 14pt
+
+% Quote/Quotation configuration (single spacing, 1cm indent)
+\renewenvironment{quote}
+               {\list{}{\leftmargin=1cm}%
+                \item\relax\singlespacing}
+               {\endlist}
+\renewenvironment{quotation}
+               {\list{}{\leftmargin=1cm}%
+                \item\relax\singlespacing}
+               {\endlist}
 
 % Section formatting
 \titleformat{\chapter}[hang]{\bfseries\Large}{\thechapter.}{1em}{}
 \titleformat{\section}[hang]{\bfseries\large}{\thesection}{1em}{}
+\titlespacing*{\chapter}{0pt}{*4}{*2}
+\titlespacing*{\section}{0pt}{*3}{*1.5}
 
 \begin{document}
 
@@ -42,37 +75,45 @@
 % TITLE PAGE
 %-------------------------------
 \begin{titlepage}
+    \singlespacing
     \centering
+    \vfill
     % University Logo
-    \includegraphics[scale=0.3]{logotu.jpg}\par\vspace{1cm}
+    \includegraphics[scale=0.25]{logotu.jpg}\par\vspace{0.2cm}
 
     % University and Department
-    {\Large\bfseries TRIBHUVAN UNIVERSITY\\[0.2cm]
-    INSTITUTE OF ENGINEERING\\[0.2cm]
+    {\Large\bfseries TRIBHUVAN UNIVERSITY\\[0.15cm]
+    INSTITUTE OF ENGINEERING\\[0.15cm]
     PULCHOWK CAMPUS\par}
-    \vspace{1cm}
+    \vfill
 
     % Project Title
-    {\LARGE\bfseries A Final Project Report\\[0.3cm]
-    \textbf{On}\\[0.3cm]
-    \textbf{Event Blinker -- Real-Time Event Discovery Platform\\with Peer-to-Peer Ride Sharing and AI Concierge}\par}
-    \vspace{1.5cm}
+    {\LARGE\bfseries A Mid-Term Report on Major Project \\[0.2cm]
+    \textbf{On}\\[0.2cm]
+    \textbf{Event Blinker -- Real-Time Event Discovery Platform\\with Peer-to-Peer Ride Sharing}\par}
+    \vfill
 
     % Submitted By Section
     {\large\textbf{Submitted By:}\par}
     {\large
-    Prabin Dhungana (PUL078BEI0XX)\\  % <-- UPDATE your roll number
-    \par}
-    \vspace{1cm}
+    Manish Adhikari (078BEI019)\\
+    Nandani Sah (078BEI023)\\
+    Prabin Raj Dhungana (078BEI026)\par}
+    \vfill
+
+    % Supervisor Section
+    {\large\textbf{Supervisor:}\par}
+    {\large Sanjivan Satyal\par}
+    \vfill
 
     % Submitted To Section
     {\large\textbf{Submitted To:}\par}
     {\large Department of Electronics \& Computer Engineering\par}
-
     \vfill
 
     % Date at bottom
     {\large March, 2026\par}
+    \vfill
 \end{titlepage}
 
 %-------------------------------
@@ -85,16 +126,18 @@ We would like to express our sincere gratitude to the Department of Electronics 
 
 We are deeply thankful to the Head of the Department, along with the Deputy Heads, for fostering an academic environment that promotes research, innovation, and practical engineering.
 
-We also extend our gratitude to our project supervisor for their guidance and constructive feedback throughout the development of \textbf{Event Blinker}. Their suggestions on system architecture, database design, and real-time communication were invaluable.
+We also extend our gratitude to our project supervisor, \textbf{Sanjivan Satyal}, for his guidance and constructive feedback throughout the development of \textbf{Event Blinker}. His suggestions on system architecture, database design, and real-time communication were invaluable.
 
-Furthermore, we acknowledge the open-source community whose libraries and tools---including Node.js, React Native, PostgreSQL/PostGIS, Expo, and Socket.io---formed the foundation of this platform.
+Furthermore, we acknowledge the open-source community whose libraries and tools, including Node.js, React Native, PostgreSQL/PostGIS, Expo, and Socket.io, formed the foundation of this platform.
 
 This submission would not have been possible without the collaborative efforts and guidance of everyone mentioned above.
 
 \vspace{1cm}
 \noindent Thank you.\\
 Sincerely,\\
-Prabin Dhungana
+Manish Adhikari\\
+Nandani Sah\\
+Prabin Raj Dhungana
 
 %-------------------------------
 % ABSTRACT
@@ -119,6 +162,8 @@ Experimental results demonstrate sub-200ms API response times, sub-50ms WebSocke
 
 \listoftables
 \addcontentsline{toc}{chapter}{\numberline{}List of Tables}
+
+\input{abbreviations}
 
 %-------------------------------
 % INCLUDE SECTIONS

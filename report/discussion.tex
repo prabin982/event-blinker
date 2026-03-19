@@ -1,7 +1,7 @@
 \chapter{Discussion}
 
 \section{Geospatial Performance Analysis}
-The PostGIS-powered geospatial engine achieves consistent sub-200ms response times for radius-based event queries. The \texttt{ST\_DWithin} function, combined with GiST spatial indexing on \texttt{events.location\_geom} and \texttt{riders.current\_location}, ensures that query performance scales linearly with data volume rather than degrading exponentially. The Mapbox GL integration on the mobile client renders markers at 60fps for typical event densities (up to 100 markers in viewport).
+The PostGIS-powered geospatial engine achieves consistent sub-200ms response times for radius-based event queries. The \texttt{ST\_DWithin} function, combined with GiST spatial indexing on \\ \texttt{events.location\_geom} and \texttt{riders.current\_location}, ensures that query performance scales linearly with data volume rather than degrading exponentially. The Mapbox GL integration on the mobile client renders markers at 60fps for typical event densities (up to 100 markers in viewport).
 
 \begin{table}[H]
 \centering
@@ -38,7 +38,7 @@ The peer-to-peer ride-sharing system provides a unique differentiator among even
 \end{itemize}
 
 \section{Real-Time Communication}
-Socket.io enables low-latency event chat and ride notifications. The room-based architecture (\texttt{event:\{id\}}, \texttt{rider:\{id\}}, \texttt{rides:all}) efficiently segments traffic. The mobile-optimized configuration supports both \texttt{polling} (for reliability) and \texttt{websocket} (for speed) transports with \texttt{allowEIO3} for backward compatibility.
+Socket.io enables low-latency event chat and ride notifications. The room-based architecture \\ (\texttt{event:\{id\}}, \texttt{rider:\{id\}}, \texttt{rides:all}) efficiently segments traffic. The mobile-optimized configuration supports both \texttt{polling} (for reliability) and \texttt{websocket} (for speed) transports with \texttt{allowEIO3} for backward compatibility.
 
 \section{Security Analysis}
 The platform implements industry-standard security:
@@ -73,4 +73,4 @@ Free to Use & \checkmark & Freemium & Freemium & \checkmark \\
 \end{table}
 
 \section{Implications for Nepal's Tech Ecosystem}
-\textbf{Event Blinker} demonstrates that locally-developed technology can address uniquely local problems---traffic congestion, event fragmentation, and language-specific assistance. By combining open-source tools (Node.js, PostgreSQL, Expo) with free-tier AI services (OpenRouter), the project proves that feature-rich, production-grade applications can be built cost-effectively for emerging markets.
+\textbf{Event Blinker} demonstrates that locally-developed technology can address uniquely local problems, traffic congestion, event fragmentation, and language-specific assistance. By combining open-source tools (Node.js, PostgreSQL, Expo) with free-tier AI services (OpenRouter), the project proves that feature-rich, production-grade applications can be built cost-effectively for emerging markets.

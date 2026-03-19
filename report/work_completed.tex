@@ -3,7 +3,7 @@
 All core modules of \textbf{Event Blinker} have been fully implemented and integrated. The following sections detail each completed milestone.
 
 \section{Backend API Server}
-A production-ready Node.js/Express server with 11 route modules, JWT authentication middleware, Socket.io real-time engine, and full CORS/rate-limiting support. The server is containerized via Docker and deployed on Render.
+A production-ready Node.js/Express server that serves as the backbone of the entire ecosystem. It includes 11 specialized route modules handling everything from biometric-ready JWT authentication to advanced spatial logic for ride-sharing. The server implements Socket.io for real-time engine capabilities, enabling live notifications and instant chat room communication. For security, we have integrated standard security headers, rate-limiting to prevent brute-force attacks, and a CORS policy that restricts API access to verified client domains. The entire environment is containerized via Docker to ensure horizontal scalability and consistent deployment on cloud platforms like Render.
 
 \section{PostgreSQL/PostGIS Database}
 Complete database schema implemented across 4 migration files:
@@ -17,89 +17,65 @@ Complete database schema implemented across 4 migration files:
 \section{Geospatial Event Discovery}
 Fully implemented interactive mobile maps with Mapbox GL. Events are fetched using PostGIS \texttt{ST\_DWithin} with radius filtering and sorted by \texttt{ST\_Distance}.
 
-% ---- FIGURE: Map Discovery Screenshot ----
-% >>> TAKE THIS SCREENSHOT: Open your mobile app, show the map screen with event markers visible
-\begin{figure}[H]
-    \centering
-    \fbox{\parbox{0.85\textwidth}{\centering\vspace{5cm}
-    \textbf{[SCREENSHOT: Mobile Map Discovery Screen]}\\
-    \small Take a screenshot of the map.js screen showing event markers on Mapbox
-    \vspace{2cm}}}
-    \caption{Mobile App -- Geospatial Event Discovery with Mapbox GL}
-    \label{fig:map_screen}
-\end{figure}
-
 \section{Blinker AI Virtual Concierge}
 Fully integrated LLAMA 3.3 AI with context-aware responses. The AI uses platform knowledge (ride-sharing instructions, ticketing help, Nepali greetings) and live event data.
 
-% ---- FIGURE: Blinker AI Chat Screenshot ----
-% >>> TAKE THIS SCREENSHOT: Open the AI chat, ask about an event, show the localized response
 \begin{figure}[H]
     \centering
-    \fbox{\parbox{0.85\textwidth}{\centering\vspace{5cm}
-    \textbf{[SCREENSHOT: Blinker AI Chat Response]}\\
-    \small Take a screenshot of the AI chat showing a user asking about an event and receiving a localized response with Nepali greetings
-    \vspace{2cm}}}
-    \caption{Blinker AI Providing Context-Aware Event Assistance}
-    \label{fig:ai_chat}
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{blinkers.jpg}
+        \caption{Geospatial Event Discovery}
+        \label{fig:map_screen}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{aiassitant.jpg}
+        \caption{Blinker AI Assistant Interface}
+        \label{fig:ai_chat}
+    \end{minipage}
 \end{figure}
 
 \section{Peer-to-Peer Ride Sharing}
 Complete ride-sharing lifecycle: 3-step driver registration, ride request creation, nearby rider notification via Socket.io, price offer/accept negotiation, ride start/complete, and review system.
 
-% ---- FIGURE: Ride Sharing UI Screenshot ----
-% >>> TAKE THIS SCREENSHOT: Show the rides.js tab with ride options or the riderRegister.js form
-\begin{figure}[H]
-    \centering
-    \fbox{\parbox{0.85\textwidth}{\centering\vspace{5cm}
-    \textbf{[SCREENSHOT: Ride Sharing Screen]}\\
-    \small Take a screenshot of the rides tab showing available rides or the ride request form
-    \vspace{2cm}}}
-    \caption{Peer-to-Peer Ride Sharing Interface}
-    \label{fig:ride_sharing}
-\end{figure}
-
 \section{Real-Time Live Chat}
 Socket.io-powered event chat rooms with user/organizer/bot message types. AI bot responses are triggered when users ask questions in event chat.
 
-% ---- FIGURE: Live Chat Screenshot ----
-% >>> TAKE THIS SCREENSHOT: Open an event's chat, show messages with different sender types
 \begin{figure}[H]
     \centering
-    \fbox{\parbox{0.85\textwidth}{\centering\vspace{5cm}
-    \textbf{[SCREENSHOT: Live Event Chat]}\\
-    \small Take a screenshot of the chat.js screen showing messages from user, organizer, and bot
-    \vspace{2cm}}}
-    \caption{Real-Time Event Chat with AI Bot Integration}
-    \label{fig:live_chat}
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ride booking.jpg}
+        \caption{Ride Sharing Interface}
+        \label{fig:ride_sharing}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{eventorg_chat.jpg}
+        \caption{Real-Time Event Chat}
+        \label{fig:live_chat}
+    \end{minipage}
 \end{figure}
 
 \section{Organizer Web Portal}
-React/Vite web dashboard with 7 pages: Login, Dashboard, Events Management, Event Creation (with Mapbox MapPicker), Analytics, Chat Management, and Rider Verification.
+The React/Vite web portal has been developed to empower event organizers with professional management and analytical tools. It features 7 distinct functional modules: a secure Login portal, a statistics-rich Dashboard, an interactive Events Management page, an Event Creation wizard with a built-in Mapbox MapPicker, a dedicated Analytics page for attendance and engagement tracking, a Chat Management console for moderating discussions, and a Rider Verification module. The portal uses responsive design principles to ensure a seamless experience on both desktop and tablet devices.
 
-% ---- FIGURE: Web Dashboard Screenshot ----
-% >>> TAKE THIS SCREENSHOT: Open web portal at localhost:5173, show the dashboard page
 \begin{figure}[H]
     \centering
-    \fbox{\parbox{0.85\textwidth}{\centering\vspace{5cm}
-    \textbf{[SCREENSHOT: Organizer Web Dashboard]}\\
-    \small Take a screenshot of the DashboardPage showing event stats and management options
-    \vspace{2cm}}}
-    \caption{Organizer Web Portal -- Dashboard View}
-    \label{fig:web_dashboard}
+    \includegraphics[width=0.8\textwidth]{organizer_portal.png}
+    \caption{Organizer Web Portal -- Event Management Dashboard}
+    \label{fig:organizer_portal}
 \end{figure}
 
 \section{Admin Verification Portal}
 Standalone HTML admin portal with token-based authentication. Supports approval/rejection of organizers, events, riders, and driver licenses.
 
-% ---- FIGURE: Admin Portal Screenshot ----
-% >>> TAKE THIS SCREENSHOT: Open admin portal, show the rider verification section
 \begin{figure}[H]
     \centering
-    \fbox{\parbox{0.85\textwidth}{\centering\vspace{5cm}
-    \textbf{[SCREENSHOT: Admin Portal -- Rider Verification]}\\
-    \small Take a screenshot of the admin portal showing pending rider approvals with document review
-    \vspace{2cm}}}
-    \caption{Admin Portal -- Rider and License Verification}
+    \includegraphics[width=0.8\textwidth]{admin_portal.png}
+    \caption{Admin Portal -- Verification and Approval Workflows}
     \label{fig:admin_portal}
 \end{figure}

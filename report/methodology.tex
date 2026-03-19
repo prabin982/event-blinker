@@ -2,36 +2,9 @@
 
 The development of \textbf{Event Blinker} follows an agile, iterative development methodology, progressing through requirements analysis, architecture design, module-wise implementation, integration testing, and deployment.
 
-\section{Technology Stack}
-The platform is built using a carefully selected modern full-stack:
-
-\begin{table}[H]
-\centering
-\caption{Technology Stack of Event Blinker}
-\label{tab:tech_stack}
-\begin{tabular}{@{}lll@{}}
-\toprule
-\textbf{Layer} & \textbf{Technology} & \textbf{Purpose} \\
-\midrule
-Backend & Node.js + Express.js & RESTful API server \\
-Database & PostgreSQL + PostGIS & Geospatial data storage \\
-Real-Time & Socket.io & Live chat \& notifications \\
-Mobile App & React Native + Expo & Cross-platform mobile UI \\
-Maps & Mapbox GL & Interactive map rendering \\
-State Mgmt & Zustand (mobile) & Lightweight state stores \\
-Web Portal & React.js + Vite & Organizer dashboard \\
-Web Styling & Tailwind CSS & Responsive web UI \\
-Admin Portal & Vanilla HTML/CSS/JS & Standalone admin interface \\
-AI & OpenRouter (LLAMA 3.3) & Virtual concierge \\
-Auth & JWT + bcryptjs & Secure authentication \\
-File Upload & Multer & Image upload handling \\
-Deployment & Render + Docker & Cloud hosting \\
-\bottomrule
-\end{tabular}
-\end{table}
-
+% Section 3.1 Technology Stack removed as it repeats what was in the Intro/Scope.
 \section{Backend Architecture}
-The backend (\texttt{server.js}) serves as the central API hub, registering 11 route modules:
+The backend (\texttt{server.js}) serves as the central API hub, registering 11 route modules. This modular structure allows each functional area of the application, such as authentication, event management, and ride-sharing, to be managed independently. Each module is equipped with its own set of validation logic and database interactions, which promotes maintainability and scalability. The integration of JSON Web Tokens (JWT) facilitates secure, stateless communication between the server and the various clients, while customized middleware handles cross-origin resource sharing (CORS) and detailed request logging for security audits.
 
 \begin{table}[H]
 \centering
@@ -56,26 +29,22 @@ The backend (\texttt{server.js}) serves as the central API hub, registering 11 r
 \end{tabular}
 \end{table}
 
-% ---- FIGURE: Data Flow Diagram ----
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{system_archi.jpg}
-    \caption{Data Flow: Client Request $\rightarrow$ Express Router $\rightarrow$ PostgreSQL/PostGIS $\rightarrow$ Response}
-    \label{fig:data_flow}
-\end{figure}
+% Figure 3.1 (Data Flow) removed.
 
 \section{Geospatial Engine}
-Event discovery is powered by PostGIS spatial functions:
+Event discovery is powered by PostGIS spatial functions, which extend the PostgreSQL database to support geographic objects. By utilizing the \texttt{GEOMETRY(Point, 4326)} type, we store the precise latitude and longitude coordinates of events and riders. This native support allows the system to perform complex spatial calculations directly within the database engine, ensuring high performance and accuracy even as the dataset grows.
+
 \begin{itemize}[noitemsep]
     \item \texttt{ST\_SetSRID(ST\_Point(lng, lat), 4326)} -- Create spatial points from coordinates.
-    \item \texttt{ST\_DWithin(geom, point, radius)} -- Find events within a given radius (meters).
-    \item \texttt{ST\_Distance(geom1, geom2)} -- Calculate distance between two geometries for sorting.
-    \item \texttt{ST\_AsGeoJSON(geom)} -- Convert geometry to GeoJSON for Mapbox rendering.
+    \item \texttt{ST\_DWithin(geom, point, radius)} -- Efficiently find events within a given distance.
+    \item \texttt{ST\_Distance(geom1, geom2)} -- Calculate the exact distance between geometries for sorting.
+    \item \texttt{ST\_AsGeoJSON(geom)} -- Convert geometry objects into GeoJSON for client-side rendering.
 \end{itemize}
-GiST spatial indexes are created on \texttt{events.location\_geom}, \texttt{riders.current\_location}, \texttt{ride\_requests.pickup\_location}, and \texttt{ride\_requests.dropoff\_location} to ensure sub-second query performance.
+GiST spatial indexes are meticulously maintained on all location-based fields, \\ such as \texttt{events.location\_geom} and \texttt{riders.current\_location}, ensuring that geospatial queries consistently achieve sub-second response times.
 
 \section{AI Integration (Blinker AI)}
-The AI module (\texttt{routes/ai.js}) implements a multi-model fallback strategy:
+The AI module (\texttt{routes/ai.js}) implements a sophisticated multi-model fallback strategy to guarantee high availability and reliability. By utilizing the OpenRouter API, the application can seamlessly transition between different LLMs, such as LLAMA 3.3 and Gemini Flash, in response to varying API performance or downtime. The integration layer performs dynamic prompt construction, injecting live event data from the database into the LLM context to ensure that the AI's responses are accurate, timely, and culturally localized for the Nepali user base.
+
 \begin{enumerate}[noitemsep]
     \item User sends a message via \texttt{POST /api/ai/chat}.
     \item Backend fetches live event context from PostgreSQL (title, venue, price, time).
@@ -83,20 +52,15 @@ The AI module (\texttt{routes/ai.js}) implements a multi-model fallback strategy
     \item The request cycles through 5 LLM models in order: LLAMA 3.3 $\rightarrow$ Gemini Flash $\rightarrow$ Gemini 1.5 $\rightarrow$ LLAMA 3.1 $\rightarrow$ OpenRouter Free.
     \item Each model has a 12-second timeout. If one fails, the next is tried automatically.
 \end{enumerate}
-
-% ---- FIGURE: AI Flowchart ----
-% >>> CREATE THIS: A flowchart showing the AI multi-model fallback:
-%     User Message → Fetch Event Context → Try Model 1 → Success? → Return
-%                                                      → Fail → Try Model 2 → ...
 \begin{figure}[H]
     \centering
-    \fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}
-    \textbf{[FIGURE: AI Multi-Model Fallback Flowchart]}\\
-    \small Create a flowchart showing: User Message $\rightarrow$ Fetch Event Context from DB $\rightarrow$ Build System Prompt $\rightarrow$ Try LLAMA 3.3 $\rightarrow$ Timeout/Fail? $\rightarrow$ Try Gemini Flash $\rightarrow$ $\ldots$ $\rightarrow$ Return Response
-    \vspace{3cm}}}
+    \includegraphics[width=0.8\textwidth]{ai.png}
     \caption{Blinker AI Multi-Model Fallback Strategy}
     \label{fig:ai_flowchart}
 \end{figure}
+
+% Figure 3.2 (AI Flowchart) removed.
+
 
 \section{Ride-Sharing Module}
 The ride-sharing system (\texttt{routes/rides.js}, 925 lines) implements a complete lifecycle:
@@ -135,10 +99,7 @@ Van & 40 & 50 & 10\% ($>$20 km) \\
 %     → Passenger Confirms → Ride In-Progress → Ride Complete → Review
 \begin{figure}[H]
     \centering
-    \fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}
-    \textbf{[FIGURE: Ride Request Lifecycle Flowchart]}\\
-    \small Create a flowchart: Passenger Creates Request $\rightarrow$ Socket.io Notifies Riders $\rightarrow$ Rider Accepts or Offers Custom Price $\rightarrow$ Passenger Accepts Offer $\rightarrow$ Ride Starts $\rightarrow$ Ride Completes $\rightarrow$ Review/Rating
-    \vspace{3cm}}}
+    \includegraphics[width=0.8\textwidth]{activity.png}
     \caption{Peer-to-Peer Ride Request Lifecycle}
     \label{fig:ride_lifecycle}
 \end{figure}
@@ -191,7 +152,8 @@ Login/Register & \texttt{auth/login.js}, \texttt{register.js} & Authentication s
 \end{tabular}
 \end{table}
 
-State management uses \textbf{Zustand} stores: \texttt{authStore.js}, \texttt{eventStore.js}, and \texttt{socketStore.js}.
+State management uses \textbf{Zustand} stores: \texttt{authStore.js}, \texttt{eventStore.js}, and 
+\\ \texttt{socketStore.js}.
 
 \section{Web Organizer Portal}
 The React/Vite web portal (\texttt{web/src/}) provides organizer tools:

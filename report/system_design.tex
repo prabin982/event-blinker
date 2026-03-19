@@ -4,10 +4,12 @@
 The architecture of \textbf{Event Blinker} follows a three-tier client-server model with real-time communication:
 
 \begin{itemize}[noitemsep]
-    \item \textbf{Presentation Layer:} React Native (Expo) mobile app + React/Vite web portal + HTML admin portal.
-    \item \textbf{Application Layer:} Node.js/Express.js API server with Socket.io real-time engine.
-    \item \textbf{Data Layer:} PostgreSQL with PostGIS extension for geospatial data, with file storage for uploads.
+    \item \textbf{Presentation Layer:} A multi-client ecosystem comprising a cross-platform React Native (Expo) mobile application, a responsive React/Vite web portal for event organizers, and a lightweight standalone HTML/JS admin portal. This decoupling allows each interface to be optimized for its specific user base.
+    \item \textbf{Application Layer:} A centralized Node.js/Express.js API server that handles business logic, authentication, and integration with third-party services. The Socket.io engine is embedded within this layer to facilitate bidirectional, real-time message broadcasting for chat and ride updates.
+    \item \textbf{Data Layer:} A relational PostgreSQL database with the PostGIS extension for high-performance spatial queries, complemented by a local file storage system for managing document and image uploads.
 \end{itemize}
+
+By adopting this modular architecture, \textbf{Event Blinker} ensures that frontend clients can evolve independently of the backend logic. The three-tier model also enhances security by isolating the database from direct external access, forcing all requests to pass through the authentication and validation middleware in the application layer.
 
 % ---- FIGURE: System Architecture ----
 % >>> CREATE THIS: A clean 3-tier diagram showing:
@@ -21,15 +23,7 @@ The architecture of \textbf{Event Blinker} follows a three-tier client-server mo
 %     [PostgreSQL + PostGIS]     [OpenRouter AI API]    [File Storage]
 \begin{figure}[H]
     \centering
-    \fbox{\parbox{0.85\textwidth}{\centering\vspace{4cm}
-    \textbf{[FIGURE: Three-Tier System Architecture Diagram]}\\[0.3cm]
-    \small \textbf{Tier 1 (Clients):} Mobile App (Expo) | Web Portal (React/Vite) | Admin Portal (HTML)\\
-    $\downarrow$ REST API + WebSocket $\downarrow$\\
-    \textbf{Tier 2 (Server):} Node.js/Express (JWT Auth + 11 Routes + Socket.io)\\
-    $\downarrow$\\
-    \textbf{Tier 3 (Data):} PostgreSQL/PostGIS | OpenRouter AI | File Storage\\[0.3cm]
-    \textit{Create this as a professional block diagram with arrows.}
-    \vspace{2cm}}}
+    \includegraphics[width=0.9\textwidth]{system_archi.jpg}
     \caption{System Architecture of Event Blinker}
     \label{fig:system_architecture}
 \end{figure}
@@ -37,7 +31,7 @@ The architecture of \textbf{Event Blinker} follows a three-tier client-server mo
 \section{Database Design}
 
 \subsection{Entity-Relationship Overview}
-The database consists of 12+ tables organized into three domains:
+The database consists of 12+ tables organized into three domains: Users, Events, and Rides. Each domain is interlinked using foreign key constraints to maintain referential integrity. All primary keys are stored as Universally Unique Identifiers (UUIDs) to ensure data portability across distributed instances and to prevent easy enumeration of resource IDs. Furthermore, the use of PostGIS's geometry types allows for native spatial indexing via GiST, which is absolutely critical for the platform's ability to filter thousands of events based on a user's current GPS coordinates in milliseconds.
 
 \begin{table}[H]
 \centering
@@ -69,17 +63,7 @@ The database consists of 12+ tables organized into three domains:
 %     users (1) → (M) events, users (1) → (M) event_likes, users (1) → (1) riders
 %     riders (1) → (1) vehicles, riders (1) → (1) driver_licenses
 %     riders (1) → (M) ride_requests, events (1) → (M) chat_messages
-\begin{figure}[H]
-    \centering
-    \fbox{\parbox{0.85\textwidth}{\centering\vspace{4cm}
-    \textbf{[FIGURE: Entity-Relationship (ER) Diagram]}\\[0.3cm]
-    \small Show tables: users, events, event\_likes, check\_ins, chat\_messages, riders, vehicles, driver\_licenses, ride\_requests, ride\_offers, ride\_reviews\\
-    Show foreign key relationships with cardinality (1:M, 1:1)\\[0.3cm]
-    \textit{Create this using draw.io or dbdiagram.io}
-    \vspace{2cm}}}
-    \caption{Entity-Relationship Diagram of Event Blinker Database}
-    \label{fig:er_diagram}
-\end{figure}
+% ER Diagram removed as image is not available.
 
 \section{System Diagrams}
 
@@ -96,39 +80,12 @@ The use case diagram identifies four primary actors and their interactions with 
 % >>> CREATE THIS: UML Use Case diagram with 4 actors and their use cases as listed above
 \begin{figure}[H]
     \centering
-    \fbox{\parbox{0.85\textwidth}{\centering\vspace{4cm}
-    \textbf{[FIGURE: Use Case Diagram]}\\[0.3cm]
-    \small \textbf{Actors:} User, Organizer, Driver, Admin\\
-    \textbf{User Cases:} Discover Events, View Detail, Like, Check-in, Chat, Book Ride, Ask Blinker AI\\
-    \textbf{Organizer Cases:} Create Event, View Analytics, Moderate Chat\\
-    \textbf{Driver Cases:} Register, Go Online, Accept Rides, Offer Price\\
-    \textbf{Admin Cases:} Approve Organizer, Approve Event, Verify Rider, Verify License\\[0.3cm]
-    \textit{Create this as a standard UML Use Case diagram.}
-    \vspace{2cm}}}
+    \includegraphics[width=0.8\textwidth]{use_case.png}
     \caption{Use Case Diagram of Event Blinker}
     \label{fig:usecase}
 \end{figure}
 
-\subsection{Sequence Diagram}
-The sequence diagram illustrates the event discovery and AI chat flow:
-
-% ---- FIGURE: Sequence Diagram ----
-% >>> CREATE THIS: UML Sequence diagram:
-%     User → Mobile App → Express API → PostGIS (find nearby events)
-%     User → Mobile App → Express API → OpenRouter (AI chat) → Response
-%     Express API → Socket.io → Mobile App (real-time updates)
-\begin{figure}[H]
-    \centering
-    \fbox{\parbox{0.85\textwidth}{\centering\vspace{4cm}
-    \textbf{[FIGURE: Sequence Diagram -- Event Discovery \& AI Chat]}\\[0.3cm]
-    \small \textbf{Lifelines:} User, Mobile App, Express API, PostgreSQL/PostGIS, OpenRouter AI, Socket.io\\
-    \textbf{Flow 1:} User opens map $\rightarrow$ App sends GPS coords $\rightarrow$ API runs ST\_DWithin $\rightarrow$ Returns events $\rightarrow$ Markers rendered\\
-    \textbf{Flow 2:} User asks AI $\rightarrow$ API fetches event context $\rightarrow$ Sends to LLAMA 3.3 $\rightarrow$ Returns reply\\[0.3cm]
-    \textit{Create this as a standard UML Sequence diagram.}
-    \vspace{2cm}}}
-    \caption{Sequence Diagram: Event Discovery and AI Interaction}
-    \label{fig:sequence}
-\end{figure}
+% Figure 4.3 (AI Flow) removed.
 
 \subsection{Activity Diagram}
 The activity diagram shows the complete ride-sharing booking flow:
@@ -141,13 +98,7 @@ The activity diagram shows the complete ride-sharing booking flow:
 %     → Passenger confirms → Ride starts → Ride completes → Rating/Review → End
 \begin{figure}[H]
     \centering
-    \fbox{\parbox{0.85\textwidth}{\centering\vspace{4cm}
-    \textbf{[FIGURE: Activity Diagram -- Ride Booking Flow]}\\[0.3cm]
-    \small \textbf{Steps:} Start $\rightarrow$ Set Pickup/Dropoff $\rightarrow$ Calculate Distance (Haversine) $\rightarrow$ Calculate Price (NPR) $\rightarrow$ Create Request $\rightarrow$ Notify Riders (Socket.io)\\
-    $\rightarrow$ [Decision Diamond] Rider Accepts / Rider Offers Custom Price\\
-    $\rightarrow$ Ride In-Progress $\rightarrow$ Ride Complete $\rightarrow$ Review \& Rating $\rightarrow$ End\\[0.3cm]
-    \textit{Create this as a standard UML Activity diagram.}
-    \vspace{2cm}}}
+    \includegraphics[width=0.8\textwidth]{activity.jpg}
     \caption{Activity Diagram: Ride Booking Process}
     \label{fig:activity}
 \end{figure}

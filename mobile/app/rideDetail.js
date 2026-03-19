@@ -17,6 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context"
 import { useLocalSearchParams, useRouter } from "expo-router"
 import { Ionicons } from "@expo/vector-icons"
 import { useAuthStore } from "../lib/authStore"
+import { useSocketStore } from "../lib/socketStore"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import axios from "axios"
 
@@ -44,12 +45,54 @@ export default function RideDetailScreen() {
     const [ride, setRide] = useState(null)
     const [loading, setLoading] = useState(true)
     const user = useAuthStore((state) => state.user)
+    const { socket, connect } = useSocketStore()
 
     useEffect(() => {
+        if (!socket) connect()
+
         if (id) {
             loadRideDetails()
         }
-    }, [id])
+
+        if (socket && id) {
+            const onAccepted = (data) => {
+                if (data.ride_request_id == id) {
+                    Alert.alert("Ride Accepted", "A rider has accepted your request!")
+                    loadRideDetails()
+                }
+            }
+            const onStarted = (data) => {
+                if (data.ride_request_id == id) {
+                    Alert.alert("Ride Started", "Your rider is heading to the destination.")
+                    loadRideDetails()
+                }
+            }
+            const onCancelled = (data) => {
+                if (data.ride_request_id == id) {
+                    Alert.alert("Ride Cancelled", "This ride has been cancelled.")
+                    loadRideDetails()
+                }
+            }
+            const onCompleted = (data) => {
+                if (data.ride_request_id == id) {
+                    Alert.alert("Ride Completed", `You have arrived! Total fare to pay: NPR ${data.fare}`)
+                    loadRideDetails()
+                }
+            }
+
+            socket.on("ride:accepted", onAccepted)
+            socket.on("ride:started", onStarted)
+            socket.on("ride:cancelled", onCancelled)
+            socket.on("ride:completed", onCompleted)
+
+            return () => {
+                socket.off("ride:accepted", onAccepted)
+                socket.off("ride:started", onStarted)
+                socket.off("ride:cancelled", onCancelled)
+                socket.off("ride:completed", onCompleted)
+            }
+        }
+    }, [id, socket])
 
     const loadRideDetails = async () => {
         try {
@@ -146,9 +189,9 @@ export default function RideDetailScreen() {
     }
 
     const isRider = ride?.rider_id && ride?.rider_profile_id === ride?.rider_id && user?.id !== ride?.user_id
-    // Simple check: if I'm NOT the user who requested, and there IS a rider assigned, am I that rider?
-    // Actually, backend returns rider_profile_id. If current user's rider profile matches this, then I'm the rider.
-    const isCurrentUserRider = ride?.rider_phone_number && ride?.rider_phone_number === user?.phone
+    // Simple check: if backend returns rider_user_id, check against current user's id
+    const isCurrentUserRider = ride?.rider_user_id == user?.id
+
 
     if (loading) {
         return (
@@ -373,11 +416,11 @@ export default function RideDetailScreen() {
                             onPress={() => handleNavigateTo(ride.pickup_lat, ride.pickup_lng, "Pickup Location")}
                         >
                             <Ionicons name="navigate-outline" size={20} color="#FFF" />
-                            <Text style={styles.navigateBtnText}>NAVIGATE TO PICKUP</Text>
+                            <Text style={styles.navigateBtnText}>1. HEAD TO PASSENGER</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.primaryButton} onPress={handleStart} disabled={loading}>
-                            <Text style={styles.primaryButtonText}>START RIDE</Text>
+                            <Text style={styles.primaryButtonText}>2. START RIDE (PASSENGER PICKED UP)</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.cancelButton} onPress={handleCancel} disabled={loading}>
@@ -393,11 +436,11 @@ export default function RideDetailScreen() {
                             onPress={() => handleNavigateTo(ride.dropoff_lat, ride.dropoff_lng, "Destination")}
                         >
                             <Ionicons name="location-outline" size={20} color="#FFF" />
-                            <Text style={styles.navigateBtnText}>NAVIGATE TO DROPOFF</Text>
+                            <Text style={styles.navigateBtnText}>1. HEAD TO DESTINATION</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.completeButton} onPress={handleComplete} disabled={loading}>
-                            <Text style={styles.completeButtonText}>MARK AS COMPLETED</Text>
+                            <Text style={styles.completeButtonText}>2. FINISH RIDE & COLLECT PAYMENT</Text>
                         </TouchableOpacity>
                     </View>
                 )}

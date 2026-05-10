@@ -143,6 +143,9 @@ async function createTables() {
         await addCol("riders", "profile_photo_url", "TEXT");
         await addCol("riders", "emergency_contact", "VARCHAR(50)");
         await addCol("riders", "rejection_reason", "TEXT");
+        await addCol("riders", "total_rides", "INTEGER DEFAULT 0");
+        await addCol("riders", "rating", "DECIMAL(3, 2) DEFAULT 5.0");
+        await addCol("riders", "total_earnings", "DECIMAL(12, 2) DEFAULT 0.00");
 
         // Driver Licenses Table
         await addCol("driver_licenses", "verified_at", "TIMESTAMP");

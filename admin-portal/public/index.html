@@ -185,24 +185,62 @@
 
         function handleKeyPress(e) { if (e.key === 'Enter') handleLogin(); }
 
-        function handleLogin() {
+        async function handleLogin() {
             const token = document.getElementById('adminToken').value.trim();
             if (!token) return alert('Token required');
 
-            adminToken = token;
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-            loadData();
+            const loginBtn = document.getElementById('loginBtn');
+            const errorEl = document.getElementById('loginError');
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Verifying...';
+            errorEl.classList.add('hidden');
+
+            try {
+                // Attempt to fetch health with this token
+                const res = await fetch(`${API_URL}/api/admin/portal/organizers/pending`, {
+                    headers: { 'x-admin-token': token }
+                });
+
+                if (res.status === 401) {
+                    throw new Error("Invalid Admin Token");
+                }
+
+                if (!res.ok) {
+                    throw new Error("Backend not responding correctly");
+                }
+
+                adminToken = token;
+                localStorage.setItem('adminToken', token); // Save for refresh
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                loadData();
+            } catch (err) {
+                errorEl.textContent = err.message;
+                errorEl.classList.remove('hidden');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Enter Dashboard';
+            }
+        }
+
+        // Auto-login if token exists
+        window.onload = () => {
+            const savedToken = localStorage.getItem('adminToken');
+            if (savedToken) {
+                document.getElementById('adminToken').value = savedToken;
+                handleLogin();
+            }
         }
 
         function logout() {
-            adminToken = '';
+            localStorage.removeItem('adminToken');
             location.reload();
         }
 
         async function switchTab(tab) {
             currentTab = tab;
-            loadData();
+            await loadData();
         }
 
         async function loadData() {

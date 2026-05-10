@@ -1,0 +1,51 @@
+\chapter{Methodology}
+The methodology followed for the development of \textbf{Event Blinker} adheres to an iterative, service-oriented development lifecycle \cite{reactnative}. This ensuring a seamless transition from the architectural design phase to the implementation of high-performance modules for spatial discovery, real-time communication, and support assistance. The complete system behaves as a unified ecosystem where discovery and mobility are logically and technically interleaved.
+
+\section{System Engineering Pipeline}
+The development process was structured into five major phases, ensuring that each layer of the three-tier architecture was properly validated before integration.
+
+\begin{enumerate}
+    \item \textbf{Requirement Analysis and Domain Modeling}: Identifying the core needs of urban residents (discovery) and mobility providers (verification). This phase involved mapping out the user personas and defining the technical boundaries of the "event-to-commute" lifecycle.
+    \item \textbf{High-Fidelity Spatial and Relational Design}: Designing the relational and spatial schema for high-precision event mapping in the Kathmandu context \cite{postgis}. This included selecting SRID 4326 for coordinate consistency and planning the GiST index configuration for PostGIS \cite{gist}.
+    \item \textbf{Core Backend Orchestration}: Implementing a modular Node.js API with decoupled domains for identity, spatial objects, and mobility state \cite{nodejs}. This phase focused on creating a scalable middleware layer that can handle asynchronous event surges.
+    \item \textbf{Assistant Integration and Data Grounding}: Configuring a lightweight assistant for event-related query resolution. This involves building a prompt-injection pipeline to ensure information accuracy.
+    \item \textbf{Frontend and Client Engineering}: Developing the cross-platform React Native mobile client for attendees and riders \cite{reactnative}, and the dedicated administrative web portals built with modern web standards.
+\end{enumerate}
+
+\section{Unified Discovery and Mobility Workflow}
+The core innovation of Event Blinker lies in its integrated workflow. Unlike standalone platforms, the methodology treats "Discovery" and "Mobility" as a single, atomic transaction pipeline.
+
+\subsection{Pipeline Stages}
+\begin{itemize}
+    \item \textbf{Stage 1: Spatial Acquisition and Filtering}: The system acquires user coordinates from the mobile device's GPS. It then performs an $O(\log n)$ GiST-indexed radial search to identify events within a defined radius (e.g., 5km) \cite{gist}. This ensures that the user is only presented with physically reachable options.
+    \item \textbf{Stage 2: Contextual Engagement and Assistance}: The user engages with the filtered event metadata. If questions arise regarding logistics or safety, a smart assistant can retrieve event-specific data from the database to provide grounded resolution in real-time.
+    \item \textbf{Stage 3: Mobility Transition and Bidding}: Upon selecting an event, the system triggers the P2P ride-request module. The destination is automatically set to the event's geometric coordinates. A "ride broadcast" is then sent via WebSockets to all verified riders within the vicinity, initiating the real-time bidding process \cite{socketio}.
+\end{itemize}
+
+\section{Processing Layers and Orchestration}
+The technical execution of the methodology is divided into three specialized processing layers.
+
+\subsection{Geospatial Engine (PostGIS)}
+The platform's spatial intelligence is anchored by the \textbf{PostGIS} extension for PostgreSQL. This allows the system to treat geographical coordinates as native geometric objects rather than floating-point numbers, enabling high-performance spatial SQL.
+
+\begin{enumerate}
+    \item \textbf{Coordinate Normalization}: Raw GPS inputs from the mobile client are translated into SRID 4326 compliant points using the \texttt{ST\_SetSRID(ST\_MakePoint())} operation.
+    \item \textbf{High-Efficiency Proximity Filtering}: The core discovery logic utilizes the \texttt{ST\_DWithin} function. Unlike traditional mathematical filters, this utilizes the \textbf{GiST (Generalized Search Tree)} index to filter millions of geometric points in sub-ms intervals.
+    \item \textbf{Spatial Serialization}: Resulting spatial objects are converted into the \textbf{GeoJSON} format using \texttt{ST\_AsGeoJSON} before being transmitted to the Mapbox GL client.
+\end{enumerate}
+
+\subsection{Smart Assistant: Integrated Support Layer}
+The assistant is implemented via a lightweight Retrieval-Augmented Generation (RAG) workflow \cite{llama3}. This ensures that the support tool is not just a general-purpose chatbot but a specialized city guide with access to live platform data.
+
+\subsubsection{Data Grounding Strategy}
+The methodology bypasses expensive vector database lookups for real-time metadata. Instead, the backend performs a relational lookup for the specific Event ID. This data (e.g., ticket pricing, safety guidelines, schedule) is injected into the system prompt. This ensures the assistant's responses are factually accurate, current, and consistent with the platform's listings. To ensure high availability, the system utilizes a multi-model failover strategy across different cloud inference endpoints.
+
+\subsection{Real-Time Mobility Synchronization (Socket.io)}
+The synchronization of ride states (requesting, offering, accepting) is managed through full-duplex WebSocket communication.
+\begin{itemize}
+    \item \textbf{Room Partitioning}: Each Event interaction is isolated in a unique "room" to prevent broadcast noise and ensure privacy.
+    \item \textbf{State Machine Transition}: The Socket layer orchestrates the mobility lifecycle: \texttt{ride:request} $\rightarrow$ \texttt{ride:bid} $\rightarrow$ \texttt{ride:trip\_started} $\rightarrow$ \texttt{ride:completed}.
+\end{itemize}
+
+\section{Identity Verification and Governance}
+A critical part of the methodology is the \textbf{Identity Assurance Pipeline}. Potential riders must upload verified state documentation (Driver's License, Vehicle Billbook). These are stored in a secure administrative queue where the "System Admin" validates the authenticity before the rider is authorized to bid on event commutes. This multi-tier approach ensures a safe, peer-to-peer ecosystem within the Kathmandu metropolitan area.

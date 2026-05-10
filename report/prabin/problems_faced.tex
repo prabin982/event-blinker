@@ -1,0 +1,18 @@
+\chapter{Problems Faced}
+Engineering a real-time multi-agent system in a developing urban context presented several significant technical and logistical challenges. These hurdles ranged from backend performance optimization to ensuring the reliability of intelligent assistance.
+
+\section{Geospatial Query Complexity}
+During the initial development phase, the system utilized standard relational filtering for event proximity searches. As the number of events in the database grew, these $O(n)$ linear searches caused significant latency on the mobile client, often exceeding 500ms. This was particularly problematic for the "map explore" feature where users expected fluid panning.
+\textbf{Resolution}: We transitioned to a dedicated spatial engine using PostGIS and implemented \textbf{GiST (Generalized Search Tree)} indexing on all geometric columns. This reduced query latency from 500ms to approximately 22ms, ensuring a high-performance discovery experience.
+
+\section{Real-time Concurrency and Message Sync}
+Managing state synchronization between attendees and riders during high-concurrency event surges proved challenging. The primary issue was "message noise," where ride requests were being broadcast to the entire network instead of localized vicinities.
+\textbf{Resolution}: We implemented a strict \textbf{Room Partitioning} strategy using Socket.io. Each discovery interaction is now isolated in a dedicated geometric "room," ensuring that riders only receive broadcasts relevant to their immediate physical and social vicinity.
+
+\section{Support Logic and Data Accuracy}
+Early prototypes of the smart assistant component frequently produced inconsistent results regarding event details, such as ticket pricing and venue locations, when relying on general datasets. This posed a reliability risk for an informational system.
+\textbf{Resolution}: We developed a specialized relational grounding pipeline. Instead of allowing the system to rely on latent knowledge, we now dynamically inject real-time SQL metadata into the prompt for every query. This forced the system's focus toward the verified facts in our database, achieving a 95\% accuracy score for support queries.
+
+\section{Cross-Platform State Management}
+Maintaining a consistent UI/UX across Android and iOS while handling real-time mobility states required a complex frontend orchestration. Specifically, handling background location updates and WebSocket re-connections during network handovers (e.g., switching from Wi-Fi to 4G) was a major technical hurdle.
+\textbf{Resolution}: We utilized a robust state management pattern in React Native, combined with custom heartbeat logic for and automatic reconnection strategies for Socket.io. This ensured that the mobility lifecycle (Request $\rightarrow$ Bid $\rightarrow$ Completion) remained synchronized even during unstable network conditions.

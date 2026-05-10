@@ -1,0 +1,31 @@
+\chapter{Introduction}
+\pagenumbering{arabic}
+\section{Background}
+The contemporary urban landscape presents a significant challenge for individuals seeking to remain informed about localized social activities, ranging from cultural concerts and large-scale festivals to academic workshops and community gatherings. Despite the ubiquity of global social media platforms, these systems frequently collapse under the weight of information entropy and lack the geospatial granularity required for effective, localized event discovery \cite{postgis}. As a result, urban residents often experience the phenomenon of ``FOMO'' (Fear Of Missing Out), as they remain unaware of highly relevant opportunities occurring within their immediate vicinity. This challenge is further exacerbated by the ``last-mile'' transportation dilemma—the logistical hurdle where the absence of reliable, destination-integrated transport discourages attendance even after an event has been identified \cite{reactnative}.
+
+In rapidly developing metropolitan areas like Kathmandu, the disconnect between event promotion and physical accessibility is particularly acute. Traditional media and even modern digital platforms like Facebook Events often fail to provide the real-time, high-precision location data and direct mobility links necessary for a seamless user journey. Furthermore, the absence of a verified, trustworthy peer-to-peer transportation layer within these platforms means that even interested participants often choose to stay home due to the unpredictability of public transit or the high cost of standalone private ride-hailing services.
+
+\section{Project Motivation}
+The primary motivation behind \textbf{Event Blinker} stems from the observed inefficiency in urban resource utilization. While massive social gatherings occur daily, the infrastructure to bridge the information-to-mobility gap remains prehistoric. We are motivated by the goal of democratizing event accessibility where no citizen is left out of an opportunity due to a lack of transport or information. The integration of high-performance spatial engines and real-time synchronization protocols presents a unique opportunity to create a unified platform that makes the city more navigable and welcoming \cite{socketio}.
+
+\section{Problem Statement}
+The current urban social ecosystem is characterized by fragmented data silos and a lack of real-time, location-aware assistance. Specifically, the following foundational problems have been identified:
+\begin{itemize}
+    \item \textbf{Geospatial Fragmentation:} Users must traverse multiple, uncoordinated social feeds to find events, often receiving information that lacks proximity-based relevance.
+    \item \textbf{Logistical Gap:} Standalone ride-hailing apps are disconnected from event context, leading to higher friction in booking and navigation for the "last-mile".
+    \item \textbf{Information Overload:} Static promotional materials provide no mechanism for real-time query resolution, leading to user frustration.
+    \item \textbf{Trust and Verification Gap:} Creating a secure environment for both event organization and peer-to-peer ride-sharing requires a robust, multi-tier identity verification system.
+\end{itemize}
+
+\section{Objectives}
+The specific technical and functional goals of Event Blinker include:
+\begin{itemize}
+    \item To engineer a \textbf{geospatial discovery engine} using PostGIS and Mapbox GL for intuitive, radius-based event exploration \cite{postgis}.
+    \item To design and implement a \textbf{peer-to-peer ride-sharing module} integrated directly into the event discovery lifecycle.
+    \item To establish a \textbf{real-time synchronization layer} using the Socket.io protocol for sub-50ms interaction latency \cite{socketio}.
+    \item To integrate a \textbf{smart assistant interface} for basic event-related query resolution and information retrieval.
+    \item To create a \textbf{centralized administrative and organizer framework} with robust Role-Based Access Control (RBAC).
+\end{itemize}
+
+\section{Scope of the Project}
+The scope of this project encompasses the end-to-end development of a multi-client infrastructure designed to support a high-concurrency urban environment for Kathmandu. This includes the development of a React Native mobile client \cite{reactnative}, a Node.js backend orchestration server \cite{nodejs}, a PostGIS-powered spatial database, and specialized web portals for administrators and organizers. The project focuses on bridging the gap between digital event discovery and physical commute logistics through high-fidelity system engineering.

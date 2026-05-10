@@ -1,0 +1,33 @@
+\chapter{Literature Review}
+The development of a real-time discovery and mobility ecosystem like \textbf{Event Blinker} resides at the intersection of several rapidly evolving technological domains. This chapter provides an analytical review of existing academic research and industry solutions in geospatial data processing, spatio-temporal event discovery, and real-time communication systems. The field of urban informatics holds immense potential for enhancing social accessibility, a challenge that is particularly acute in rapidly growing metropolitan areas where information is fragmented and transport is inconsistent \cite{urbanGIS}.
+
+\section{Evolution of Event Discovery Platforms}
+Historically, the discovery of social and community events was limited to physical notice boards, local newspapers, and word-of-mouth. The transition to the digital era saw the emergence of massive centralized platforms like Facebook Events and Eventbrite. While these platforms solved the problem of global distribution, they introduced new challenges regarding information density and "geo-spatial noise." Research by Xu et al. (2016) demonstrated that users prioritize events within a proximate radius over high-popularity events elsewhere \cite{mapbox}.
+
+\section{Geospatial Information Systems (GIS)}
+Geospatial data processing is the backbone of urban navigation. The core challenge in GIS is the efficient retrieval of complex geometric objects (points, polygons, lines) on a massive scale without compromising system latency \cite{postgis}.
+
+\subsection{History and Evolution of Spatial Databases}
+The introduction of \textbf{PostGIS} as an extension for PostgreSQL fundamentally changed the landscape. By treating geographical coordinates as native geometric types with their own operators, PostGIS enabled "spatial SQL." Marino et al. (2019) demonstrated that standard relational queries for proximity are $O(n)$, making them unusable for large cities, whereas spatial indexing reduces this complexity to logarithmic scales \cite{postgis}.
+
+Specifically for urban discovery, the development of \textbf{GiST (Generalized Search Tree)} indices has proven critical. Unlike standard B-Trees, GiST allows for non-linear, multi-dimensional search patterns \cite{knuth}, which form the technical foundation of Event Blinker's 22ms query execution \cite{gist}.
+
+\subsection{Coordinate Systems and Geometric Projection}
+A significant challenge in Nepali GIS is the accurate mapping of rural vs urban coordinates. The project utilizes the \textbf{Haversine formula} to account for the Earth's non-linear curvature, ensuring that "as-the-crow-flies" distance is accurate for Kathmandu's hilly terrain. Prior computational work has shown that failing to account for Earth's radius can lead to significant error in distance estimation for multi-kilometer trips \cite{urbanGIS}.
+
+\section{Real-time Communication and State Synchronization}
+For high-concurrency systems, the maintenance of a consistent state across all clients is a primary engineering hurdle. Traditional HTTP-based polling is insufficient for high-stakes interactions like fare bidding or live chat \cite{socketio}.
+
+\subsection{Event-Driven Architectures and WebSockets}
+The project utilizes the theory of \textbf{Event-Driven Architectures}. By implementing a full-duplex communication protocol like WebSockets (Socket.io), the server can "push" updates to the client instantly. This reduces latency from seconds to milliseconds, which is critical for the "real-time" promise of the platform \cite{socketio}.
+
+\section{Shared Mobility and Peer-to-Peer Economics}
+The "last-mile" barrier is a well-documented logistical challenge in urban planning. Peer-to-peer (P2P) ride-sharing has emerged as a disruptive solution to this problem, leveraging the "excess capacity" of private vehicles to solve public transport gaps \cite{peer2peer}.
+
+\subsection{P2P vs. Centralized Ride-Hailing}
+Platforms like Uber revolutionized urban mobility through centralized algorithmic dispatch. However, research into decentralized bidding systems—where riders and users "negotiate" in real-time—has shown higher user satisfaction for scheduled social trips \cite{peer2peer}. Trust metrics and multi-tier verification are essential for these systems to succeed in a low-trust environment.
+
+\section{Intelligent Assistance: A Supplementary Focus}
+While secondary to the core discovery and mobility modules, the integration of lightweight smart assistants provides a mechanism for basic query resolution. Modern retrieval-augmented generation (RAG) strategies allow these assistants to remain grounded in current platform metadata, reducing the risk of information hallucination \cite{llama3}.
+
+

@@ -126,6 +126,15 @@ async function createTables() {
         // Riders Table
         await addCol("riders", "approved_at", "TIMESTAMP");
         await addCol("riders", "approved_by", "INTEGER REFERENCES users(id)");
+        await addCol("ride_requests", "accepted_at", "TIMESTAMP");
+        await addCol("ride_requests", "started_at", "TIMESTAMP");
+        await addCol("ride_requests", "completed_at", "TIMESTAMP");
+        await addCol("ride_requests", "cancelled_at", "TIMESTAMP");
+        await addCol("ride_requests", "cancellation_reason", "TEXT");
+        await addCol("ride_requests", "requested_price", "DECIMAL(10, 2)");
+        await addCol("ride_requests", "vehicle_type", "VARCHAR(50) DEFAULT 'sedan'");
+        await addCol("ride_requests", "user_phone", "VARCHAR(20)");
+        await addCol("ride_requests", "rider_phone", "VARCHAR(20)");
         await addCol("riders", "nid_number", "VARCHAR(50)");
         await addCol("riders", "bank_name", "VARCHAR(100)");
         await addCol("riders", "account_number", "VARCHAR(50)");

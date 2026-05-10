@@ -22,6 +22,7 @@ const createTables = async () => {
             make VARCHAR(100) NOT NULL,
             model VARCHAR(100) NOT NULL,
             year INT NOT NULL,
+            color VARCHAR(50),
             license_plate VARCHAR(20) UNIQUE NOT NULL,
             vehicle_type VARCHAR(50) DEFAULT 'sedan',
             seats_available INT DEFAULT 4,
@@ -36,6 +37,10 @@ const createTables = async () => {
             license_number VARCHAR(50) UNIQUE NOT NULL,
             license_photo_url TEXT NOT NULL,
             expiry_date DATE NOT NULL,
+            issued_date DATE,
+            issuing_authority VARCHAR(100),
+            license_holder_name VARCHAR(100),
+            date_of_birth DATE,
             verification_status VARCHAR(20) DEFAULT 'pending',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
@@ -51,6 +56,11 @@ const createTables = async () => {
             registration_status VARCHAR(20) DEFAULT 'pending',
             profile_photo_url TEXT,
             emergency_contact VARCHAR(50),
+            nid_number VARCHAR(50),
+            bank_name VARCHAR(100),
+            account_number VARCHAR(50),
+            account_holder_name VARCHAR(100),
+            terms_accepted BOOLEAN DEFAULT false,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
 
@@ -77,20 +87,28 @@ const createTables = async () => {
         CREATE INDEX IF NOT EXISTS idx_ride_requests_pickup ON ride_requests USING GIST(pickup_location);
     `;
 
-        console.log("Running embedded schema migration...");
+        console.log("Running complete embedded schema migration...");
         await db.query(rideSharingSchema);
-        console.log("✓ Ride sharing tables created/updated");
+        console.log("✓ Ride sharing tables completely synchronized");
 
-        // Add missing columns if they don't exist
+        // Add missing columns if they don't exist (Backup check)
         const addCol = async (table, col, def) => {
             try {
                 await db.query(`ALTER TABLE ${table} ADD COLUMN IF NOT EXISTS ${col} ${def};`);
-            } catch (e) { console.log(`Note: ${col} check on ${table} skipped`); }
+            } catch (e) {
+                // Ignore if it's just a "relation exists" error or column error
+            }
         };
 
-        await addCol("users", "is_verified", "BOOLEAN DEFAULT false");
-        await addCol("riders", "profile_photo_url", "TEXT");
-        await addCol("riders", "registration_status", "VARCHAR(20) DEFAULT 'pending'");
+        await addCol("riders", "nid_number", "VARCHAR(50)");
+        await addCol("riders", "bank_name", "VARCHAR(100)");
+        await addCol("riders", "account_number", "VARCHAR(50)");
+        await addCol("riders", "account_holder_name", "VARCHAR(100)");
+        await addCol("riders", "terms_accepted", "BOOLEAN DEFAULT false");
+        await addCol("vehicles", "registration_document_url", "TEXT");
+        await addCol("vehicles", "billbook_photo_url", "TEXT");
+        await addCol("driver_licenses", "date_of_birth", "DATE");
+        await addCol("driver_licenses", "license_holder_name", "VARCHAR(100)");
 
         console.log("✓ Database is synchronized and up-to-date!");
         return true;

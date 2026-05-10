@@ -86,6 +86,41 @@ app.use(express.urlencoded({ extended: true }))
 // Serve uploaded images statically
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 
+// Global Photo URL Fixer (Fixes localhost/relative paths for Mobile & Web)
+app.use((req, res, next) => {
+  const originalJson = res.json;
+  res.json = function (data) {
+    const PUBLIC_URL = "https://event-blinker-1.onrender.com";
+
+    // Helper to fix a single string
+    const fixUrl = (val) => {
+      if (typeof val !== 'string') return val;
+      if (val.includes('localhost') || val.includes('10.0.2.2') || val.includes('192.168.')) {
+        return val.replace(/http:\/\/localhost:\d+/g, PUBLIC_URL).replace(/http:\/\/10\.0\.2\.2:\d+/g, PUBLIC_URL).replace(/http:\/\/192\.168\.\d+\.\d+:\d+/g, PUBLIC_URL);
+      }
+      if (val.startsWith('/uploads/')) return PUBLIC_URL + val;
+      if (val.startsWith('uploads/')) return PUBLIC_URL + '/' + val;
+      return val;
+    };
+
+    // Recursive fixer for objects/arrays
+    const process = (obj) => {
+      if (!obj || typeof obj !== 'object') return obj;
+      for (let key in obj) {
+        if (typeof obj[key] === 'string' && (key.toLowerCase().includes('url') || key.toLowerCase().includes('photo') || key.toLowerCase().includes('avatar') || key.toLowerCase().includes('image') || key.toLowerCase().includes('document'))) {
+          obj[key] = fixUrl(obj[key]);
+        } else if (typeof obj[key] === 'object') {
+          process(obj[key]);
+        }
+      }
+      return obj;
+    };
+
+    return originalJson.call(this, process(data));
+  };
+  next();
+});
+
 // Request logging
 app.use((req, res, next) => {
   console.log(`[BACKEND] ${req.method} ${req.originalUrl}`)

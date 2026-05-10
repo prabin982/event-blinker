@@ -246,6 +246,22 @@
             await loadData();
         }
 
+        // --- HELPERS ---
+        function fixImageUrl(url) {
+            if (!url) return 'https://via.placeholder.com/150?text=No+Photo';
+            if (url.startsWith('http')) {
+                // If the URL contains an internal IP or localhost (from mobile testing), strip it to use our proxy
+                if (url.includes('localhost') || url.includes('10.0.2.2') || url.indexOf('192.168.') !== -1) {
+                    const parts = url.split('/uploads/');
+                    if (parts.length > 1) return '/uploads/' + parts[1];
+                }
+                return url;
+            }
+            if (url.startsWith('/uploads')) return url;
+            if (url.startsWith('uploads')) return '/' + url;
+            return '/uploads/' + url;
+        }
+
         async function loadData() {
             const container = document.getElementById('contentArea');
             // Update Tab UI
@@ -421,7 +437,7 @@
                 <div class="flex justify-between items-start mb-4">
                     <div class="flex items-center gap-3">
                         <div class="relative">
-                            ${rider.profile_photo_url ? `<img src="${rider.profile_photo_url}" class="w-14 h-14 rounded-full object-cover border-2 border-orange-100 shadow-sm" onclick="openDoc('${rider.profile_photo_url}', 'Rider Profile Photo')">` : '<div class="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center text-xl">👤</div>'}
+                            ${rider.profile_photo_url ? `<img src="${fixImageUrl(rider.profile_photo_url)}" class="w-14 h-14 rounded-full object-cover border-2 border-orange-100 shadow-sm" onclick="openDoc('${fixImageUrl(rider.profile_photo_url)}', 'Rider Profile Photo')">` : '<div class="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center text-xl">👤</div>'}
                             <div class="absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-white ${isOnline ? 'bg-green-500' : 'bg-gray-400'}"></div>
                         </div>
                         <div>
@@ -464,8 +480,8 @@
                     <div class="space-y-1">
                         <p class="text-[10px] font-bold text-gray-400 uppercase ml-1">Billbook Photo</p>
                         ${rider.billbook_photo_url ? `
-                            <div class="relative group cursor-pointer" onclick="openDoc('${rider.billbook_photo_url}', 'Billbook (Identity)')">
-                                <img src="${rider.billbook_photo_url}" class="w-full h-24 object-cover rounded-xl border-2 border-dashed border-gray-200 group-hover:border-orange-500 transition-all">
+                            <div class="relative group cursor-pointer" onclick="openDoc('${fixImageUrl(rider.billbook_photo_url)}', 'Billbook (Identity)')">
+                                <img src="${fixImageUrl(rider.billbook_photo_url)}" class="w-full h-24 object-cover rounded-xl border-2 border-dashed border-gray-200 group-hover:border-orange-500 transition-all">
                                 <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-xl flex items-center justify-center transition-all">
                                     <span class="text-white text-[10px] font-bold">Zoom 🔍</span>
                                 </div>
@@ -475,8 +491,8 @@
                     <div class="space-y-1">
                         <p class="text-[10px] font-bold text-gray-400 uppercase ml-1">Driver License</p>
                         ${rider.license_photo_url ? `
-                            <div class="relative group cursor-pointer" onclick="openDoc('${rider.license_photo_url}', 'License Photo')">
-                                <img src="${rider.license_photo_url}" class="w-full h-24 object-cover rounded-xl border-2 border-dashed border-gray-200 group-hover:border-orange-500 transition-all">
+                            <div class="relative group cursor-pointer" onclick="openDoc('${fixImageUrl(rider.license_photo_url)}', 'License Photo')">
+                                <img src="${fixImageUrl(rider.license_photo_url)}" class="w-full h-24 object-cover rounded-xl border-2 border-dashed border-gray-200 group-hover:border-orange-500 transition-all">
                                 <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 rounded-xl flex items-center justify-center transition-all">
                                     <span class="text-white text-[10px] font-bold">Zoom 🔍</span>
                                 </div>

@@ -108,6 +108,9 @@ const createTables = async () => {
         await addCol("riders", "profile_photo_url", "TEXT");
         await addCol("riders", "emergency_contact", "VARCHAR(50)");
         await addCol("riders", "registration_status", "VARCHAR(20) DEFAULT 'pending'");
+        await addCol("riders", "approved_at", "TIMESTAMP");
+        await addCol("riders", "approved_by", "INTEGER REFERENCES users(id)");
+        await addCol("riders", "updated_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
 
         await addCol("vehicles", "color", "VARCHAR(50)");
         await addCol("vehicles", "registration_document_url", "TEXT");

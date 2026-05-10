@@ -105,10 +105,25 @@ const createTables = async () => {
         await addCol("riders", "account_number", "VARCHAR(50)");
         await addCol("riders", "account_holder_name", "VARCHAR(100)");
         await addCol("riders", "terms_accepted", "BOOLEAN DEFAULT false");
+        await addCol("riders", "profile_photo_url", "TEXT");
+        await addCol("riders", "emergency_contact", "VARCHAR(50)");
+        await addCol("riders", "registration_status", "VARCHAR(20) DEFAULT 'pending'");
+
+        await addCol("vehicles", "color", "VARCHAR(50)");
         await addCol("vehicles", "registration_document_url", "TEXT");
         await addCol("vehicles", "billbook_photo_url", "TEXT");
+        await addCol("vehicles", "vehicle_type", "VARCHAR(50) DEFAULT 'sedan'");
+        await addCol("vehicles", "seats_available", "INT DEFAULT 4");
+
         await addCol("driver_licenses", "date_of_birth", "DATE");
         await addCol("driver_licenses", "license_holder_name", "VARCHAR(100)");
+        await addCol("driver_licenses", "issued_date", "DATE");
+        await addCol("driver_licenses", "issuing_authority", "VARCHAR(100)");
+        await addCol("driver_licenses", "verification_status", "VARCHAR(20) DEFAULT 'pending'");
+
+        await addCol("ride_requests", "vehicle_type", "VARCHAR(50) DEFAULT 'sedan'");
+        await addCol("ride_requests", "user_phone", "VARCHAR(20)");
+        await addCol("ride_requests", "rider_phone", "VARCHAR(20)");
 
         console.log("✓ Database is synchronized and up-to-date!");
         return true;

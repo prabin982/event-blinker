@@ -392,10 +392,9 @@ router.get("/licenses/pending", authMiddleware, adminMiddleware, async (req, res
 })
 
 // Approve license
-router.post("/licenses/:id/approve", authMiddleware, adminMiddleware, async (req, res) => {
+router.post("/licenses/:id/approve", adminTokenMiddleware, async (req, res) => {
   try {
     const licenseId = req.params.id
-    const adminId = req.user.id
 
     const license = await db.oneOrNone("SELECT * FROM driver_licenses WHERE id = $1", [licenseId])
     if (!license) {
@@ -404,9 +403,9 @@ router.post("/licenses/:id/approve", authMiddleware, adminMiddleware, async (req
 
     await db.none(
       `UPDATE driver_licenses 
-       SET verification_status = 'approved', verified_by = $1, verified_at = NOW(), updated_at = NOW()
-       WHERE id = $2`,
-      [adminId, licenseId]
+       SET verification_status = 'approved', verified_at = NOW(), updated_at = NOW()
+       WHERE id = $1`,
+      [licenseId]
     )
 
     res.json({ success: true, message: "License approved" })
@@ -417,10 +416,9 @@ router.post("/licenses/:id/approve", authMiddleware, adminMiddleware, async (req
 })
 
 // Reject license
-router.post("/licenses/:id/reject", authMiddleware, adminMiddleware, async (req, res) => {
+router.post("/licenses/:id/reject", adminTokenMiddleware, async (req, res) => {
   try {
     const licenseId = req.params.id
-    const adminId = req.user.id
     const { rejection_reason } = req.body
 
     if (!rejection_reason) {
@@ -434,9 +432,9 @@ router.post("/licenses/:id/reject", authMiddleware, adminMiddleware, async (req,
 
     await db.none(
       `UPDATE driver_licenses 
-       SET verification_status = 'rejected', rejection_reason = $1, verified_by = $2, verified_at = NOW(), updated_at = NOW()
-       WHERE id = $3`,
-      [rejection_reason, adminId, licenseId]
+       SET verification_status = 'rejected', rejection_reason = $1, verified_at = NOW(), updated_at = NOW()
+       WHERE id = $2`,
+      [rejection_reason, licenseId]
     )
 
     res.json({ success: true, message: "License rejected" })

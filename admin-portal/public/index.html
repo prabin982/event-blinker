@@ -207,7 +207,7 @@
                 }
 
                 if (!res.ok) {
-                    throw new Error("Backend not responding correctly");
+                    throw new Error(`Server Error (${res.status}) at ${API_URL}`);
                 }
 
                 adminToken = token;
@@ -216,7 +216,10 @@
                 document.getElementById('mainApp').classList.remove('hidden');
                 loadData();
             } catch (err) {
-                errorEl.textContent = err.message;
+                errorEl.innerHTML = `
+                    <div class="text-red-500 font-bold">${err.message}</div>
+                    <div class="text-[10px] text-gray-400 mt-1">Target: ${API_URL}/api/admin/...</div>
+                `;
                 errorEl.classList.remove('hidden');
             } finally {
                 loginBtn.disabled = false;

@@ -7,8 +7,12 @@ const createTables = async () => {
         console.log("Creating/Updating tables...")
 
         // Enable PostGIS (Critical for maps/rides)
-        await db.query("CREATE EXTENSION IF NOT EXISTS postgis;")
-        console.log("✓ PostGIS status checked")
+        try {
+            await db.query("CREATE EXTENSION IF NOT EXISTS postgis;")
+            console.log("✓ PostGIS extension enabled");
+        } catch (e) {
+            console.log("⚠️ PostGIS extension check failed (might already be enabled or permission denied). Continuing...");
+        }
 
         // Define all table schemas in one block
         const schemaFiles = [

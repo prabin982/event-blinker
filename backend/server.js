@@ -108,6 +108,17 @@ app.use("/api/ai", aiRoutes)
 
 // ============ DIAGNOSTICS & ROOT ============
 
+// Force migration endpoint (Secret Repair Link)
+app.get("/api/admin/force-migrate", async (req, res) => {
+  try {
+    const { createTables } = require("./scripts/migrate_core")
+    await createTables()
+    res.json({ status: "success", message: "Database tables checked and created!" })
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message, stack: error.stack })
+  }
+})
+
 // Database health check
 app.get("/health", async (req, res) => {
   try {

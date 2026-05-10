@@ -8,6 +8,14 @@ const db = require("./config/database")
 const { setupSocketHandlers } = require("./utils/socket-handler")
 const socketModule = require("./utils/socket")
 
+// Run migrations on startup
+const { createTables } = require("./scripts/migrate_core")
+createTables().then(() => {
+  console.log("🚀 Database Migrations Finished")
+}).catch(err => {
+  console.error("❌ Migration failed:", err)
+})
+
 // Import routes
 const authRoutes = require("./routes/auth")
 const eventRoutes = require("./routes/events")

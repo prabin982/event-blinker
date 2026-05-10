@@ -3,6 +3,7 @@ import cors from "cors"
 import dotenv from "dotenv"
 import path from "path"
 import { fileURLToPath } from "url"
+import axios from "axios"
 
 dotenv.config()
 
@@ -11,6 +12,7 @@ const __dirname = path.dirname(__filename)
 
 const app = express()
 const PORT = process.env.ADMIN_PORT || 3001
+const API_BASE = process.env.API_URL || "https://event-blinker-1.onrender.com"
 
 // Middleware
 app.use(cors())
@@ -22,16 +24,9 @@ const adminAuth = (req, res, next) => {
   const adminToken = req.headers["x-admin-token"]
   const expectedToken = process.env.ADMIN_SECRET_TOKEN || "prabin@1234"
 
-  console.log(`🔐 Admin Auth Check (Portal):`)
-  console.log(`   Token received: ${adminToken ? adminToken.substring(0, 8) : 'NONE'}`)
-  console.log(`   Token expected: ${expectedToken.substring(0, 8)}`)
-  console.log(`   Match: ${adminToken === expectedToken}`)
-
   if (!adminToken || adminToken !== expectedToken) {
-    console.warn(`   ❌ Auth failed`)
     return res.status(401).json({ error: "Unauthorized. Admin token required." })
   }
-  console.log(`   ✅ Auth passed`)
   next()
 }
 
@@ -40,58 +35,43 @@ app.get("/health", (req, res) => {
   res.json({ status: "ok", service: "admin-portal" })
 })
 
-// API health check (for proxy compatibility)
-app.get("/api/health", adminAuth, (req, res) => {
-  res.json({ status: "ok", service: "admin-portal-api" })
-})
-
-// Proxy API routes (protected)
-app.use("/api", adminAuth, async (req, res) => {
+// Proxy /uploads for images
+app.get("/uploads/*", async (req, res) => {
   try {
-    const API_BASE = process.env.API_URL || "https://event-blinker.onrender.com"
-    const targetUrl = `${API_BASE}/api${req.url}`
-
-    console.log(`🔀 Proxying: ${req.method} ${req.originalUrl} → ${targetUrl}`)
-
-    const axios = (await import("axios")).default
+    const targetUrl = `${API_BASE}${req.originalUrl}`
     const response = await axios({
-      method: req.method,
+      method: "GET",
       url: targetUrl,
-      headers: {
-        "x-admin-token": req.headers["x-admin-token"],
-        "Content-Type": "application/json",
-      },
-      data: req.body,
-      params: req.query,
+      responseType: "stream"
     })
-
-    res.json(response.data)
-  } catch (error) {
-    console.error(`❌ Proxy error: ${error.message}`)
-    res.status(error.response?.status || 500).json({
-      error: "Proxy error",
-      details: error.response?.data || error.message
-    })
+    response.data.pipe(res)
+  } catch (e) {
+    res.status(404).send("Not found")
   }
 })
 
-// Proxy /uploads for images
-app.use("/uploads/*", async (req, res) => {
+// Proxy API routes
+app.use("/api", adminAuth, async (req, res) => {
   try {
-    const API_URL = process.env.API_URL || "https://event-blinker.onrender.com"
-    const targetUrl = `${API_URL}${req.originalUrl}`
-    const axios = (await import("axios")).default
+    const targetUrl = `${API_BASE}/api${req.url}`
+    console.log(`� [Proxy] ${req.method} ${targetUrl}`)
 
     const response = await axios({
-      method: 'GET',
+      method: req.method,
       url: targetUrl,
-      responseType: 'stream'
+      data: req.body,
+      params: req.query,
+      headers: {
+        "x-admin-token": req.headers["x-admin-token"],
+        "Content-Type": "application/json"
+      },
+      validateStatus: () => true // Allow all statuses
     })
 
-    response.data.pipe(res)
-  } catch (e) {
-    console.error("Image proxy error:", e.message)
-    res.status(404).send('Not found')
+    res.status(response.status).json(response.data)
+  } catch (error) {
+    console.error(`❌ [Proxy Error] ${error.message}`)
+    res.status(500).json({ error: "Portal Connection Failure", details: error.message })
   }
 })
 
@@ -101,10 +81,6 @@ app.get("*", (req, res) => {
 })
 
 app.listen(PORT, () => {
-  const adminToken = process.env.ADMIN_SECRET_TOKEN || "prabin@1234"
-  console.log(`\n🔐 Admin Portal running on http://localhost:${PORT}`)
-  console.log(`📝 Admin Token: ${adminToken}`)
-  console.log(`📝 Backend API: ${process.env.API_URL || "https://event-blinker.onrender.com/api"}`)
-  console.log(`⚠️  Keep this token secret!\n`)
+  console.log(`🔐 Admin Portal running on PORT ${PORT}`)
+  console.log(`📝 Backend API: ${API_BASE}`)
 })
-

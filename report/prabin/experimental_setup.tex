@@ -1,0 +1,47 @@
+\chapter{Experimental Setup}
+The evaluation of \textbf{Event Blinker} was conducted using a distributed cloud topology to simulate real-world urban interactions and high-concurrency event surges \cite{nodejs}. The goal of the experimentation was to measure the efficiency of the spatial engine, the responsiveness of the real-time mobility module, and the overall stability of the system state synchronization.
+
+\section{Experimental Environment}
+The system was deployed on a heterogeneous infrastructure to replicate the client-server relationship of a real-world deployment.
+
+\subsection{Backend Infrastructure Specification}
+The core API and persistence layers were hosted on a cloud instance with the following specifications:
+\begin{itemize}
+    \item \textbf{Compute}: 4 vCPUs (Intel Xeon Processors)
+    \item \textbf{Memory}: 8GB DDR4 RAM
+    \item \textbf{Runtime}: Node.js 18.x LTS with V8 engine optimization \cite{nodejs}.
+    \item \textbf{Database}: PostgreSQL 15 with PostGIS 3.3 extension \cite{postgis}.
+\end{itemize}
+
+\subsection{Support Assistant Configuration}
+The system included a lightweight assistant for support queries, grounded in the platform's local database \cite{llama3}.
+\begin{itemize}
+    \item \textbf{Inference Type}: Remote API Access.
+    \item \textbf{Context Management}: Dynamic Relational Injection.
+\end{itemize}
+
+\subsection{Client Emulation Environment}
+Testing was conducted using a mix of physical mobile devices and emulated instances.
+\begin{itemize}
+    \item \textbf{Mobile OS}: Android 13 and iOS 16 environments.
+    \item \textbf{Framework}: React Native 0.72 with Mapbox GL SDK \cite{reactnative}.
+    \item \textbf{Network Simulation}: Urban 4G/LTE profile with network jitter simulation.
+\end{itemize}
+
+\section{Testing Framework and Strategy}
+A multi-tier testing strategy was implemented to ensure system robustness across different operational domains.
+
+\subsection{Unit and Logical Validation}
+Individual services and utility functions were subjected to unit testing. The \textbf{Spatial Logic} was tested against known GPS coordinates across the Kathmandu Valley to ensure sub-1 meter accuracy \cite{postgis}. JWT token expiration and RBAC gates were verified to ensure secure access to rider documentation.
+
+\subsection{Performance and Load Testing Profile}
+To simulate event surges, we utilized custom scripts for WebSocket concurrency and API throughput testing \cite{socketio}.
+\begin{itemize}
+    \item \textbf{Target Concurrency}: 1,000 active users performing simultaneous map interactions.
+    \item \textbf{WebSocket Stress}: Measuring the latency of \texttt{ride:new\_request} broadcasts across concurrent rooms.
+\end{itemize}
+
+\subsection{Functional Accuracy Audit}
+We performed an audit of the assistant's query resolution capabilities. The responses were compared against the "ground-truth" relational data stored in the database to ensure that the grounding pipeline successfully eliminated information errors.
+
+

@@ -1,0 +1,31 @@
+{
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "apk": {
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://event-blinker-1.onrender.com/api",
+        "EXPO_PUBLIC_AI_CHAT_URL": "https://event-blinker-1.onrender.com/api/ai/chat",
+        "EXPO_PUBLIC_MAPBOX_TOKEN": "pk.eyJ1IjoicHJhYmlubm5ubiIsImEiOiJjbW00OHZ4NTAwOHRlMnFxcnU0bHpnM2pkIn0.qaMlA24-5I_qANfRSN2jvA"
+      }
+    },
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://event-blinker-1.onrender.com/api",
+        "EXPO_PUBLIC_AI_CHAT_URL": "https://event-blinker-1.onrender.com/api/ai/chat",
+        "EXPO_PUBLIC_MAPBOX_TOKEN": "pk.eyJ1IjoicHJhYmlubm5ubiIsImEiOiJjbW00OHZ4NTAwOHRlMnFxcnU0bHpnM2pkIn0.qaMlA24-5I_qANfRSN2jvA"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

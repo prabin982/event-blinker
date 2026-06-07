@@ -1,7 +1,7 @@
 import { useState } from "react"
 import MapPicker from "./MapPicker"
 
-const API_URL = import.meta.env.VITE_API_URL || "http://192.168.254.10:5000"
+const API_URL = import.meta.env.VITE_API_URL || "https://event-blinker.onrender.com"
 
 export default function EventForm({ onEventCreated }) {
   const [formData, setFormData] = useState({
@@ -78,10 +78,10 @@ export default function EventForm({ onEventCreated }) {
 
       const uploadData = await uploadResponse.json()
       // Construct full URL for the image
-      const fullImageUrl = uploadData.imageUrl.startsWith('http') 
-        ? uploadData.imageUrl 
+      const fullImageUrl = uploadData.imageUrl.startsWith('http')
+        ? uploadData.imageUrl
         : `${API_URL}${uploadData.imageUrl}`
-      
+
       setFormData((prev) => ({
         ...prev,
         image_url: fullImageUrl,
@@ -326,7 +326,7 @@ export default function EventForm({ onEventCreated }) {
           onChange={handleChange}
           required
           rows="4"
-            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+          className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
           placeholder="Describe your event..."
         />
       </div>

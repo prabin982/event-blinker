@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import Navigation from "../components/Navigation"
 
-const API_URL = import.meta.env.VITE_API_URL || "http://192.168.254.10:5000"
+const API_URL = import.meta.env.VITE_API_URL || "https://event-blinker.onrender.com"
 
 export default function EventsPage({ user, onLogout }) {
   const [events, setEvents] = useState([])
@@ -62,9 +62,9 @@ export default function EventsPage({ user, onLogout }) {
           {events.map((event) => (
             <div key={event.id} className="bg-white rounded-lg shadow overflow-hidden">
               {event.image_url && (
-                <img 
-                  src={event.image_url} 
-                  alt={event.title} 
+                <img
+                  src={event.image_url}
+                  alt={event.title}
                   className="w-full h-48 object-cover"
                   onError={(e) => {
                     e.target.onerror = null

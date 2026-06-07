@@ -2,53 +2,10 @@ const express = require("express")
 const db = require("../config/database")
 const authMiddleware = require("../middleware/auth")
 const socketModule = require("../utils/socket")
-const http = require("http")
+const aiService = require("../utils/ai-service")
 
 const router = express.Router()
 
-// AI Service URL (optional - only used if configured)
-// Defaults to localhost, but can be set to network IP if needed
-const AI_SERVICE_URL = process.env.AI_SERVICE_URL || "http://192.168.254.10:5100"
-
-// Helper function to make HTTP requests (using built-in http module)
-function makeRequest(url, options) {
-  return new Promise((resolve, reject) => {
-    const urlObj = new URL(url)
-    const requestOptions = {
-      hostname: urlObj.hostname,
-      port: urlObj.port || (urlObj.protocol === "https:" ? 443 : 80),
-      path: urlObj.pathname,
-      method: options.method || "GET",
-      headers: options.headers || {},
-    }
-
-    const req = http.request(requestOptions, (res) => {
-      let data = ""
-      res.on("data", (chunk) => {
-        data += chunk
-      })
-      res.on("end", () => {
-        try {
-          const jsonData = JSON.parse(data)
-          resolve({ ok: res.statusCode >= 200 && res.statusCode < 300, json: () => Promise.resolve(jsonData), status: res.statusCode })
-        } catch (e) {
-          resolve({ ok: false, json: () => Promise.resolve({}), status: res.statusCode })
-        }
-      })
-    })
-
-    req.on("error", reject)
-    req.setTimeout(10000, () => {
-      req.destroy()
-      reject(new Error("Request timeout"))
-    })
-
-    if (options.body) {
-      req.write(options.body)
-    }
-    req.end()
-  })
-}
 
 // Get messages for event
 router.get("/:event_id", async (req, res) => {
@@ -111,7 +68,7 @@ router.post("/:event_id", authMiddleware, async (req, res) => {
          created_at`,
       [req.user.id, event_id, message.trim(), senderType],
     )
-    
+
     // Get user name
     msg.user_name = userData?.name || "User"
 
@@ -131,38 +88,24 @@ router.post("/:event_id", authMiddleware, async (req, res) => {
 
     // Check if message is a question and trigger AI response (async, non-blocking)
     const messageLower = message.trim().toLowerCase()
-    const isQuestion = messageLower.includes("?") || 
-                       messageLower.startsWith("what") || 
-                       messageLower.startsWith("when") || 
-                       messageLower.startsWith("where") || 
-                       messageLower.startsWith("how") || 
-                       messageLower.startsWith("why") ||
-                       messageLower.startsWith("is") ||
-                       messageLower.startsWith("can") ||
-                       messageLower.startsWith("does")
+    const isQuestion = messageLower.includes("?") ||
+      messageLower.startsWith("what") ||
+      messageLower.startsWith("when") ||
+      messageLower.startsWith("where") ||
+      messageLower.startsWith("how") ||
+      messageLower.startsWith("why") ||
+      messageLower.startsWith("is") ||
+      messageLower.startsWith("can") ||
+      messageLower.startsWith("does")
 
     // Trigger AI response if it's a question (fire and forget)
-    if (isQuestion && AI_SERVICE_URL) {
-      // Get event details for AI context (async, don't block response)
-      db.oneOrNone("SELECT * FROM events WHERE id = $1", [event_id])
-        .then((eventData) => {
-          // Call AI service asynchronously (don't wait for response)
-          return makeRequest(`${AI_SERVICE_URL}/chat`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              message: message.trim(),
-              event_id: event_id,
-            }),
-          })
-        })
-        .then(async (aiRes) => {
-          if (aiRes && aiRes.ok) {
-            const aiData = await aiRes.json()
-            if (aiData.reply) {
-              // Save AI response as a bot message
-              const aiMessage = await db.one(
-                `INSERT INTO chat_messages (user_id, event_id, message, sender_type)
+    if (isQuestion) {
+      aiService.generateAIResponse(message.trim(), event_id)
+        .then(async (reply) => {
+          if (reply && typeof reply === 'string') {
+            // Save AI response as a bot message
+            const aiMessage = await db.one(
+              `INSERT INTO chat_messages (user_id, event_id, message, sender_type)
                  VALUES (NULL, $1, $2, 'bot')
                  RETURNING 
                    id,
@@ -171,36 +114,35 @@ router.post("/:event_id", authMiddleware, async (req, res) => {
                    message,
                    sender_type,
                    created_at`,
-                [event_id, aiData.reply]
-              ).catch((err) => {
-                // If user_id cannot be NULL, try with a system user ID or skip
-                console.log("Could not save AI message:", err.message)
-                return null
+              [event_id, reply]
+            ).catch((err) => {
+              // If user_id cannot be NULL, try with a system user ID or skip
+              console.log("Could not save AI message:", err.message)
+              return null
+            })
+
+            if (!aiMessage) return
+
+            aiMessage.user_name = "Event Assistant"
+
+            // Broadcast AI response
+            const io = socketModule.getIO()
+            if (io) {
+              io.to(`event:${event_id}`).emit("message:new", {
+                id: aiMessage.id,
+                user_id: null,
+                event_id: aiMessage.event_id,
+                message: aiMessage.message,
+                sender_type: "bot",
+                user_name: "Event Assistant",
+                created_at: aiMessage.created_at,
               })
-              
-              if (!aiMessage) return
-              
-              aiMessage.user_name = "Event Assistant"
-              
-              // Broadcast AI response
-              const io = socketModule.getIO()
-              if (io) {
-                io.to(`event:${event_id}`).emit("message:new", {
-                  id: aiMessage.id,
-                  user_id: null,
-                  event_id: aiMessage.event_id,
-                  message: aiMessage.message,
-                  sender_type: "bot",
-                  user_name: "Event Assistant",
-                  created_at: aiMessage.created_at,
-                })
-              }
             }
           }
         })
         .catch((err) => {
           // Silently fail - AI is optional
-          console.log("AI service not available or error:", err.message)
+          console.log("[AI Context Hook] Service not available or error:", err.message)
         })
     }
 

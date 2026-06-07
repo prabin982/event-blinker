@@ -34,6 +34,11 @@ export default function Navigation({ user, onLogout }) {
             <Link to="/events" className="text-gray-700 hover:text-blue-600 font-medium">
               Events
             </Link>
+            {user?.user_type === "organizer" && (
+              <Link to="/admin/riders" className="text-gray-700 hover:text-blue-600 font-medium">
+                Verify Riders
+              </Link>
+            )}
             <div className="flex items-center gap-4">
               <span className="text-gray-700">{user?.name}</span>
               <button onClick={handleLogout} className="bg-gradient-to-r from-red-600 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-red-700 hover:to-blue-700 shadow-md">

@@ -1,0 +1,22 @@
+\chapter{Conclusion and Future Enhancement}
+
+\section{Conclusion}
+This project presented the design and implementation of \textbf{Event Blinker}, a real-time discovery platform designed to unify the event lifecycle from geospatial exploration to destination-integrated transport. The primary objective of the work was to solve the "informational and logistical gap" in modern urban environments—where citizens are often aware of events but discouraged from attending due to fragmented data and inconsistent transport alternatives.
+
+To achieve this goal, the project successfully developed a multi-tier infrastructure combining a React Native mobile client, a Node.js backend orchestration server, and a PostGIS-powered spatial database. The integration of a smart assistant grounded in live platform metadata represents a significant step forward in making urban discovery more interactive. By using a data-grounding strategy, the platform ensures that the assistant's responses are factually accurate and rooted in the actual facts of the platform rather than generic training data.
+
+The experimental results further highlighted the efficiency of specialized spatial indexing and real-time synchronization. With a mean spatial search latency of 22ms and message broadcast times under 40ms, the platform demonstrates that a modular, service-oriented architecture is capable of handling the high-concurrency demands of a modern metropolitan area. The peer-to-peer ride-sharing module successfully addresses the "last-mile" barrier, providing a practical demonstration of how digital discovery can be seamlessly linked to physical mobility.
+
+In summary, Event Blinker serves as both a technical proof-of-concept and a potentially transformative social tool. It demonstrates that the synergy between geospatial engines, real-time protocols, and smart support systems can significantly improve the quality of urban social life. This project provides a foundation for future research in smart city informatics and sets a benchmark for the development of integrated discovery and mobility ecosystems.
+
+\section{Future Enhancement}
+Although the project successfully delivered a working platform for urban discovery and mobility, there are several areas in which the system can be expanded:
+
+\begin{itemize}
+    \item \textbf{Integrated Payment Ecosystem}: Future versions could incorporate an integrated ticket payment gateway and fare payment system using local digital wallets like eSewa and Khalti.
+    \item \textbf{Unified Mobility API Integration}: Integration with public transit schedules and micro-mobility options (e.g., e-scooters) to provide a complete Mobility-as-a-Service experience.
+    \item \textbf{Multi-Language Support}: Extending the support assistant to interact in native languages like Nepali to improve accessibility for a broader demographic.
+    \item \textbf{Scalable Spatial Partitioning}: Sharding the database and compute layers based on geographic regions to allow for global deployment across multiple cities.
+\end{itemize}
+
+Overall, these future enhancements would transform Event Blinker from a discovery platform into a comprehensive urban social ecosystem, making cities more navigable, accessible, and connected for all residents.

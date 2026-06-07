@@ -91,7 +91,7 @@ const adminTokenMiddleware = (req, res, next) => {
 }
 
 // Get pending organizer registrations
-router.get("/organizers/pending", authMiddleware, adminMiddleware, async (req, res) => {
+router.get("/organizers/pending", adminTokenMiddleware, async (req, res) => {
   try {
     const organizers = await db.any(
       `SELECT 
@@ -110,7 +110,7 @@ router.get("/organizers/pending", authMiddleware, adminMiddleware, async (req, r
 })
 
 // Approve organizer
-router.post("/organizers/:id/approve", authMiddleware, adminMiddleware, async (req, res) => {
+router.post("/organizers/:id/approve", adminTokenMiddleware, async (req, res) => {
   try {
     const organizerId = req.params.id
     const adminId = req.user.id
@@ -166,7 +166,7 @@ router.post("/organizers/:id/reject", authMiddleware, adminMiddleware, async (re
 })
 
 // Get pending event approvals
-router.get("/events/pending", authMiddleware, adminMiddleware, async (req, res) => {
+router.get("/events/pending", adminTokenMiddleware, async (req, res) => {
   try {
     const events = await db.any(
       `SELECT 
@@ -187,7 +187,7 @@ router.get("/events/pending", authMiddleware, adminMiddleware, async (req, res) 
 })
 
 // Approve event
-router.post("/events/:id/approve", authMiddleware, adminMiddleware, async (req, res) => {
+router.post("/events/:id/approve", adminTokenMiddleware, async (req, res) => {
   try {
     const eventId = req.params.id
 
@@ -236,7 +236,7 @@ router.post("/events/:id/reject", authMiddleware, adminMiddleware, async (req, r
 })
 
 // Get all riders (for admin dashboard)
-router.get("/riders/all", authMiddleware, adminMiddleware, async (req, res) => {
+router.get("/riders/all", adminTokenMiddleware, async (req, res) => {
   try {
     const { status } = req.query
 
@@ -269,7 +269,7 @@ router.get("/riders/all", authMiddleware, adminMiddleware, async (req, res) => {
 })
 
 // Get pending rider registrations
-router.get("/riders/pending", authMiddleware, adminMiddleware, async (req, res) => {
+router.get("/riders/pending", adminTokenMiddleware, async (req, res) => {
   try {
     const riders = await db.any(
       `SELECT 
@@ -294,7 +294,7 @@ router.get("/riders/pending", authMiddleware, adminMiddleware, async (req, res) 
 })
 
 // Approve rider registration
-router.post("/riders/:id/approve", authMiddleware, adminMiddleware, async (req, res) => {
+router.post("/riders/:id/approve", adminTokenMiddleware, async (req, res) => {
   try {
     const riderId = req.params.id
     const adminId = req.user.id
@@ -317,9 +317,9 @@ router.post("/riders/:id/approve", authMiddleware, adminMiddleware, async (req, 
 
     await db.none(
       `UPDATE riders 
-       SET registration_status = 'approved', approved_by = $1, approved_at = NOW(), updated_at = NOW()
-       WHERE id = $2`,
-      [adminId, riderId]
+       SET registration_status = 'approved', approved_at = NOW(), updated_at = NOW()
+       WHERE id = $1`,
+      [riderId]
     )
 
     if (rider.license_id && rider.verification_status === "pending") {
@@ -392,10 +392,9 @@ router.get("/licenses/pending", authMiddleware, adminMiddleware, async (req, res
 })
 
 // Approve license
-router.post("/licenses/:id/approve", authMiddleware, adminMiddleware, async (req, res) => {
+router.post("/licenses/:id/approve", adminTokenMiddleware, async (req, res) => {
   try {
     const licenseId = req.params.id
-    const adminId = req.user.id
 
     const license = await db.oneOrNone("SELECT * FROM driver_licenses WHERE id = $1", [licenseId])
     if (!license) {
@@ -404,9 +403,9 @@ router.post("/licenses/:id/approve", authMiddleware, adminMiddleware, async (req
 
     await db.none(
       `UPDATE driver_licenses 
-       SET verification_status = 'approved', verified_by = $1, verified_at = NOW(), updated_at = NOW()
-       WHERE id = $2`,
-      [adminId, licenseId]
+       SET verification_status = 'approved', verified_at = NOW(), updated_at = NOW()
+       WHERE id = $1`,
+      [licenseId]
     )
 
     res.json({ success: true, message: "License approved" })
@@ -417,10 +416,9 @@ router.post("/licenses/:id/approve", authMiddleware, adminMiddleware, async (req
 })
 
 // Reject license
-router.post("/licenses/:id/reject", authMiddleware, adminMiddleware, async (req, res) => {
+router.post("/licenses/:id/reject", adminTokenMiddleware, async (req, res) => {
   try {
     const licenseId = req.params.id
-    const adminId = req.user.id
     const { rejection_reason } = req.body
 
     if (!rejection_reason) {
@@ -434,9 +432,9 @@ router.post("/licenses/:id/reject", authMiddleware, adminMiddleware, async (req,
 
     await db.none(
       `UPDATE driver_licenses 
-       SET verification_status = 'rejected', rejection_reason = $1, verified_by = $2, verified_at = NOW(), updated_at = NOW()
-       WHERE id = $3`,
-      [rejection_reason, adminId, licenseId]
+       SET verification_status = 'rejected', rejection_reason = $1, verified_at = NOW(), updated_at = NOW()
+       WHERE id = $2`,
+      [rejection_reason, licenseId]
     )
 
     res.json({ success: true, message: "License rejected" })

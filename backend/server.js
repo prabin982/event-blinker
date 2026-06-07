@@ -8,6 +8,14 @@ const db = require("./config/database")
 const { setupSocketHandlers } = require("./utils/socket-handler")
 const socketModule = require("./utils/socket")
 
+// Run migrations on startup
+const { createTables } = require("./scripts/migrate_core")
+createTables().then(() => {
+  console.log("🚀 Database Migrations Finished")
+}).catch(err => {
+  console.error("❌ Migration failed:", err)
+})
+
 // Import routes
 const authRoutes = require("./routes/auth")
 const eventRoutes = require("./routes/events")
@@ -18,6 +26,7 @@ const organizerRoutes = require("./routes/organizer")
 const uploadRoutes = require("./routes/upload")
 const rideRoutes = require("./routes/rides")
 const adminRoutes = require("./routes/admin")
+const aiRoutes = require("./routes/ai")
 
 const app = express()
 const server = http.createServer(app)
@@ -77,6 +86,41 @@ app.use(express.urlencoded({ extended: true }))
 // Serve uploaded images statically
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 
+// Global Photo URL Fixer (Fixes localhost/relative paths for Mobile & Web)
+app.use((req, res, next) => {
+  const originalJson = res.json;
+  res.json = function (data) {
+    const PUBLIC_URL = "https://event-blinker-1.onrender.com";
+
+    // Helper to fix a single string
+    const fixUrl = (val) => {
+      if (typeof val !== 'string') return val;
+      if (val.includes('localhost') || val.includes('10.0.2.2') || val.includes('192.168.')) {
+        return val.replace(/http:\/\/localhost:\d+/g, PUBLIC_URL).replace(/http:\/\/10\.0\.2\.2:\d+/g, PUBLIC_URL).replace(/http:\/\/192\.168\.\d+\.\d+:\d+/g, PUBLIC_URL);
+      }
+      if (val.startsWith('/uploads/')) return PUBLIC_URL + val;
+      if (val.startsWith('uploads/')) return PUBLIC_URL + '/' + val;
+      return val;
+    };
+
+    // Recursive fixer for objects/arrays
+    const process = (obj) => {
+      if (!obj || typeof obj !== 'object') return obj;
+      for (let key in obj) {
+        if (typeof obj[key] === 'string' && (key.toLowerCase().includes('url') || key.toLowerCase().includes('photo') || key.toLowerCase().includes('avatar') || key.toLowerCase().includes('image') || key.toLowerCase().includes('document'))) {
+          obj[key] = fixUrl(obj[key]);
+        } else if (typeof obj[key] === 'object') {
+          process(obj[key]);
+        }
+      }
+      return obj;
+    };
+
+    return originalJson.call(this, process(data));
+  };
+  next();
+});
+
 // Request logging
 app.use((req, res, next) => {
   console.log(`[BACKEND] ${req.method} ${req.originalUrl}`)
@@ -94,8 +138,21 @@ app.use("/api/upload", uploadRoutes)
 app.use("/api/rides", rideRoutes)
 app.use("/api/users", require("./routes/users"))
 app.use("/api/admin", adminRoutes)
+app.use("/api/ai", aiRoutes)
+
 
 // ============ DIAGNOSTICS & ROOT ============
+
+// Force migration endpoint (Secret Repair Link)
+app.get("/api/admin/force-migrate", async (req, res) => {
+  try {
+    const { createTables } = require("./scripts/migrate_core")
+    await createTables()
+    res.json({ status: "success", message: "Database tables checked and created!" })
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message, stack: error.stack })
+  }
+})
 
 // Database health check
 app.get("/health", async (req, res) => {
@@ -112,6 +169,7 @@ app.get("/api/admin/debug/database", (req, res) => {
   res.json({
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
+    jwtStatus: process.env.JWT_SECRET ? "Secret is set" : "Secret is MISSING",
     status: "Database configuration loaded"
   })
 })
@@ -121,9 +179,11 @@ app.get("/api/admin/debug/tables", async (req, res) => {
     const tables = await db.any(
       `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name`
     )
+    const userCount = await db.one("SELECT COUNT(*) FROM users")
     res.json({
       tables: tables.map(t => t.table_name),
-      count: tables.length
+      count: tables.length,
+      usersCount: parseInt(userCount.count)
     })
   } catch (error) {
     res.status(500).json({ error: error.message })
